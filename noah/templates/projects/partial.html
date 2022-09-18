@@ -1,0 +1,18 @@
+<dl class="row">
+    <dt class="col-sm-2">
+        <p class="mb-0 pb-0">Projects</p>
+    </dt>
+    <dd class="col-sm-10">
+        <div class="row">
+            {% for project in projects %}
+                <div class="col-12 col-md-6 {{ 'pb-3' if not loop.last }}">
+                    {% if project["public"] != true %}
+                        <span class="text-danger">(Private)</span>
+                    {% endif %}
+                    <a href="{{ url_for('projects.show', id=project['id'] )}}">{{ project['name'] }}</a>
+                    <p class="mb-0">{{ project['startdate'].strftime('%B, %Y') }} - {{ project['enddate'].strftime('%B, %Y') if project['enddate'] else 'Current'  }}</p>
+                </div>
+            {% endfor %}
+        </ul>
+    </dd>
+</dl>

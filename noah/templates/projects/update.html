@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% from "projects/form.html" import form_for %}
+
+{% block header %}
+    <h1>{% block title %}Update Projects{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    {{ form_for(request.form if request.form else project) }}
+    <hr />
+    <form action="{{ url_for('projects.delete', id=project['id']) }}" method="post">
+        <input type="submit" value="Delete" onclick="return confirm('Are you sure?');" class="btn btn-link" />
+    </form>
+{% endblock %}

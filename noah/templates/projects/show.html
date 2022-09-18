@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}{{ project['name'] }}{% endblock %}</h1>
+    {% if g.user['id'] == project['author_id'] %}
+        <a href="{{ url_for('projects.update', id=project['id']) }}">Edit</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="accordion accordion-flush pb-2" id="quickInfo">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="quickInfoTitle">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#quickInfoCollapse" aria-expanded="true" aria-controls="quickInfoCollapse">
+                    Quick Info
+                </button>
+            </h2>
+            <div id="quickInfoCollapse" class="accordion-collapse collapse show" aria-labelledby="quickInfoTitle" data-bs-parent="#quickInfoCollapse">
+                <div class="accordion-body container">
+                    <dl class="row">
+                        <dt class="col-sm-3">
+                            <p class="mb-0 pb-0">Date</p>
+                        </dt>
+                        <dd class="col-sm-9">
+                            <p class="mb-0">{{ project['startdate'].strftime('%B, %Y') }} - {{ project['enddate'].strftime('%B, %Y') if project['enddate'] else 'Current'  }}</p>
+                        </dd>
+                        {% if project['link'] %}
+                            <dt class="col-sm-3">
+                                <p class="mb-0 pb-0">Link</p>
+                            </dt>
+                            <dd class="col-sm-9">
+                                <p class="mb-0">
+                                    <a href="{{ project['link'] }}">{{ project['link'] }}</a>
+                                </p>
+                            </dd>
+                        {% endif %}
+                        {% for item in ['langs', 'deps', 'platforms'] %}
+                            {% if project[item] %}
+                                <dt class="col-sm-3">
+                                    <p class="mb-0 pb-0">{{ ['Languages', 'Dependencies', 'Platforms'][loop.index0] }}</p>
+                                </dt>
+                                <dd class="col-sm-9">
+                                    <p class="mb-0">{{ project[item]|join(", ") }}</p>
+                                </dd>
+                            {% endif %}
+                        {% endfor %}
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        {{ project['about']|safe }}
+    </div>
+{% endblock %}

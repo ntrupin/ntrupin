@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1 class="mb-3">{% block title %}Noah Trupin{% endblock %}</h1>
+    <p>I write code, usually in C, Python, Mathematica, or Ruby.</p>
+    <p>This site hosts information on my projects, pieces of my writing, and other odds and ends I've decided to collect. I hope you enjoy your stay.</p>
+{% endblock %}
+
+{% block content %}
+    {% if g.user != None %}
+        <div class="hstack gap-3">
+            <a href="{{ url_for('projects.create') }}">New Project</a>
+            <a href="{{ url_for('posts.create') }}">New Post</a>
+    </div>
+    {% endif %}
+    {% include "projects/partial.html" %}
+    {% include "posts/partial.html" %}
+{% endblock %}

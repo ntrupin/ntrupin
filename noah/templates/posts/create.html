@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% from "posts/form.html" import form_for %}
+
+{% block header %}
+    <h1>{% block title %}New Post{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    {{ form_for(request.form) }}
+{% endblock %}

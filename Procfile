@@ -1,1 +1,1 @@
-web: flask --app noah run
+web: gunicorn -w 4 'noah:create_app()'

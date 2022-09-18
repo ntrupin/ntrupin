@@ -2,7 +2,7 @@
     "version": 2,
     "builds": [
         {
-            "src": "./noah",
+            "src": "./noah/__init__.py",
             "use": "@vercel/python"
         }
     ],

@@ -56,7 +56,7 @@ def create_app(test_config=None):
             retmode=Count.ALL
         )
         posts = execute(
-            "SELECT p.id, title, body, created, author_id, username"
+            "SELECT p.id, title, body, public, created, author_id, username"
             " FROM posts p JOIN users u ON p.author_id = u.id"
             " WHERE public IN %s"
             " ORDER BY created DESC",

@@ -48,7 +48,7 @@ def create():
 
 def get_post(id, check_author=True):
     post = execute(
-        "SELECT p.id, title, body, created, author_id, username"
+        "SELECT p.id, title, body, public, created, author_id, username"
         " FROM posts p JOIN users u ON p.author_id = u.id"
         " WHERE p.id = %s AND public IN %s ",
         args=(id, (True,) if g.user is None else (True, False)),

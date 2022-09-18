@@ -11,10 +11,9 @@ from flask import current_app, g
 def get_db():
     if "db" not in g:
         g.db = psycopg2.connect(
-            host="localhost",
-            database="personal",
+            os.environ['DATABASE_URL'],
             user=os.environ["DB_USERNAME"],
-            password=os.environ["DB_PASSWORD"],
+            password=os.environ["DB_PASSWORD"]
         )
         g.db.autocommit = True
     return g.db

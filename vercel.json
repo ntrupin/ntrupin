@@ -1,8 +1,19 @@
 {
+    "version": 2,
+    "builds": [
+        {
+            "src": "./index.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "/noah/static/**",
+            "use": "@vercel/static"
+        }
+    ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "/index.py"
+            "dest": "index.py"
         }
     ]
 }

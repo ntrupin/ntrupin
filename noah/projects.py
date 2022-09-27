@@ -14,14 +14,7 @@ bp = Blueprint("projects", __name__, url_prefix="/projects")
 
 @bp.route("/")
 def index():
-    projects = execute(
-        "SELECT p.id, name, startdate, enddate, link, about, langs, deps, platforms, images, public, created, author_id, username"
-        " FROM projects p JOIN users u ON p.author_id = u.id"
-        " WHERE public IN %s"
-        " ORDER BY enddate DESC NULLS FIRST, startdate DESC",
-        args=((True,) if g.user is None else (True, False),),
-        retmode=Count.ALL
-    )
+    projects = get_projects()
     return render_template("projects/index.html", projects=projects)
 
 @bp.route("/create", methods=("GET", "POST"))
@@ -66,6 +59,16 @@ def get_project(id, check_author=True):
     if check_author and project["author_id"] != g.user["id"]:
         abort(403)
     return project
+
+def get_projects(retmode = Count.ALL):
+    return execute(
+        "SELECT p.id, name, startdate, enddate, link, about, langs, deps, platforms, images, public, created, author_id, username"
+        " FROM projects p JOIN users u ON p.author_id = u.id"
+        " WHERE public IN %s"
+        " ORDER BY enddate DESC NULLS FIRST, startdate DESC",
+        args=((True,) if g.user is None else (True, False),),
+        retmode=retmode
+    )
 
 @bp.route("/<int:id>/update", methods=("GET", "POST"))
 @login_required

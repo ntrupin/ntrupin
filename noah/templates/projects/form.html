@@ -84,6 +84,11 @@
             <input type="checkbox" class="form-check-input" name="onresume" id="onresume" {{ "checked" if object["onresume"] == true }} />
             <label class="form-check-label" for="onresume">Resume</label>
         </div>
+
+        <div class="form-group form-check mb-3">
+            <input type="checkbox" class="form-check-input" name="favorite" id="favorite" {{ "checked" if object["favorite"] == true }} />
+            <label class="form-check-label" for="favorite">Favorite</label>
+        </div>
     
         <input type="submit" value="Save" class="btn btn-link" />
     </form>

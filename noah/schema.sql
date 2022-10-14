@@ -34,5 +34,6 @@ CREATE TABLE projects (
     images TEXT[],
     public BOOLEAN DEFAULT FALSE,
     onresume BOOLEAN DEFAULT FALSE,
+    favorite BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (author_id) REFERENCES users (id)
 );

@@ -19,6 +19,12 @@
                 <div class="accordion-body container">
                     <dl class="row">
                         <dt class="col-sm-3">
+                            <p class="mb-0 pb-0">On Resume?</p>
+                        </dt>
+                        <dd class="col-sm-9">
+                            <p class="mb-0">{{ project["onresume"] }}</p>
+                        </dd>
+                        <dt class="col-sm-3">
                             <p class="mb-0 pb-0">Date</p>
                         </dt>
                         <dd class="col-sm-9">
@@ -50,6 +56,11 @@
         </div>
     </div>
     <div>
-        {{ project['about']|safe }}
+        {% if project['about']|length > 0 %}
+            {{ project['about']|safe }}
+        {% else %}
+            <p><i>'About' data not found. From the Resume entry:</i></p>
+            <p>{{ project['resume'] }}</p>
+        {% endif %}
     </div>
 {% endblock %}

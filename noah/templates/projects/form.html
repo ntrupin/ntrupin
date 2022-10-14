@@ -66,6 +66,11 @@
         </div>
 
         <div class="mb-3">
+            <label for="resume">Resume Entry</label>
+            <textarea class="form-control" name="resume" id="resume">{{ object['resume'] }}</textarea>
+        </div>
+
+        <div class="mb-3">
             <label for="about">About</label>
             <textarea class="form-control" name="about" id="about">{{ object['about'] }}</textarea>
         </div>
@@ -73,6 +78,11 @@
         <div class="form-group form-check mb-3">
             <input type="checkbox" class="form-check-input" name="public" id="public" {{ "checked" if object["public"] == true }} />
             <label class="form-check-label" for="public">Public</label>
+        </div>
+
+        <div class="form-group form-check mb-3">
+            <input type="checkbox" class="form-check-input" name="onresume" id="onresume" {{ "checked" if object["onresume"] == true }} />
+            <label class="form-check-label" for="onresume">Resume</label>
         </div>
     
         <input type="submit" value="Save" class="btn btn-link" />

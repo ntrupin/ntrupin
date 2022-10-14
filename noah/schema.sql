@@ -23,6 +23,7 @@ CREATE TABLE projects (
     author_id INTEGER NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     name TEXT NOT NULL,
+    resume TEXT,
     startdate TIMESTAMP NOT NULL,
     enddate TIMESTAMP NOT NULL,
     link TEXT DEFAULT '.',
@@ -32,5 +33,6 @@ CREATE TABLE projects (
     platforms TEXT[],
     images TEXT[],
     public BOOLEAN DEFAULT FALSE,
+    onresume BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (author_id) REFERENCES users (id)
 );

@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% block header %}
+    {% if g.user != None %}
+    <div class="hstack gap-3">
+        <a href="{{ url_for('projects.create') }}">New Project</a>
+        <a href="{{ url_for('posts.create') }}">New Post</a>
+    </div>
+    {% endif %}
     <h1 class="mb-3">{% block title %}Noah Trupin{% endblock %}</h1>
-    <p>Hi &#8212; I'm Noah, a student and developer with a goal of creating robust solutions that serve others while furthering my knowledge of computer science and programming. Though my recent works involve rebuilding my <a href="{{ url_for('projects.show', id=2) }}">school newspaper's website</a> and creating a <a href="{{ url_for('projects.show', id=3) }}">scheduling system for peer tutors</a>, my interests also include <a href="{{ url_for('projects.show', id=10) }}">programming language theory</a> and conducting <a href="{{ url_for('projects.show', id=4) }}">environmental research and analyses</a>.</p>
+    <p>Hi &#8212; I'm Noah, a student and aspiring computer scientist with a passion for <b><a class="text-decoration-none" href="{{ url_for('projects.show', id=10) }}">programming languages</a></b> and <b><a class="text-decoration-none" href="{{ url_for('projects.show', id=4) }}">environmental research and analysis</a></b>.</p>
     <p>This site hosts information on my projects, pieces of my writing, and other odds and ends I've decided to collect.</p>
 {% endblock %}
 
 {% block content %}
-    {% if g.user != None %}
-        <div class="hstack gap-3">
-            <a href="{{ url_for('projects.create') }}">New Project</a>
-            <a href="{{ url_for('posts.create') }}">New Post</a>
-    </div>
-    {% endif %}
     {% if projects|length > 0 %}
         {% include "projects/partial.html" %}
     {% endif %}

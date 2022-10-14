@@ -1,18 +1,48 @@
 <dl class="row">
     <dt class="col-sm-2">
         <p class="mb-0 pb-0">Projects</p>
+        <ul class="list-unstyled fw-normal">
+            <li>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="projectRadio" id="allRadio" checked>
+                    <label class="form-check-label" for="allRadio">
+                        <small>All projects</small>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="projectRadio" id="resumeRadio">
+                    <label class="form-check-label" for="resumeRadio">
+                        <small>Resume only</small>
+                    </label>
+                </div>                  
+            </li>
+            <li><small>Official PDF</small></li>
+        </ul>
     </dt>
     <dd class="col-sm-10">
-        <div class="row">
+        <div class="row" id="projects">
             {% for project in projects %}
-                <div class="col-12 col-md-6 {{ 'pb-3' if not loop.last }}">
-                    {% if project["public"] != true %}
-                        <span class="text-danger">(Private)</span>
-                    {% endif %}
-                    <a href="{{ url_for('projects.show', id=project['id'] )}}">{{ project['name'] }}</a>
-                    <p class="mb-0">{{ project['startdate'].strftime('%B, %Y') }} - {{ project['enddate'].strftime('%B, %Y') if project['enddate'] else 'Current'  }}</p>
+                <div data-resume="{{ project['onresume'] }}" class="col-12 {{ 'pb-3' if not loop.last }}">
+                    <div class="hstack gap-3 pt-0 mt-0">
+                        <div>
+                            {% if project["public"] != true %}
+                                <span class="text-danger">Private</span> | 
+                            {% endif %}
+                            <a href="{{ url_for('projects.show', id=project['id'] )}}" class="text-decoration-none"><b>{{ project['name'] }}</b></a>
+                        </div>
+                        <div class="ms-auto">
+                            <span>
+                                {% if project['link'] %}
+                                    <a href="{{ project['link'] }}">Link</a> | 
+                                {% endif %}
+                                {{ project['startdate'].strftime('%B %Y') }} - {{ project['enddate'].strftime('%B %Y') if project['enddate'] else 'Current'  }}
+                            </span>
+                        </div>
+                    </div>
+                    <p class="class="mb-0">{{ project["resume"] if not null }}</p>
                 </div>
             {% endfor %}
         </ul>
     </dd>
 </dl>
+<script src="{{ url_for('static', filename='js/resume.js') }}"></script>

@@ -45,16 +45,11 @@ def create_app(test_config=None):
     @app.route("/")
     def index():
         projects = get_projects()
-        #posts = execute(
-        #    "SELECT p.id, title, body, public, created, author_id, username"
-        #    " FROM posts p JOIN users u ON p.author_id = u.id"
-        #    " WHERE public IN %s"
-        #    " ORDER BY created DESC",
-        #    args=((True,) if g.user is None else (True, False),),
-        #    retmode=Count.SOME,
-        #    count=10
-        #)
-        #return render_template("index.html", projects=projects, posts=posts)
         return render_template("index.html", projects=projects, posts=[])
+
+    @app.route("/experimental")
+    def experimental():
+        projects = get_projects()
+        return render_template("experimental.html", projects=projects, posts=[])
     
     return app

@@ -26,10 +26,9 @@ body {
     padding: 25px;
     max-width: 60rem;
     height: 100%;
-
 }
 
-a {
+/*a {
     position: relative;
     color: #0d6efd;
     text-decoration: none;
@@ -54,7 +53,7 @@ a::before {
 
 a:hover::before {
     transform: scaleX(1);
-}
+}*/
 
 .accordion-button[aria-expanded=true] {
     color: #000000!important;

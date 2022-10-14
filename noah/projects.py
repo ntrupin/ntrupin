@@ -30,17 +30,19 @@ def create():
         deps = request.form.getlist("deps[]")
         platforms = request.form.getlist("platforms[]")
         images = request.files.getlist("images[]")
+        resume = request.form["resume"]
         about = request.form["about"]
         public = "public" in request.form
+        onresume = "onresume" in request.form
         if not name:
             error = "Name is required."
         if error is not None:
             flash(error)
         else:
             execute(
-                "INSERT INTO projects (name, startdate, enddate, link, langs, deps, platforms, images, about, public, author_id)"
-                " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                args=(name, startdate, enddate, link, langs, deps, platforms, [], about, public, g.user["id"])
+                "INSERT INTO projects (name, startdate, enddate, link, langs, deps, platforms, images, resume, about, public, onresume, author_id)"
+                " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                args=(name, startdate, enddate, link, langs, deps, platforms, [], resume, about, public, onresume, g.user["id"])
             )
             return redirect(url_for("projects.index"))
 
@@ -48,7 +50,7 @@ def create():
 
 def get_project(id, check_author=True):
     project = execute(
-        "SELECT p.id, name, startdate, enddate, link, about, langs, deps, platforms, images, public, created, author_id, username"
+        "SELECT p.id, name, startdate, enddate, link, resume, about, langs, deps, platforms, images, public, onresume, created, author_id, username"
         " FROM projects p JOIN users u ON p.author_id = u.id"
         " WHERE p.id = %s AND public IN %s",
         args=(id, (True,) if g.user is None else (True, False)),
@@ -62,7 +64,7 @@ def get_project(id, check_author=True):
 
 def get_projects(retmode = Count.ALL):
     return execute(
-        "SELECT p.id, name, startdate, enddate, link, about, langs, deps, platforms, images, public, created, author_id, username"
+        "SELECT p.id, name, startdate, enddate, link, resume, about, langs, deps, platforms, images, public, onresume, created, author_id, username"
         " FROM projects p JOIN users u ON p.author_id = u.id"
         " WHERE public IN %s"
         " ORDER BY enddate DESC NULLS FIRST, startdate DESC",
@@ -83,8 +85,10 @@ def update(id):
         deps = request.form.getlist("deps[]")
         platforms = request.form.getlist("platforms[]")
         images = request.files.getlist("images[]")
+        resume = request.form["resume"]
         about = request.form["about"]
         public = "public" in request.form
+        onresume = "onresume" in request.form
         error = None
         if not name:
             error = "Title is required"
@@ -92,9 +96,9 @@ def update(id):
             flash(error)
         else:
             execute(
-                "UPDATE projects SET name = %s, startdate = %s, enddate = %s, link = %s, langs = %s, deps = %s, platforms = %s, images = %s, about = %s, public = %s"
+                "UPDATE projects SET name = %s, startdate = %s, enddate = %s, link = %s, langs = %s, deps = %s, platforms = %s, images = %s, resume = %s, about = %s, public = %s, onresume = %s"
                 " WHERE ID = %s",
-                args=(name, startdate, enddate, link, langs, deps, platforms, [], about, public, id)
+                args=(name, startdate, enddate, link, langs, deps, platforms, [], resume, about, public, onresume, id)
             )
             return redirect(url_for("projects.show", id=id))
 

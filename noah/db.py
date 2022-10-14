@@ -7,7 +7,6 @@ from enum import Enum, auto
 import click
 from flask import current_app, g
 
-
 def get_db():
     if "db" not in g:
         g.db = psycopg2.connect(
@@ -23,13 +22,11 @@ def close_db(e=None):
     if db is not None:
         db.close()
 
-
 def init_db():
     db = get_db()
 
     with db.cursor() as curs, current_app.open_resource("schema.sql") as f:
         curs.execute(f.read().decode("utf8"))
-
 
 @click.command("init-db")
 def init_db_command():

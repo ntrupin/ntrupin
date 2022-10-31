@@ -21,9 +21,14 @@
             {% for message in get_flashed_messages() %}
                 <div class="flash">{{ message }}</div>
             {% endfor %}
-            {% if request.path != "/" %}
-                <a href="/">&#171; Home</a>
-            {% endif %}
+            <div class="hstack gap-2">
+                {% if request.path != "/" %}
+                    <a href="/">&#171; Home</a>
+                {% endif %}
+                <a href="{{ url_for('static', filename='pdf/trupinresume.pdf') }}" class="ms-auto">Resume</a>
+                <div>/</div>
+                <a href="https://github.com/ntrupin">GitHub</a>
+            </div>
             {% block header %}{% endblock %}
             <hr />
         </header>

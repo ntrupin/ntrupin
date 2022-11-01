@@ -1,7 +1,16 @@
-/*:root {
-    --bs-link-color: var(--bs-danger);
-    --bs-link-hover-color: #d91f12;
-}*/
+:root {
+    --bs-link-color: var(--root-color);
+    --bs-link-hover-color: var(--root-color);
+}
+
+:root .form-check-input:checked {
+    background-color: var(--root-color);
+    border-color: var(--root-color);
+}
+
+:root a:hover {
+    filter: brightness(85%);
+}
 
 html {
     scroll-behavior: smooth;

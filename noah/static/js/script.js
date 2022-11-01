@@ -4,5 +4,8 @@ const colors = [
     "--bs-green", "--bs-blue", "--bs-red", "--bs-purple", "--bs-pink"
 ];
 document.querySelector("#randomColor").addEventListener("click", (e) => {
-    document.documentElement.style = `--root-color: var(${colors[Math.floor(Math.random()*colors.length)]});`;
+    let ds = document.documentElement.getAttribute("style") ?? "";
+    const color = (ds.match(/(?<=\-\-root\-color\: var\().+?(?=\)\;)/g) ?? [""])[0];
+    const set = colors.filter(c => c != color);
+    document.documentElement.style = `--root-color: var(${set[Math.floor(Math.random()*set.length)]});`;
 });

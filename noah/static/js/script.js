@@ -6,7 +6,7 @@ const colors = [
 window.addEventListener('DOMContentLoaded', (_) => {
     document.querySelector("#randomColor").addEventListener("click", (_) => {
         let ds = document.documentElement.getAttribute("style") ?? "";
-        const color = (ds.match(/(?<=\-\-root\-color\: var\().+?(?=\)\;)/g) ?? [""])[0];
+        const color = ds.replace(/(\-\-root\-color\: var\(|\)\;)/g, "");
         const set = colors.filter(c => c != color);
         document.documentElement.style = `--root-color: var(${set[Math.floor(Math.random()*set.length)]});`;
     });

@@ -1,7 +1,7 @@
 hljs.highlightAll();
 
 const colors = [
-    "--bs-green", "--bs-blue", "--bs-red", "--bs-purple", "--bs-pink"
+    "--bs-green", "--bs-blue", "--bs-red", "--bs-purple", "--bs-cyan", "--bs-orange"
 ];
 document.querySelector("#randomColor").addEventListener("click", (e) => {
     let ds = document.documentElement.getAttribute("style") ?? "";

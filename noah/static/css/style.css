@@ -8,6 +8,16 @@
     border-color: var(--root-color);
 }
 
+:root .accordion-button:focus {
+    border-color: var(--root-color);
+    filter: brightness(125%);
+    box-shadow: none;
+}
+
+:root .accordion-button:after {
+    filter: brightness(0%);
+}
+
 :root a:hover {
     filter: brightness(85%);
 }

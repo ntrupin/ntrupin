@@ -51,5 +51,9 @@ def create_app(test_config=None):
     def experimental():
         projects = get_projects()
         return render_template("experimental.html", projects=projects, posts=[])
+
+    @app.route("/explorer")
+    def explorer():
+        return render_template("explorer/index.html")
     
     return app

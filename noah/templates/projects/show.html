@@ -18,12 +18,14 @@
             <div id="quickInfoCollapse" class="accordion-collapse collapse show" aria-labelledby="quickInfoTitle" data-bs-parent="#quickInfoCollapse">
                 <div class="accordion-body container">
                     <dl class="row">
-                        <dt class="col-sm-3">
-                            <p class="mb-0 pb-0">On Resume?</p>
-                        </dt>
-                        <dd class="col-sm-9">
-                            <p class="mb-0">{{ project["onresume"] }}</p>
-                        </dd>
+                        {% if g.user != None %}
+                            <dt class="col-sm-3">
+                                <p class="mb-0 pb-0">On Resume?</p>
+                            </dt>
+                            <dd class="col-sm-9">
+                                <p class="mb-0">{{ project["onresume"] }}</p>
+                            </dd>
+                        {% endif %}
                         <dt class="col-sm-3">
                             <p class="mb-0 pb-0">Date</p>
                         </dt>

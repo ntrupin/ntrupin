@@ -42,7 +42,7 @@ def create():
         else:
             execute(
                 "INSERT INTO projects (name, startdate, enddate, link, langs, deps, platforms, images, resume, about, public, onresume, favorite, author_id)"
-                " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 args=(name, startdate, enddate, link, langs, deps, platforms, [], resume, about, public, onresume, favorite, g.user["id"])
             )
             return redirect(url_for("projects.index"))

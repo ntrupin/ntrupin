@@ -4,9 +4,9 @@
         <ul class="list-unstyled fw-normal">
             <li>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="projectRadio" id="allRadio" checked>
-                    <label class="form-check-label" for="allRadio">
-                        <small>All projects</small>
+                    <input class="form-check-input" type="radio" name="projectRadio" id="defaultRadio" checked>
+                    <label class="form-check-label" for="defaultRadio">
+                        <small>Projects</small>
                     </label>
                 </div>
                 <!--<div class="form-check">
@@ -18,21 +18,36 @@
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="projectRadio" id="resumeRadio">
                     <label class="form-check-label" for="resumeRadio">
-                        <small>CV only</small>
+                        <small>On CV</small>
                     </label>
-                </div>                  
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="projectRadio" id="archivedRadio">
+                    <label class="form-check-label" for="archivedRadio">
+                        <small>Archived</small>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="projectRadio" id="allRadio">
+                    <label class="form-check-label" for="allRadio">
+                        <small>All</small>
+                    </label>
+                </div>                   
             </li>
-            <li><small><a href="{{ url_for('static', filename='pdf/trupinresume.pdf') }}">CV PDF</a></small></li>
+            {# <li><small><a href="{{ url_for('static', filename='pdf/trupinresume.pdf') }}">CV PDF</a></small></li> #}
         </ul>
     </dt>
     <dd class="col-sm-10">
         <div class="row" id="projects">
             {% for project in projects %}
-                <div class="col-12 {{ 'pb-3' if not loop.last }}" data-resume="{{ project['onresume'] }}" data-favorite="{{ project['favorite'] }}">
+                <div class="col-12 {{ 'pb-3' if not loop.last }} {{ 'd-none' if project['archived']}}" data-resume="{{ project['onresume'] }}" data-favorite="{{ project['favorite'] }}" data-archived="{{ project['archived'] }}">
                     <div class="hstack gap-3 pt-0 mt-0">
                         <div>
                             {% if project["public"] != true %}
                                 <span class="text-danger">Private</span> | 
+                            {% endif %}
+                            {% if project["archived"] == true %}
+                                <span class="text-warning">Archived</span> | 
                             {% endif %}
                             <a href="{{ url_for('projects.show', id=project['id'] )}}" class="text-decoration-none"><b>{{ project['name'] }}</b></a>
                         </div>

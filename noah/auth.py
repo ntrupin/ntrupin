@@ -1,3 +1,7 @@
+# inspired by https://flask.palletsprojects.com/en/2.3.x/tutorial/views/
+
+import functools
+
 import functools
 
 from flask import (
@@ -6,10 +10,11 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 import click
 
-from noah.db import get_db, execute, Count
+from noah.db import execute, get_db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
+# register a new user
 @click.command("add-user")
 @click.argument("username")
 @click.argument("password")
@@ -18,24 +23,25 @@ def add_user_command(username, password):
     try:
         execute(
             "INSERT INTO users (username, password) VALUES (%s, %s)",
-            args=(username, generate_password_hash(password))
+            args=[username, generate_password_hash(password)]
         )
     except db.IntegrityError:
         click.echo(f"User {username} is already registered.")
     else:
         click.echo(f"Successfully added {username} to database.")
 
+# on get, render login
+# on post, process provided information
 @bp.route("/login", methods=("GET", "POST"))
 def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
         error = None
-        user = execute(
+        user = (execute(
             "SELECT * FROM users WHERE username = %s", 
-            args=(username,),
-            retmode=Count.ONE
-        )
+            args=[username]
+        ) + [None])[0]
         if user is None:
             error = "Incorrect username."
         elif not check_password_hash(user["password"], password):
@@ -50,6 +56,7 @@ def login():
 
     return render_template("auth/login.html")
 
+# check if user logged in
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get("user_id")
@@ -59,15 +66,16 @@ def load_logged_in_user():
     else:
         g.user = execute(
             "SELECT * FROM users WHERE id = %s", 
-            args=(user_id,),
-            retmode=Count.ONE
-        )
+            args=[user_id]
+        )[0]
 
+# log out, clear session
 @bp.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("index"))
 
+# helper decorator, protect view
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):

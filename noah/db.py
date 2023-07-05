@@ -1,57 +1,49 @@
-import os
 import psycopg2
 import psycopg2.extras
-from functools import partial
-from enum import Enum, auto
 
 import click
+import flask
 from flask import current_app, g
 
+# fetch current db
+# connects to db if no connection active
 def get_db():
     if "db" not in g:
         g.db = psycopg2.connect(
-            os.environ['DATABASE_URL']
+            current_app.config["DB_URL"]
         )
         g.db.autocommit = True
     return g.db
 
-
+# close connection if exists
 def close_db(e=None):
     db = g.pop("db", None)
-
     if db is not None:
         db.close()
 
+# init db using schema
 def init_db():
-    db = get_db()
+    db = get_db() 
+    with current_app.open_resource("schema.sql") as f:
+        execute(f.read.decode("utf8"))
 
-    with db.cursor() as curs, current_app.open_resource("schema.sql") as f:
-        curs.execute(f.read().decode("utf8"))
-
+# click command for init_db
 @click.command("init-db")
 def init_db_command():
-    """Clear the existing data and create new tables."""
     init_db()
-    click.echo("Initialized the database.")
+    click.echo("database initialized")
 
-def init_app(app):
+# register teardown and click command
+def init_app(app: flask.Flask):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
 
-class Count(Enum):
-    NONE = auto()
-    ONE = auto()
-    SOME = auto()
-    ALL = auto()
-
-def execute(cmd, args=None, retmode=Count.NONE, count=0):
+# db query helper 
+def execute(cmd: str, args: list[any] = []):
     db = get_db()
     with db.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as curs:
-        (lambda x: x() if args is None else x(args))(partial(curs.execute, cmd))
-        return ({
-            Count.ONE: curs.fetchone, 
-            Count.SOME: lambda: curs.fetchmany(count),
-            Count.ALL: curs.fetchall,
-            Count.NONE: lambda: None
-        }[retmode]())
-
+        curs.execute(cmd, args)
+        if curs.description is not None:
+            return curs.fetchall()
+        return None
+    

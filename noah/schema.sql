@@ -18,23 +18,14 @@ CREATE TABLE posts (
     FOREIGN KEY (author_id) REFERENCES users (id)
 );
 
-CREATE TABLE projects (
+create table projects (
     id SERIAL PRIMARY KEY,
     author_id INTEGER NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     name TEXT NOT NULL,
-    resume TEXT,
-    startdate TIMESTAMP NOT NULL,
-    enddate TIMESTAMP NOT NULL,
-    link TEXT DEFAULT '.',
-    about TEXT NOT NULL,
-    langs TEXT[],
-    deps TEXT[],
-    platforms TEXT[],
-    images TEXT[],
-    public BOOLEAN DEFAULT FALSE,
-    onresume BOOLEAN DEFAULT FALSE,
-    favorite BOOLEAN DEFAULT FALSE,
-    archived BOOLEAN DEFAULT FALSE,
+    startdate TIMESTAMP,
+    enddate TIMESTAMP,
+    content TEXT NOT NULL,
+    public BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (author_id) REFERENCES users (id)
 );

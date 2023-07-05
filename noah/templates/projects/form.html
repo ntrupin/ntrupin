@@ -1,102 +1,21 @@
 {% macro form_for(object) %}
     <form method="post">
-        <div class="mb-3">
-            <label for="name">Name</label>
-            <input class="form-control" name="name" id="name" value="{{ object['name'] }}" required />
-        </div>
+        <label for="name">Name</label>
+        <input name="name" id="name" value="{{ object['name'] }}" required />
 
-        <div class="mb-3">
-            <label for="startdate">Start Date</label>
-            <input class="form-control" name="startdate" id="startdate" type="date" value="{{ (object['startdate'].strftime('%Y-%m-%d')) if object['startdate'] else '' }}" required />
-        </div>
+        <label for="startdate">Start Date</label>
+        <input name="startdate" id="startdate" type="date" value="{{ (object['startdate'].strftime('%Y-%m-%d')) if object['startdate'] else '' }}" />
 
+        <label for="enddate">End Date</label>
+        <input name="enddate" id="enddate" type="date" value="{{ (object['enddate'].strftime('%Y-%m-%d')) if object['enddate'] else '' }}" />
 
-        <div class="mb-3">
-            <label for="enddate">End Date</label>
-            <input class="form-control" name="enddate" id="enddate" type="date" value="{{ (object['enddate'].strftime('%Y-%m-%d')) if object['enddate'] else '' }}" />
-        </div>
+        <label for="content">Content</label>
+        <textarea name="content" id="content">{{ object['content'] }}</textarea>
 
-        <div class="mb-3">
-            <label for="link">Link</label>
-            <input class="form-control" name="link" id="link" value="{{ object['link'] }}" />
-        </div>
-
-        <div class="mb-3">
-            <label for="langs">Langs</label>
-            <div class="input-group" id="langs-group">
-                {% for lang in object['langs'] %}
-                    <input class="form-control" name="langs[]" value="{{ lang }}" />
-                {% endfor %}
-            </div>
-            <div class="btn-group" role="group">
-                <button id="langs-remove" type="button" class="btn btn-sm btn-outline-danger">-</button>
-                <button id="langs-add" type="button" class="btn btn-sm btn-outline-success">+</button>
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label for="deps">Dependencies</label>
-            <div class="input-group" id="deps-group">
-                {% for dep in object['deps'] %}
-                    <input class="form-control" name="deps[]" value="{{ dep }}" />
-                {% endfor %}   
-            </div>
-            <div class="btn-group" role="group">
-                <button id="deps-remove" type="button" class="btn btn-sm btn-outline-danger">-</button>
-                <button id="deps-add" type="button" class="btn btn-sm btn-outline-success">+</button>
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label for="platforms">Platforms</label>
-            <div class="input-group" id="platforms-group">
-                {% for platform in object['platforms'] %}
-                    <input class="form-control" name="platforms[]" value="{{ platform }}" />
-                {% endfor %}   
-            </div>
-            <div class="btn-group" role="group">
-                <button id="platforms-remove" type="button" class="btn btn-sm btn-outline-danger">-</button>
-                <button id="platforms-add" type="button" class="btn btn-sm btn-outline-success">+</button>
-            </div>  
-        </div>
-
-        <div class="mb-3">
-            <label for="images">Images</label>
-            <input class="form-control" type="file" name="images[]" id="images" multiple />
-        </div>
-
-        <div class="mb-3">
-            <label for="resume">Resume Entry</label>
-            <textarea class="form-control" name="resume" id="resume">{{ object['resume'] }}</textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="about">About</label>
-            <textarea class="form-control" name="about" id="about">{{ object['about'] }}</textarea>
-        </div>
-
-        <div class="form-group form-check mb-3">
-            <input type="checkbox" class="form-check-input" name="public" id="public" {{ "checked" if object["public"] == true }} />
-            <label class="form-check-label" for="public">Public</label>
-        </div>
-
-        <div class="form-group form-check mb-3">
-            <input type="checkbox" class="form-check-input" name="onresume" id="onresume" {{ "checked" if object["onresume"] == true }} />
-            <label class="form-check-label" for="onresume">Resume</label>
-        </div>
-
-        <div class="form-group form-check mb-3">
-            <input type="checkbox" class="form-check-input" name="favorite" id="favorite" {{ "checked" if object["favorite"] == true }} />
-            <label class="form-check-label" for="favorite">Favorite</label>
-        </div>
-
-        <div class="form-group form-check mb-3">
-            <input type="checkbox" class="form-check-input" name="archived" id="archived" {{ "checked" if object["archived"] == true }} />
-            <label class="form-check-label" for="archived">Archived</label>
-        </div>
+        <input type="checkbox" name="public" id="public" {{ "checked" if object["public"] == true }} />
+        <label for="public">Public</label>
     
-        <input type="submit" value="Save" class="btn btn-link" />
+        <input type="submit" value="Save" />
     </form>
-    <input id="ref-el" class="form-control d-none" name="" value="" /> 
     <script src="{{ url_for('static', filename='js/project.js') }}"></script>
 {% endmacro %}

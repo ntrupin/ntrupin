@@ -32,6 +32,26 @@
                     <li><a href="/projects">Projects</a></li>
                     <li><a href="/about">About Me</a></li>
                 </ul>
+            </nav>
+        </header>
+        <section class="sidebar">
+            <hgroup class="sidebar_full">
+                <img src="{{ url_for('static', filename='images/noah.jpeg') }}" class="headshot" />
+                <h4>Noah Trupin</h4>
+                <p><small>Undergrad CS @ Purdue</small></p>
+            </hgroup>
+            <nav class="sidebar_collapsed">
+                <ul>
+                    <li>
+                        <img src="{{ url_for('static', filename='images/noah.jpeg') }}" class="headshot" />
+                    </li>
+                    <li>
+                        <hgroup style="margin-top:24px">
+                            <h4>Noah Trupin</h4>
+                            <p><small>Undergrad CS @ Purdue</small></p>
+                        </hgroup>
+                    </li>
+                </ul>
                 <ul class="nav_menu">
                     <li>
                         <details role="list" dir="rtl">
@@ -41,26 +61,23 @@
                             <ul role="listbox">
                                 <li><a href="/projects">Projects</a></li>
                                 <li><a href="/about">About Me</a></li>
+                                <li><a href="https://github.com/ntrupin">GitHub</a></li>
+                                <li><a href="https://linkedin.com/in/ntrupin">LinkedIn</a></li>
+                                <li><a href="https://twitter.com/ntrupin">Twitter</a></li>
+                                <li><a href="{{ url_for('static', filename='files/trupin_resume.pdf') }}">Resume</a></li>
                             </ul>
                         </details>
                     </li>
                 </ul>
             </nav>
-        </header>
-        <section class="sidebar">
-            <hgroup>
-                <img src="{{ url_for('static', filename='images/noah.jpeg') }}" class="headshot" />
-                <h4>Noah Trupin</h4>
-                <small>Undergrad CS @ Purdue</small>
-                <nav>
-                    <ul>
-                        <li><a href="https://github.com/ntrupin"><img src="{{ url_for('static', filename='images/github.svg') }}" class="svg_link" /></a></li>
-                        <li><a href="https://linkedin.com/in/ntrupin"><img src="{{ url_for('static', filename='images/linkedin.svg') }}" class="svg_link" /></a></li>
-                        <li><a href="https://twitter.com/ntrupin"><img src="{{ url_for('static', filename='images/twitter.svg') }}" class="svg_link" /></a></li>
-                        <li><a href="{{ url_for('static', filename='files/trupin_resume.pdf') }}">Resume</a></li>
-                    </ul>
-                </nav>
-            </hgroup>
+            <nav class="sidebar_links">
+                <ul>
+                    <li><a href="https://github.com/ntrupin"><img src="{{ url_for('static', filename='images/github.svg') }}" class="svg_link" /></a></li>
+                    <li><a href="https://linkedin.com/in/ntrupin"><img src="{{ url_for('static', filename='images/linkedin.svg') }}" class="svg_link" /></a></li>
+                    <li><a href="https://twitter.com/ntrupin"><img src="{{ url_for('static', filename='images/twitter.svg') }}" class="svg_link" /></a></li>
+                    <li><a href="{{ url_for('static', filename='files/trupin_resume.pdf') }}">Resume</a></li>
+                </ul>
+            </nav>
         </section>
         <main class="content">
             {% block content %}{% endblock %}

@@ -9,6 +9,6 @@
 {% block content %}
     {{ form_for(request.form if request.form else project) }}
     <form action="{{ url_for('projects.delete', id=project['id']) }}" method="post">
-        <input type="submit" value="Delete" onclick="return confirm('Are you sure?');" class="btn btn-link" />
+        <input type="submit" value="Delete" onclick="return confirm('Are you sure?');" />
     </form>
 {% endblock %}

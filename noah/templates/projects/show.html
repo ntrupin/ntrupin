@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>PROJECT</h1>
+    <hgroup>
+        <h1>{{ project["name"] }}</h1>
+        <p>
+            {% if project["startdate"] != None %}
+                <small>{{ project["startdate"].strftime('%B, %Y') }} - {{ project["enddate"].strftime('%B, %Y') if project["enddate"] != None else "Current" }}</small>
+            {% endif %}
+        </p>
+    </hgroup>
+    <div>
+        {{ project["content"]|safe }}
+    </div>
+    <div>
+        {% if g.user['id'] == project['author_id'] %}
+            <a href="{{ url_for('projects.update', id=project['id']) }}">Edit</a>
+        {% endif %}
+    </div>
 {% endblock %}

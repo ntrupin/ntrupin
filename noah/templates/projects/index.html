@@ -4,7 +4,16 @@
     <h3>Projects</h3>
     <ul>
         {% for project in projects %}
-            <li>{{ project.name }}</li>
+            <li>
+                <hgroup>
+                    <a href="{{ url_for('projects.show', id=project.id) }}"><i>{{ project.name }}</i></a>
+                    <p>
+                        {% if project["startdate"] != None %}
+                            <small>{{ project["startdate"].strftime('%B, %Y') }} - {{ project["enddate"].strftime('%B, %Y') if project["enddate"] != None else "Current" }}</small>
+                        {% endif %}
+                    </p>
+                </hgroup>
+            </li>
         {% endfor %}
     </ul>
 {% endblock %}

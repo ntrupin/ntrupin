@@ -1,60 +1,9 @@
 {% extends "base.html" %}
 
-{% block header %}
-    {% if g.user != None %}
-    <div class="hstack gap-3">
-        <a href="{{ url_for('projects.create') }}">New Project</a>
-        <a href="{{ url_for('posts.create') }}">New Post</a>
-    </div>
-    {% endif %}
-    <h1>{% block title %}Noah Trupin{% endblock %}</h1>
-    <p>CS @ Purdue | Under construction.</p>
-    <!--<p>Hi &#8212; I'm Noah, a student with a passion for <b><a class="text-decoration-none" href="{{ url_for('projects.show', id=10) }}">programming languages</a></b> and <b><a class="text-decoration-none" href="{{ url_for('projects.show', id=4) }}">environmental research and analysis</a></b>.</p>
-    <p>This site hosts information on my projects, pieces of my writing, and more.</p>-->
-{% endblock %}
-
 {% block content %}
-    <dl class="row">
-        <dt class="col-sm-2">
-            <p class="mb-0 pb-0">Recent Projects</p>
-            <ul class="list-unstyled fw-normal">
-                <li>
-                    <small>{{ [3, projects|length]|min }} of {{ projects|selectattr("archived", "equalto", False)|list|length }} current, {{ projects|selectattr("archived", "equalto", True)|list|length }} archived</small></li>
-                <li>
-                    <small><a href="/projects">View all</a></small>
-                </li>
-            </ul>
-        </dt>
-        <dd class="col-sm-10">
-            <div class="row" id="projects">
-                {% for project in projects[0:[3, projects|length]|min] %}
-                    <div class="col-12 {{ 'pb-3' if not loop.last }}" data-resume="{{ project['onresume'] }}" data-favorite="{{ project['favorite'] }}">
-                        <div class="hstack gap-3 pt-0 mt-0">
-                            <div>
-                                {% if project["public"] != true %}
-                                    <span class="text-danger">Private</span> | 
-                                {% endif %}
-                                {% if project["archived"] == true %}
-                                    <span class="text-warning">Archived</span> | 
-                                {% endif %}
-                                <a href="{{ url_for('projects.show', id=project['id'] )}}" class="text-decoration-none"><b>{{ project['name'] }}</b></a>
-                            </div>
-                            <div class="ms-auto">
-                                <span>
-                                    {% if project['link'] %}
-                                        <a href="{{ project['link'] }}">Link</a> | 
-                                    {% endif %}
-                                    {{ project['startdate'].strftime('%B %Y') }} - {{ project['enddate'].strftime('%B %Y') if project['enddate'] else 'Current'  }}
-                                </span>
-                            </div>
-                        </div>
-                        <p class="class="mb-0">{{ project["resume"] if not null }}</p>
-                    </div>
-                {% endfor %}
-            </ul>
-        </dd>
-    </dl>
-    {% if posts|length > 0 %}
-        {% include "posts/partial.html" %}
-    {% endif %}
+    <h3>Home</h3>
+    <p>Welcome to my website! Here serves to showcase my writings, projects, and other odds and ends I find interesting.</p>
+    <h3>About this site</h3>
+    <p>This site is written in <b>Python</b> using the <b>Flask</b> web framework with <b>Jinja2</b> for templating, <b>PostgreSQL</b> as its database, and <b>Werkzeug</b> for authentication. The frontend uses vanilla <b>HTML/CSS/JavaScript</b> with <b>Pico.css</b> for base styling. I currently host the database on <b>Heroku</b> and the client/server on <b>Vercel</b>. <b>GitHub CI/CD</b> manages deployment from <a href="https://github.com/ntrupin/website"><b>this GitHub repository</b></a>.</p>
+    <p>Started as a static site hosted on GitHub Pages in 2017, ntrupin.com now serves as a dynamic hub for my projects, writing, and more.</p>
 {% endblock %}

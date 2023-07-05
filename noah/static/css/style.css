@@ -51,6 +51,8 @@ details[role=list] summary::after, li[role=list]>a::after {
 
 .sidebar_collapsed {
     background-color: white;
+    margin-left: -10px;
+    margin-right: -10px;
 }
 
 .sidebar_links {

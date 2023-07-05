@@ -2,12 +2,13 @@
 <html style="--root-color: var(--bs-blue);" lang="en" data-bs-theme="light">
 <head>
     {% block head %}
-        <link rel="preload" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" crossorigin="anonymous" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
-        <link rel="preload" href="{{ url_for('static', filename='css/style.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+        <!--<link rel="preload" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" crossorigin="anonymous" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+        <link rel="preload" href="{{ url_for('static', filename='css/style.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'" />-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+        <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css" crossorigin="anonymous" as="style" onload="this.onload=null;this.rel='stylesheet'" />
         <noscript>
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
-            <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
         </noscript>
         <title>{% block title %}{% endblock %}</title>
         <meta charset="utf-8" />
@@ -35,15 +36,32 @@
             </nav>
         </header>
         <section class="sidebar">
-            <hgroup class="sidebar_full">
-                <img src="{{ url_for('static', filename='images/noah.jpeg') }}" class="headshot" />
-                <h4>Noah Trupin</h4>
-                <p><small>Undergrad CS @ Purdue</small></p>
-            </hgroup>
+            <div class="sidebar_full">
+                <hgroup class="sidebar_full">
+                    <img alt="Noah Trupin" src="{{ url_for('static', filename='images/noah.jpeg') }}" class="headshot" />
+                    <h4>Noah Trupin</h4>
+                    <p style="margin-bottom:0;"><small>Undergrad CS @ Purdue</small></p>
+                </hgroup>
+                <div class="sidebar_links grid">
+                    <div>
+                        <nav>
+                            <ul>
+                                <li style="padding:10px;"><a href="https://github.com/ntrupin"><img alt="GitHub Logo" src="{{ url_for('static', filename='images/github.svg') }}" class="svg_link" /></a></li>
+                                <li style="padding:10px;"><a href="https://linkedin.com/in/ntrupin"><img alt="LinkedIn Logo" src="{{ url_for('static', filename='images/linkedin.svg') }}" class="svg_link" /></a></li>
+                                <li style="padding:10px;"><a href="https://twitter.com/ntrupin"><img alt="Twitter Logo" src="{{ url_for('static', filename='images/twitter.svg') }}" class="svg_link" /></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div>
+                        <div><a href="{{ url_for('static', filename='files/trupin_resume.pdf') }}">Resume</a></div>
+                    </div>
+                </div>
+                <hr style="width:80%;margin-left:0px;" />
+            </div>
             <nav class="sidebar_collapsed">
                 <ul>
                     <li>
-                        <img src="{{ url_for('static', filename='images/noah.jpeg') }}" class="headshot" />
+                        <img alt="Noah Trupin" src="{{ url_for('static', filename='images/noah.jpeg') }}" class="headshot" />
                     </li>
                     <li>
                         <hgroup style="margin-top:24px">
@@ -55,12 +73,12 @@
                 <ul class="nav_menu">
                     <li>
                         <details role="list" dir="rtl">
-                            <summary aria-haspopup="listbox" role="link">
+                            <summary aria-haspopup="listbox" role="link listitem">
                                 <img src="{{ url_for('static', filename='images/bars-solid.svg') }}" width="24px" height="24px" />
                             </summary>
-                            <ul role="listbox">
-                                <li><a href="/projects">Projects</a></li>
-                                <li><a href="/about">About Me</a></li>
+                            <ul role="listbox listitem">
+                                <li><a href="{{ url_for('projects.index') }}">Projects</a></li>
+                                <li><a href="{{ url_for('about') }}">About Me</a></li>
                                 <li><a href="https://github.com/ntrupin">GitHub</a></li>
                                 <li><a href="https://linkedin.com/in/ntrupin">LinkedIn</a></li>
                                 <li><a href="https://twitter.com/ntrupin">Twitter</a></li>
@@ -68,14 +86,6 @@
                             </ul>
                         </details>
                     </li>
-                </ul>
-            </nav>
-            <nav class="sidebar_links">
-                <ul>
-                    <li><a href="https://github.com/ntrupin"><img src="{{ url_for('static', filename='images/github.svg') }}" class="svg_link" /></a></li>
-                    <li><a href="https://linkedin.com/in/ntrupin"><img src="{{ url_for('static', filename='images/linkedin.svg') }}" class="svg_link" /></a></li>
-                    <li><a href="https://twitter.com/ntrupin"><img src="{{ url_for('static', filename='images/twitter.svg') }}" class="svg_link" /></a></li>
-                    <li><a href="{{ url_for('static', filename='files/trupin_resume.pdf') }}">Resume</a></li>
                 </ul>
             </nav>
         </section>
@@ -89,7 +99,7 @@
             {% endblock %}
         </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

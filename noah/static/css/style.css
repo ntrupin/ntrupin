@@ -13,6 +13,7 @@ textarea {
 .headshot {
     max-width: 100px;
     clip-path: circle();
+    aspect-ratio: 1 / 1;
 }
 
 .nav {
@@ -43,10 +44,12 @@ details[role=list] summary::after, li[role=list]>a::after {
     position:sticky;
     position:-webkit-sticky;
     top: 0;
+    max-height: 95vh;
 }
 
 .sidebar_full {
     display: none;
+    margin-bottom: 0.5rem;
 }
 
 .sidebar_collapsed {
@@ -55,8 +58,8 @@ details[role=list] summary::after, li[role=list]>a::after {
     margin-right: -10px;
 }
 
-.sidebar_links {
-    display: none;
+.sidebar_list > li {
+    font-size: 0.8em;
 }
 
 @media (min-width: 768px) {

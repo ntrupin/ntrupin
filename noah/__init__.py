@@ -31,6 +31,9 @@ def create_app() -> Flask:
     from . import projects
     app.register_blueprint(projects.bp)
 
+    from . import rss
+    app.register_blueprint(rss.bp)
+
     @app.route("/")
     def index():
         return render_template("index.html")

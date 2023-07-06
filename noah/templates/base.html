@@ -25,13 +25,13 @@
             <nav class="nav">
                 <ul>
                     {% if request.path != "/" %}
-                        <li><a href="/">Home</a></li>
+                        <li><a href="{{ url_for('index') }}">Home</a></li>
                     {% endif %}
                 </ul>
                 <ul></ul>
                 <ul class="nav_items">
-                    <li><a href="/projects">Projects</a></li>
-                    <li><a href="/about">About Me</a></li>
+                    <li><a href="{{ url_for('projects.index') }}">Projects and Research</a></li>
+                    <li><a href="{{ url_for('about') }}">About Me</a></li>
                 </ul>
             </nav>
         </header>
@@ -61,7 +61,9 @@
             <nav class="sidebar_collapsed">
                 <ul>
                     <li>
-                        <img alt="Noah Trupin" src="{{ url_for('static', filename='images/noah.jpeg') }}" class="headshot" />
+                        <a href="{{ url_for('index') }}">
+                            <img alt="Noah Trupin" src="{{ url_for('static', filename='images/noah.jpeg') }}" class="headshot" />
+                        </a>
                     </li>
                     <li>
                         <hgroup style="margin-top:24px">
@@ -77,10 +79,14 @@
                                 <img src="{{ url_for('static', filename='images/bars-solid.svg') }}" width="24px" height="24px" />
                             </summary>
                             <ul role="listbox listitem">
-                                <li><a href="{{ url_for('projects.index') }}">Projects</a></li>
+                                {% if request.path != "/" %}
+                                <li><a href="{{ url_for('index') }}">Home</a></li>
+                                {% endif %}
+                                <li><a href="{{ url_for('projects.index') }}">Projects and Research</a></li>
                                 <li><a href="{{ url_for('about') }}">About Me</a></li>
                                 <li><a href="https://github.com/ntrupin">GitHub</a></li>
                                 <li><a href="https://linkedin.com/in/ntrupin">LinkedIn</a></li>
+                                <li><a href="https://www.threads.net/@ntrupin">Threads</a></li>
                                 <li><a href="https://twitter.com/ntrupin">Twitter</a></li>
                                 <li><a href="{{ url_for('static', filename='files/trupin_resume.pdf') }}">Resume</a></li>
                             </ul>
@@ -95,7 +101,7 @@
         <footer class="footer">
             <!--<hr />-->
             {% block footer %}
-                &copy; 2017-{{ now.year }} <a href="/">Noah Trupin</a>.
+                &copy; 2018-{{ now.year }} <a href="/">Noah Trupin</a>.
             {% endblock %}
         </footer>
     </div>

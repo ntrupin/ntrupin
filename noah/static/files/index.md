@@ -1,4 +1,4 @@
-Assorted CS-related happenings.
+Assorted CS-related happenings. Most recent at the top.
 
 ##### 2023
 - Deployed Sentinel on all screens throughout Lawrenceville's Kirby Math and Science Center.

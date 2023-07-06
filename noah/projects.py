@@ -59,13 +59,13 @@ def update(id):
                 " WHERE ID = %s",
                 args=[name, startdate, enddate, content, public, id]
             )
-            return redirect(url_for("projects.index"))
+            return redirect(url_for("projects.show", id=id))
     return render_template("projects/update.html", project=project)
 
 @bp.route("/<int:id>", methods=["GET"])
 def show(id):
     project = dict(get_project(id))
-    project["content"] = markdown.markdown(project["content"], extensions=["fenced_code", "tables", "nl2br"])
+    project["content"] = markdown.markdown(project["content"], extensions=["fenced_code", "tables", "nl2br", "toc"])
     return render_template("projects/show.html", project=project)
 
 @bp.route("/<int:id>/delete", methods=["POST"])

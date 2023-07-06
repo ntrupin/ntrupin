@@ -2,6 +2,7 @@
 
 {% block content %}
     <hgroup>
+        <a href="{{ url_for('projects.index') }}">All Projects and Research</a>
         <h1>{{ project["name"] }}</h1>
         <p>
             {% if project["startdate"] != None %}

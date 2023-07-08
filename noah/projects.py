@@ -1,10 +1,12 @@
 import markdown
 from flask import (
-    Blueprint, request, render_template, flash, redirect, url_for, g
+    Blueprint, request, render_template, flash, redirect, url_for, g, abort
 )
 
 from noah.auth import login_required
 from noah.db import execute
+
+from psycopg2.extras import RealDictRow
 
 bp = Blueprint("projects", __name__, url_prefix="/projects")
 
@@ -65,6 +67,8 @@ def update(id):
 @bp.route("/<int:id>", methods=["GET"])
 def show(id):
     project = dict(get_project(id))
+    if len(project) == 0:
+        abort(404, description="Project not found.")
     project["content"] = markdown.markdown(project["content"], extensions=["fenced_code", "tables", "nl2br", "toc"])
     return render_template("projects/show.html", project=project)
 
@@ -75,17 +79,18 @@ def delete(id):
     return redirect(url_for("projects.index"))
 
 def get_project(id):
-    return execute(
+    return (execute(
         "SELECT p.id, name, startdate, enddate, content, public, created, author_id, username"
         " FROM projects p JOIN users u ON p.author_id = u.id"
-        " WHERE p.id = %s AND public IN %s",
-        args=[id, (True,) if g.user is None else (True, False)]
-    )[0]
+        " WHERE p.id = %s AND (p.author_id = %s OR public IS TRUE)",
+        args=[id, (g.user or {"id": None})["id"]]
+    ) or [RealDictRow()])[0]
 
 def get_projects():
     return execute(
         "SELECT p.id, name, startdate, enddate, content, public, created, author_id, username"
         " FROM projects p JOIN users u ON p.author_id = u.id"
-        " WHERE public IS TRUE"
-        " ORDER BY enddate DESC NULLS FIRST, startdate DESC"
+        " WHERE public IS TRUE OR p.author_id = %s"
+        " ORDER BY enddate DESC NULLS FIRST, startdate DESC",
+        args=[(g.user or {"id": None})["id"]]
     )

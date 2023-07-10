@@ -27,5 +27,6 @@ create table projects (
     enddate TIMESTAMP,
     content TEXT NOT NULL,
     public BOOLEAN NOT NULL DEFAULT FALSE,
+    pinned BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (author_id) REFERENCES users (id)
 );

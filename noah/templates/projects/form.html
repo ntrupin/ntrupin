@@ -14,6 +14,9 @@
 
         <input type="checkbox" name="public" id="public" {{ "checked" if object["public"] == true }} />
         <label for="public">Public</label>
+
+        <input type="checkbox" name="pinned" id="pinned" {{ "checked" if object["pinned"] == true }} />
+        <label for="pinned">Pinned</label>
     
         <input type="submit" value="Save" />
     </form>

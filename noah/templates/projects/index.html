@@ -8,7 +8,21 @@
         <p><a href="{{ url_for('projects.create') }}">New Project</a></p>
     {% endif %}
     <ul>
-        {% for project in projects %}
+        {% for project in projects if project["pinned"] %}
+            <li class="pinned">
+                <hgroup>
+                    <a href="{{ url_for('projects.show', id=project.id) }}">
+                        {% if not project.public %}<mark>Private</mark> {% endif %}<i>{{ project.name }}</i>
+                    </a>
+                    <p>
+                        {% if project["startdate"] != None %}
+                            <small>{{ project["startdate"].strftime('%B, %Y') }} - {{ project["enddate"].strftime('%B, %Y') if project["enddate"] != None else "Current" }}</small>
+                        {% endif %}
+                    </p>
+                </hgroup>
+            </li>
+        {% endfor %}
+        {% for project in projects if not project["pinned"] %}
             <li>
                 <hgroup>
                     <a href="{{ url_for('projects.show', id=project.id) }}">

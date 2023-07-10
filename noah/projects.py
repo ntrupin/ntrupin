@@ -25,6 +25,7 @@ def create():
         enddate = request.form["enddate"]  if request.form["enddate"] != "" else None
         content = request.form["content"] or "..."
         public = "public" in request.form
+        pinned = "pinned" in request.form
         if not name:
             error = "Name is required"
         if error is not None:
@@ -32,9 +33,9 @@ def create():
         else:
             print(g.user["id"])
             execute(
-                "INSERT INTO projects (name, startdate, enddate, content, public, author_id)"
-                " VALUES (%s, %s, %s, %s, %s, %s)",
-                args=[name, startdate, enddate, content, public, g.user["id"]]
+                "INSERT INTO projects (name, startdate, enddate, content, public, pinned, author_id)"
+                " VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                args=[name, startdate, enddate, content, public, pinned, g.user["id"]]
             )
             return redirect(url_for("projects.index"))
     return render_template("projects/create.html")
@@ -50,16 +51,16 @@ def update(id):
         enddate = request.form["enddate"]  if request.form["enddate"] != "" else None
         content = request.form["content"] or "..."
         public = "public" in request.form
+        pinned = "pinned" in request.form
         if not name:
             error = "Name is required"
         if error is not None:
             flash(error)
         else:
-            print(g.user["id"])
             execute(
-                "UPDATE projects SET name = %s, startdate = %s, enddate = %s, content = %s, public = %s"
+                "UPDATE projects SET name = %s, startdate = %s, enddate = %s, content = %s, public = %s, pinned = %s"
                 " WHERE ID = %s",
-                args=[name, startdate, enddate, content, public, id]
+                args=[name, startdate, enddate, content, public, pinned, id]
             )
             return redirect(url_for("projects.show", id=id))
     return render_template("projects/update.html", project=project)
@@ -80,7 +81,7 @@ def delete(id):
 
 def get_project(id):
     return (execute(
-        "SELECT p.id, name, startdate, enddate, content, public, created, author_id, username"
+        "SELECT p.id, name, startdate, enddate, content, public, pinned, created, author_id, username"
         " FROM projects p JOIN users u ON p.author_id = u.id"
         " WHERE p.id = %s AND (p.author_id = %s OR public IS TRUE)",
         args=[id, (g.user or {"id": None})["id"]]
@@ -88,7 +89,7 @@ def get_project(id):
 
 def get_projects():
     return execute(
-        "SELECT p.id, name, startdate, enddate, content, public, created, author_id, username"
+        "SELECT p.id, name, startdate, enddate, content, public, pinned, created, author_id, username"
         " FROM projects p JOIN users u ON p.author_id = u.id"
         " WHERE public IS TRUE OR p.author_id = %s"
         " ORDER BY enddate DESC NULLS FIRST, startdate DESC",

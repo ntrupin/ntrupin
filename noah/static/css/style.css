@@ -39,6 +39,21 @@ details[role=list] summary::after, li[role=list]>a::after {
     filter: invert(44%) sepia(69%) saturate(3024%) hue-rotate(166deg) brightness(93%) contrast(87%);
 }
 
+li.pinned {
+    list-style: none;
+}
+
+li.pinned::before {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-left: -20px;
+    margin-top: 8px;
+    background-image: url(/static/images/thumbtack-solid.svg);
+}
+
 .sidebar {
     margin-bottom: 10px;
     position:sticky;

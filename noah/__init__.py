@@ -38,9 +38,17 @@ def create_app() -> Flask:
     def index():
         return render_template("index.html")
     
+    @app.route("/education")
+    def education():
+        return render_template("education.html")
+    
     @app.route("/about")
     def about():
         return render_template("about.html")
+    
+    @app.route("/experience")
+    def experience():
+        return render_template("experience.html")
     
     @app.errorhandler(403)
     def forbidden(e):

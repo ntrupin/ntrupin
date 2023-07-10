@@ -1,61 +1,62 @@
 {% extends "base.html" %}
 
-{% block title %}Noah Trupin{% endblock %}
+{% block title %}Noah Trupin | Index{% endblock %}
 
-{% block content %}
-    <h3>Home</h3>
-    <p>Welcome to my website! Here serves to showcase my writings, projects, and other odds and ends I find interesting.</p>
-    <h3>About this site</h3>
-    <p>This site is entirely hand-written. The backend uses <b>Python</b> and the <b>Flask</b> web framework with <b>Jinja2</b> for templating, <b>PostgreSQL</b> as its database, and <b>Werkzeug</b> for authentication. The frontend uses vanilla <b>HTML/CSS/JavaScript</b> with <b>Pico.css</b> for base styling. I currently host the database on <b>Heroku</b> and the client/server on <b>Vercel</b>. I also have an <a href="{{ url_for('rss.index') }}"><b>RSS feed</b></a>. <b>GitHub CI/CD</b> manages deployment from <a href="https://github.com/ntrupin/website"><b>this GitHub repository</b></a>.</p>
-    <p>Pages are generated from <b>Markdown</b>. Layout takes inspiration from the <b>Minimal Mistakes</b> Jekyll theme.</p>
-    <p>Started as a static site hosted on GitHub Pages in 2018, ntrupin.com now serves as a dynamic hub for my projects, writing, and more.</p>
-    <h3>Timeline</h3>
-    <p>Assorted CS-related happenings. Most recent at the top.</p>
-    <h5>2023</h5>
-    <ul>
-    <li>Deployed Sentinel on all screens throughout Lawrenceville's Kirby Math and Science Center.</li>
-    <li>Graduated from The Lawrenceville School.</li>
-    <li>Joined the Straato project as Chief of Technology.</li>
-    <li>Project and poster <em>Sentinel: An Interactive Simulation Framework</em> at Lawrenceville's Spring Student Showcase.</li>
-    </ul>
-    <h5>2022</h5>
-    <ul>
-    <li>Created the Sentinel Project Team with Dr. Keith Voss at the Lawrenceville School.</li>
-    <li>Poster <em>Mathematica in Optical Music Recognition</em> and Mathematica computer vision-powered sheet music to MIDI converter prototype at Lawrenceville's Spring Student Showcase.</li>
-    <li>Promoted to President of Programming Club.</li>
-    <li>Promoted to President of Peer Tutoring.</li>
-    <li>Lawrenceville's Science Department acquired my water quality modeling tool from the Stroud project.</li>
-    <li>Joined Princeton University's High School Program for computer science.</li>
-    <li>Hosted MEGA League's inaugural hackathon for hundreds of students from over 20 schools around the world.</li>
-    <li>Posters <em>Paradigm for Future Analysis of Shipetaukin Creek Water Quality</em> and <em>The Security Behind Blockchain Technology</em> at Lawrenceville's Winter Student Showcase.</li>
-    <li>Students present their final projects from the CodeItForward program.</li>
-    <li>Promoted to Web Editor for The Lawrence.</li>
-    <li>Deployed <em>Peer Tutoring Requests</em> on Lawrenceville's website.</li>
-    <li>Project <em>Peer Tutoring Requests</em> announced at School Meeting.</li>
-    <li>Lectured Lawrenceville's Honors Computer Programming class on blockchain technology. Led students through building a functional, mineable prototype in Wolfram.</li>
-    </ul>
-    <h5>2021</h5>
-    <ul>
-    <li>Started water quality research with the Stroud Water Research Center.</li>
-    <li>Promoted to Systems &amp; C Branch Leader and Board Member for Programming Club.</li>
-    <li>Poster <em>Lambda Calculus and its Application in Mathematical Logic</em> at Lawrenceville's Fall Student Showcase.</li>
-    <li>Joined Peer Tutoring as Mathematics and Computer Science Tutor.</li>
-    <li>Joined Robitics Design Studio as Programming Lead.</li>
-    <li>Joined The Lawrence as Associate Web Editor.</li>
-    </ul>
-    <h5>2020</h5>
-    <ul>
-    <li>Became a tutor for Programming Club.</li>
-    </ul>
-    <h5>2019</h5>
-    <ul>
-    <li>Joined Programming Club.</li>
-    <li>Started at The Lawrenceville School.</li>
-    <li>AbstractML breaks 100 stars on GitHub.</li>
-    </ul>
-    <h5>2018</h5>
-    <ul>
-    <li>Founded my first open-source project, AbstractML.</li>
-    <li>Created ntrupin.com.</li>
-    </ul>
-{% endblock %}
+{% block content %} 
+<h3>Home</h3>
+<p>Welcome to my website! Here serves to showcase my writings, projects, and other odds and ends I find interesting.</p>
+<h3>About this site</h3>
+<p>This site is entirely hand-written. The backend uses <strong>Python</strong> and the <strong>Flask</strong> web framework with <strong>Jinja2</strong> for templating, <strong>PostgreSQL</strong> as its database, and <strong>Werkzeug</strong> for authentication. The frontend uses vanilla <strong>HTML/CSS/JavaScript</strong> with <strong>Pico.css</strong> for base styling. I currently host the database on <strong>Heroku</strong> and the client/server on <strong>Vercel</strong>. I also have an <strong><a href="/rss.xml">RSS feed</a></strong>. <strong>GitHub CI/CD</strong> manages deployment from <strong><a href="https://github.com/ntrupin/website">this GitHub repository</a></strong>.</p>
+<p>Static pages are generated from <strong>Markdown</strong> using <strong><a href="https://github.com/ntrupin/website/blob/main/mdutil.py">this utility script</a></strong>. Layout takes inspiration from the <strong>Minimal Mistakes</strong> Jekyll theme.</p>
+<p>Started as a static site hosted on GitHub Pages in 2018, ntrupin.com now serves as a dynamic hub for my projects, writing, and more.</p>
+<h3>Timeline</h3>
+<p>Assorted CS-related happenings. Most recent at the top.</p>
+<h5>2023</h5>
+<ul>
+<li>Deployed Sentinel on all screens throughout Lawrenceville's Kirby Math and Science Center.</li>
+<li>Graduated from The Lawrenceville School.</li>
+<li>Joined the Straato project as Chief of Technology.</li>
+<li>Project and poster <em>Sentinel: An Interactive Simulation Framework</em> at Lawrenceville's Spring Student Showcase.</li>
+</ul>
+<h5>2022</h5>
+<ul>
+<li>Created the Sentinel Project Team with Dr. Keith Voss at the Lawrenceville School.</li>
+<li>Poster <em>Mathematica in Optical Music Recognition</em> and Mathematica computer vision-powered sheet music to MIDI converter prototype at Lawrenceville's Spring Student Showcase.</li>
+<li>Promoted to President of Programming Club.</li>
+<li>Promoted to President of Peer Tutoring.</li>
+<li>Lawrenceville's Science Department acquired my water quality modeling tool from the Stroud project.</li>
+<li>Joined Princeton University's High School Program for computer science.</li>
+<li>Hosted MEGA League's inaugural hackathon for hundreds of students from over 20 schools around the world.</li>
+<li>Posters <em>Paradigm for Future Analysis of Shipetaukin Creek Water Quality</em> and <em>The Security Behind Blockchain Technology</em> at Lawrenceville's Winter Student Showcase.</li>
+<li>Students present their final projects from the CodeItForward program.</li>
+<li>Promoted to Web Editor for The Lawrence.</li>
+<li>Deployed <em>Peer Tutoring Requests</em> on Lawrenceville's website.</li>
+<li>Project <em>Peer Tutoring Requests</em> announced at School Meeting.</li>
+<li>Lectured Lawrenceville's Honors Computer Programming class on blockchain technology. Led students through building a functional, mineable prototype in Wolfram.</li>
+</ul>
+<h5>2021</h5>
+<ul>
+<li>Started water quality research with the Stroud Water Research Center.</li>
+<li>Promoted to Systems &amp; C Branch Leader and Board Member for Programming Club.</li>
+<li>Poster <em>Lambda Calculus and its Application in Mathematical Logic</em> at Lawrenceville's Fall Student Showcase.</li>
+<li>Joined Peer Tutoring as Mathematics and Computer Science Tutor.</li>
+<li>Joined Robitics Design Studio as Programming Lead.</li>
+<li>Joined The Lawrence as Associate Web Editor.</li>
+</ul>
+<h5>2020</h5>
+<ul>
+<li>Became a tutor for Programming Club.</li>
+</ul>
+<h5>2019</h5>
+<ul>
+<li>Joined Programming Club.</li>
+<li>Started at The Lawrenceville School.</li>
+<li>AbstractML breaks 100 stars on GitHub.</li>
+</ul>
+<h5>2018</h5>
+<ul>
+<li>Founded my first open-source project, AbstractML.</li>
+<li>Created ntrupin.com.</li>
+</ul>
+{% endblock %}           
+            

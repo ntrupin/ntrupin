@@ -10,6 +10,7 @@ Static pages are generated from **Markdown** using **[this utility script](https
 
 Started as a static site hosted on GitHub Pages in 2018, ntrupin.com now serves as a dynamic hub for my projects, writing, and more.
 
+<!--
 ### Timeline
 
 Assorted CS-related happenings. Most recent at the top.
@@ -54,3 +55,4 @@ Assorted CS-related happenings. Most recent at the top.
 ##### 2018
 - Founded my first open-source project, AbstractML.
 - Created ntrupin.com.
+-->

@@ -2,7 +2,7 @@
 
 I'm an undergraduate computer science student at [Purdue University](https://purdue.edu). I started programming in elementary school (circa 2014) through VBA macros in Microsoft Excel, but soon moved onto full-stack web development, iOS development, compiler and interpreter construction, and more. 
 
-For high school I attended The Lawrenceville School, and
+For high school, I attended The Lawrenceville School. While there, I
 
 - Lead the Programming Club, where I designed and implemented curricula to teach students C and Python programming; 
 - Served as a Web Editor for The Lawrence, our weekly publication, where I built the publication's [full-stack website](https://ntrupin.com/projects/3);

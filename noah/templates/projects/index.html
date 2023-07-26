@@ -12,8 +12,13 @@
             <li class="pinned">
                 <hgroup>
                     <a href="{{ url_for('projects.show', id=project.id) }}">
-                        {% if not project.public %}<mark>Private</mark> {% endif %}<i>{{ project.name }}</i>
+                        {% if not project.public %}<mark>Private</mark> {% endif %}<b>{{ project.name }}</b>
                     </a>
+                    {% if project["brief"] != None %}
+                        <p style="margin-bottom:0;">
+                            {{ project["prief"] }}
+                        </p>
+                    {% endif %}
                     <p>
                         {% if project["startdate"] != None %}
                             <small>{{ project["startdate"].strftime('%B, %Y') }} - {{ project["enddate"].strftime('%B, %Y') if project["enddate"] != None else "Current" }}</small>
@@ -26,8 +31,13 @@
             <li>
                 <hgroup>
                     <a href="{{ url_for('projects.show', id=project.id) }}">
-                        {% if not project.public %}<mark>Private</mark> {% endif %}<i>{{ project.name }}</i>
+                        {% if not project.public %}<mark>Private</mark> {% endif %}<b>{{ project.name }}</b>
                     </a>
+                    {% if project["brief"] != None %}
+                        <p style="margin-bottom:0;">
+                            {{ project["brief"] }}
+                        </p>
+                    {% endif %}
                     <p>
                         {% if project["startdate"] != None %}
                             <small>{{ project["startdate"].strftime('%B, %Y') }} - {{ project["enddate"].strftime('%B, %Y') if project["enddate"] != None else "Current" }}</small>

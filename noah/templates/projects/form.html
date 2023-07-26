@@ -9,6 +9,9 @@
         <label for="enddate">End Date</label>
         <input name="enddate" id="enddate" type="date" value="{{ (object['enddate'].strftime('%Y-%m-%d')) if object['enddate'] else '' }}" />
 
+        <label for="brief">Brief</label>
+        <textarea name="brief" id="brief">{{ object['brief'] if object['brief'] else '' }}</textarea>
+
         <label for="content">Content</label>
         <textarea name="content" id="content">{{ object['content'] }}</textarea>
 

@@ -25,6 +25,7 @@ create table projects (
     name TEXT NOT NULL,
     startdate TIMESTAMP,
     enddate TIMESTAMP,
+    brief TEXT,
     content TEXT NOT NULL,
     public BOOLEAN NOT NULL DEFAULT FALSE,
     pinned BOOLEAN NOT NULL DEFAULT FALSE,

@@ -10,6 +10,8 @@ from psycopg2.extras import RealDictRow
 
 bp = Blueprint("projects", __name__, url_prefix="/projects")
 
+FIELDS = ["name", "startdate", "enddate", "brief", "content", "public", "pinned"]
+
 @bp.route("/")
 def index():
     projects = get_projects()
@@ -21,6 +23,7 @@ def create():
     if request.method == "POST":
         error = None
         name = request.form["name"]
+        brief = request.form["brief"] if request.form["brief"] != "" else None
         startdate = request.form["startdate"] if request.form["startdate"] != "" else None
         enddate = request.form["enddate"]  if request.form["enddate"] != "" else None
         content = request.form["content"] or "..."
@@ -33,9 +36,9 @@ def create():
         else:
             print(g.user["id"])
             execute(
-                "INSERT INTO projects (name, startdate, enddate, content, public, pinned, author_id)"
-                " VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                args=[name, startdate, enddate, content, public, pinned, g.user["id"]]
+                f"INSERT INTO projects ({', '.join(FIELDS)}, author_id)"
+                " VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                args=[name, startdate, enddate, brief, content, public, pinned, g.user["id"]]
             )
             return redirect(url_for("projects.index"))
     return render_template("projects/create.html")
@@ -47,6 +50,7 @@ def update(id):
     if request.method == "POST":
         error = None
         name = request.form["name"]
+        brief = request.form["brief"] if request.form["brief"] != "" else None
         startdate = request.form["startdate"] if request.form["startdate"] != "" else None
         enddate = request.form["enddate"]  if request.form["enddate"] != "" else None
         content = request.form["content"] or "..."
@@ -58,9 +62,9 @@ def update(id):
             flash(error)
         else:
             execute(
-                "UPDATE projects SET name = %s, startdate = %s, enddate = %s, content = %s, public = %s, pinned = %s"
+                f"UPDATE projects SET {', '.join([f'{x} = %s' for x in FIELDS])}"
                 " WHERE ID = %s",
-                args=[name, startdate, enddate, content, public, pinned, id]
+                args=[name, startdate, enddate, brief, content, public, pinned, id]
             )
             return redirect(url_for("projects.show", id=id))
     return render_template("projects/update.html", project=project)
@@ -81,7 +85,7 @@ def delete(id):
 
 def get_project(id):
     return (execute(
-        "SELECT p.id, name, startdate, enddate, content, public, pinned, created, author_id, username"
+        f"SELECT p.id, {', '.join(FIELDS)}, created, author_id, username"
         " FROM projects p JOIN users u ON p.author_id = u.id"
         " WHERE p.id = %s AND (p.author_id = %s OR public IS TRUE)",
         args=[id, (g.user or {"id": None})["id"]]
@@ -89,7 +93,7 @@ def get_project(id):
 
 def get_projects():
     return execute(
-        "SELECT p.id, name, startdate, enddate, content, public, pinned, created, author_id, username"
+        f"SELECT p.id, {', '.join(FIELDS)}, created, author_id, username"
         " FROM projects p JOIN users u ON p.author_id = u.id"
         " WHERE public IS TRUE OR p.author_id = %s"
         " ORDER BY enddate DESC NULLS FIRST, startdate DESC",

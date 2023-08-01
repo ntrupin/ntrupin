@@ -2,9 +2,11 @@
 
 Welcome to my website! Here serves to showcase my writings, projects, and other odds and ends I find interesting.
 
+### Recent Work
+
 ### About this site
 
-This site is entirely hand-written. The backend uses **Python** and the **Flask** web framework with **Jinja2** for templating, **PostgreSQL** as its database, and **Werkzeug** for authentication. The frontend uses vanilla **HTML/CSS/JavaScript** with **Pico.css** for base styling. I currently host the database on **Heroku** and the client/server on **Vercel**. I also have an **[RSS feed](/rss.xml)**. **GitHub CI/CD** manages deployment from **[this GitHub repository](https://github.com/ntrupin/website)**.
+This site has been written, modified, and re-written countless times over the years. The backend uses **Python** and the **Flask** web framework with **Jinja2** for templating, **PostgreSQL** as its database, and **Werkzeug** for authentication. The frontend uses vanilla **HTML/CSS/JavaScript** with **Pico.css** for base styling. I currently host the database on **Heroku** and the client/server on **Vercel**. I also have an **[RSS feed](/rss.xml)**. **GitHub CI/CD** manages deployment from **[this GitHub repository](https://github.com/ntrupin/website)**.
 
 Static pages are generated from **Markdown** using **[this utility script](https://github.com/ntrupin/website/blob/main/mdutil.py)**. Layout takes inspiration from the **Minimal Mistakes** Jekyll theme.
 

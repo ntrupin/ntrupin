@@ -47,8 +47,7 @@
             <li style="list-style:none;background-image:none;background-repeat:none;background-position:0;">
                 <hgroup>
                     <a href="{{ url_for('projects.show_id', id=project.id) if project.urlid == None else url_for('projects.show_name', name=project.urlid) }}">
-                        {% if not project.public %}<mark>Private</mark> {% endif %}<b style="font-size:larger;">{{ project.name }}</b>
-                    </a>
+                        {% if not project.public %}<mark>Private</mark> {% endif %}<b style="font-size:larger;">{{ project.name }}</b></a>
                     <ul style="position:relative;top:-2px;padding-left:0px;display:inline;">
                         {% if project["github"] != None %}
                             <li style="padding-left:10px;display:inline-block;">

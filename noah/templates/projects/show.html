@@ -4,6 +4,7 @@
     <hgroup>
         <a href="{{ url_for('projects.index') }}">All Projects and Research</a>
         <h1>{{ project["name"] }}</h1>
+
         <p>
             {% if project["startdate"] != None %}
                 <small>{{ project["startdate"].strftime('%B, %Y') }} - {{ project["enddate"].strftime('%B, %Y') if project["enddate"] != None else "Current" }}</small>
@@ -11,6 +12,18 @@
         </p>
     </hgroup>
     <div>
+        <ul>
+            {% if project["link"] %}
+                <li>
+                    Link: <a href="{{ project.link }}">{{ project.link }}</a>
+                </li>
+            {% endif %}
+            {% if project["github"] %}
+                <li>
+                    GitHub: <a href="{{ project.github }}">{{ project.github|replace('https://github.com/', '') }}</a>
+                </li>
+            {% endif %}
+        </ul>
         {{ project["content"]|safe }}
     </div>
     <div>

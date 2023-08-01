@@ -38,6 +38,8 @@
                     <p>
                         {% if project["startdate"] != None %}
                             <small>{{ project["startdate"].strftime('%B %d, %Y') }} - {{ project["enddate"].strftime('%B %d, %Y') if project["enddate"] != None else "Current" }}</small>
+                        {% else %}
+                            <small>Always updating</small>
                         {% endif %}
                     </p>
                 </hgroup>
@@ -73,6 +75,8 @@
                     <p>
                         {% if project["startdate"] != None %}
                             <small>{{ project["startdate"].strftime('%B %d, %Y') }} - {{ project["enddate"].strftime('%B %d, %Y') if project["enddate"] != None else "Current" }}</small>
+                        {% else %}
+                            <small>Always updating</small>
                         {% endif %}
                     </p>
                 </hgroup>

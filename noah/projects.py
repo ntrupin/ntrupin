@@ -88,7 +88,7 @@ def show_id(id):
 
 @bp.route("/<string:name>", methods=["GET"])
 def show_name(name):
-    project = session["project"] or dict(get_project_by_name(name))
+    project = ("project" in session and session["project"]) or dict(get_project_by_name(name))
     session["project"] = None
     if len(project) == 0:
         abort(404, description="Project not found.")

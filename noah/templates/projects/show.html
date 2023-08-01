@@ -7,7 +7,7 @@
 
         <p>
             {% if project["startdate"] != None %}
-                <small>{{ project["startdate"].strftime('%B, %Y') }} - {{ project["enddate"].strftime('%B, %Y') if project["enddate"] != None else "Current" }}</small>
+                <small>{{ project["startdate"].strftime('%B %d, %Y') }} - {{ project["enddate"].strftime('%B %d, %Y') if project["enddate"] != None else "Current" }}</small>
             {% endif %}
         </p>
     </hgroup>

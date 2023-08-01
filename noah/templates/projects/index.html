@@ -36,10 +36,17 @@
                         </p>
                     {% endif %}
                     <p>
-                        {% if project["startdate"] != None %}
-                            <small>{{ project["startdate"].strftime('%B %d, %Y') }} - {{ project["enddate"].strftime('%B %d, %Y') if project["enddate"] != None else "Current" }}</small>
+                        {% if project.continuous %}
+                            <small>
+                                {% if project["startdate"] != None %}
+                                    Created {{ project["startdate"].strftime('%B %d, %Y') }} | 
+                                {% endif %}
+                                Continuous project
+                            </small>
                         {% else %}
-                            <small>Always updating</small>
+                            {% if project["startdate"] != None %}
+                                <small>{{ project["startdate"].strftime('%B %d, %Y') }} - {{ project["enddate"].strftime('%B %d, %Y') if project["enddate"] != None else "Current" }}</small>
+                            {% endif %}
                         {% endif %}
                     </p>
                 </hgroup>
@@ -73,10 +80,17 @@
                         </p>
                     {% endif %}
                     <p>
-                        {% if project["startdate"] != None %}
-                            <small>{{ project["startdate"].strftime('%B %d, %Y') }} - {{ project["enddate"].strftime('%B %d, %Y') if project["enddate"] != None else "Current" }}</small>
+                        {% if project.continuous %}
+                            <small>
+                                {% if project["startdate"] != None %}
+                                    Created {{ project["startdate"].strftime('%B %d, %Y') }} |  
+                                {% endif %}
+                                Continuous project
+                            </small>
                         {% else %}
-                            <small>Always updating</small>
+                            {% if project["startdate"] != None %}
+                                <small>{{ project["startdate"].strftime('%B %d, %Y') }} - {{ project["enddate"].strftime('%B %d, %Y') if project["enddate"] != None else "Current" }}</small>
+                            {% endif %}
                         {% endif %}
                     </p>
                 </hgroup>

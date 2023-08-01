@@ -10,7 +10,7 @@ from psycopg2.extras import RealDictRow
 
 bp = Blueprint("projects", __name__, url_prefix="/projects")
 
-FIELDS = ["name", "startdate", "enddate", "urlid", "link", "github", "brief", "content", "public", "pinned"]
+FIELDS = ["name", "startdate", "enddate", "urlid", "link", "github", "brief", "content", "public", "pinned", "continuous"]
 
 @bp.route("/")
 def index():
@@ -32,6 +32,7 @@ def create():
         content = request.form["content"] or "..."
         public = "public" in request.form
         pinned = "pinned" in request.form
+        continuous = "continuous" in request.form
         if not name:
             error = "Name is required"
         if error is not None:
@@ -40,8 +41,8 @@ def create():
             print(g.user["id"])
             execute(
                 f"INSERT INTO projects ({', '.join(FIELDS)}, author_id)"
-                " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                args=[name, startdate, enddate, urlid, link, github, brief, content, public, pinned, g.user["id"]]
+                " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                args=[name, startdate, enddate, urlid, link, github, brief, content, public, pinned, continuous, g.user["id"]]
             )
             return redirect(url_for("projects.index"))
     return render_template("projects/create.html")
@@ -62,6 +63,7 @@ def update(id):
         content = request.form["content"] or "..."
         public = "public" in request.form
         pinned = "pinned" in request.form
+        continuous = "continuous" in request.form
         if not name:
             error = "Name is required"
         if error is not None:
@@ -70,7 +72,7 @@ def update(id):
             execute(
                 f"UPDATE projects SET {', '.join([f'{x} = %s' for x in FIELDS])}"
                 " WHERE ID = %s",
-                args=[name, startdate, enddate, urlid, link, github, brief, content, public, pinned, id]
+                args=[name, startdate, enddate, urlid, link, github, brief, content, public, pinned, continuous, id]
             )
             return redirect(url_for("projects.show_id", id=id))
     return render_template("projects/update.html", project=project)

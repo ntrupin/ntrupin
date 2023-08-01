@@ -9,6 +9,15 @@
         <label for="enddate">End Date</label>
         <input name="enddate" id="enddate" type="date" value="{{ (object['enddate'].strftime('%Y-%m-%d')) if object['enddate'] else '' }}" />
 
+        <label for="urlid">URL Name</label>
+        <input name="urlid" id="urlid" value="{{ object['urlid'] if object['urlid'] else '' }}" />
+
+        <label for="link">Link</label>
+        <input name="link" id="link" value="{{ object['link'] if object['link'] else '' }}" />
+
+        <label for="github">GitHub</label>
+        <input name="github" id="github" value="{{ object['github'] if object['github'] else '' }}" />
+
         <label for="brief">Brief</label>
         <textarea name="brief" id="brief">{{ object['brief'] if object['brief'] else '' }}</textarea>
 

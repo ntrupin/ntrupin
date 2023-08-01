@@ -66,6 +66,7 @@ li.pinned::before {
     position:-webkit-sticky;
     top: 0;
     max-height: 95vh;
+    z-index: 1;
 }
 
 .sidebar_full {

@@ -7,7 +7,7 @@ if __name__ == "__main__":
         with open(f"./noah/pages/{f}", "r") as i, open(f"./noah/templates/{name}.html", "w") as o:
             o.write(f"""{{% extends "base.html" %}}
 
-{{% block title %}}Noah Trupin | {name.capitalize()}{{% endblock %}}
+{{% block title %}}Noah Trupin{' | ' + name.capitalize() if name != 'index' else ''}{{% endblock %}}
 
 {{% block content %}} 
 {markdown.markdown(i.read())}

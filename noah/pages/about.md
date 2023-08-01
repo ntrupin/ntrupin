@@ -1,4 +1,4 @@
-### Hi! I'm Noah
+# Hi! I'm Noah
 
 I'm an undergraduate computer science student at [Purdue University](https://purdue.edu). I started programming in elementary school (circa 2014) through VBA macros in Microsoft Excel, but soon moved onto full-stack web development, iOS development, compiler and interpreter construction, and more. 
 
@@ -14,10 +14,3 @@ For high school, I attended The Lawrenceville School. While there, I
 
 Now, I spend most of my time exploring compilers and interpreters with an emphasis on **parsing algorithms**.
 -->
-
-<details open><summary>GitHub Statistics</summary><p>
-    <a href="https://github.com/ntrupin">
-        <img src="https://raw.githubusercontent.com/ntrupin/github-stats/master/generated/overview.svg#gh-light-mode-only" />
-        <img src="https://raw.githubusercontent.com/ntrupin/github-stats/master/generated/languages.svg#gh-light-mode-only" />
-    </a>
-</p></details>

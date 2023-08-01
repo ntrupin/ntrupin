@@ -4,34 +4,47 @@
 
 [data-theme="light"],
 :root:not([data-theme="dark"]) {
-    --svg-primary: invert(44%) sepia(69%) saturate(3024%) hue-rotate(166deg) brightness(93%) contrast(87%);
-    --svg-color: invert(8%) sepia(20%) saturate(822%) hue-rotate(163deg) brightness(94%) contrast(97%);
+    --primary: #23B0FF;
+    --primary-hover: #16A8F6;
+    --primary-focus: rgba(35, 142, 255, 0.25);
+    --primary-inverse: #FFF;
+    --svg-primary: invert(64%) sepia(88%) saturate(3225%) hue-rotate(175deg) brightness(102%) contrast(101%);
+    --svg-color: invert(30%) sepia(14%) saturate(1032%) hue-rotate(163deg) brightness(88%) contrast(80%);
 }
 
 @media only screen and (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
-        --primary: #78E2A0;
-        --primary-hover: #6BDA97;
-        --primary-focus: rgba(120, 192, 160, 0.25);
+        --primary-green: #78E2A0;
+        --primary-green-hover: #6BDA97;
+        --primary-green-focus: rgba(120, 192, 160, 0.25);
+        --primary: #23B0FF;
+        --primary-hover: #16A8F6;
+        --primary-focus: rgba(35, 142, 255, 0.25);
         --primary-inverse: #FFF;
-        --svg-primary: invert(90%) sepia(25%) saturate(781%) hue-rotate(74deg) brightness(92%) contrast(93%);
-        --svg-color: invert(100%) sepia(0%) saturate(2%) hue-rotate(249deg) brightness(114%) contrast(101%);
-        --background-color: color-mix(in srgb, var(--primary) 2%, #11191f 98%);
+        --svg-primary-green: invert(90%) sepia(25%) saturate(781%) hue-rotate(74deg) brightness(92%) contrast(93%);
+        --svg-primary: invert(64%) sepia(88%) saturate(3225%) hue-rotate(175deg) brightness(102%) contrast(101%);
+        --svg-color: invert(90%) sepia(17%) saturate(149%) hue-rotate(163deg) brightness(87%) contrast(87%);
+        --background-color: color-mix(in srgb, var(--primary) 5%, #11191f 95%);
     }
 }
 
 [data-theme="dark"] {
-    --primary: #78E2A0;
-    --primary-hover: #6BDA97;
-    --primary-focus: rgba(120, 192, 160, 0.25);
+    --primary-green: #78E2A0;
+    --primary-green-hover: #6BDA97;
+    --primary-green-focus: rgba(120, 192, 160, 0.25);
+    --primary: #23B0FF;
+    --primary-hover: #16A8F6;
+    --primary-focus: rgba(35, 142, 255, 0.25);
     --primary-inverse: #FFF;
-    --svg-primary: invert(90%) sepia(25%) saturate(781%) hue-rotate(74deg) brightness(92%) contrast(93%);
-    --svg-color: invert(100%) sepia(0%) saturate(2%) hue-rotate(249deg) brightness(114%) contrast(101%);
-    --background-color: color-mix(in srgb, var(--primary) 2%, #11191f 98%);
+    --svg-primary-green: invert(90%) sepia(25%) saturate(781%) hue-rotate(74deg) brightness(92%) contrast(93%);
+    --svg-primary: invert(67%) sepia(96%) saturate(3526%) hue-rotate(175deg) brightness(102%) contrast(102%);
+    --svg-color: invert(90%) sepia(17%) saturate(149%) hue-rotate(163deg) brightness(87%) contrast(87%);
+    --background-color: color-mix(in srgb, var(--primary) 5%, #11191f 95%);
 }
 
 :root {
     --font-family: 'Lustria', serif;
+    --text-color: var(--color);
     --form-element-active-border-color: var(--primary);
     --form-element-focus-color: var(--primary-focus);
     --switch-color: var(--primary-inverse);
@@ -46,9 +59,32 @@ html, body {
 
 /* font resets */
 
-:not(a) > b, :not(a) > strong {
+h1 {
     text-decoration: underline;
+    text-decoration-color: var(--primary);
 }
+
+a {
+    color: var(--text-color);
+    text-decoration: underline;
+    transition: all 0.25s ease-in;
+}
+
+a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--primary);
+}
+
+img[src*=".svg"] {
+    filter: var(--svg-color);
+    transition: filter 0.25s ease-in-out;
+}
+
+img[src*=".svg"]:hover {
+    filter: var(--svg-primary);
+}
+
+/* misc styles */
 
 .header {
     display: none;
@@ -88,7 +124,6 @@ details[role=list] summary::after, li[role=list]>a::after {
 .svg_link {
     width: 24px;
     height: 24px;
-    filter: var(--svg-primary);
 }
 
 li.pinned {

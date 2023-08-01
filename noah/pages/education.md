@@ -1,4 +1,4 @@
-### Education
+# Education
 
 - **Purdue University** 2023 - present  
 *West Lafayette, Indiana*  

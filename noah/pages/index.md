@@ -1,4 +1,4 @@
-### Home
+# Home
 
 Welcome to my website! Here serves to showcase my writings, projects, and other odds and ends I find interesting.
 

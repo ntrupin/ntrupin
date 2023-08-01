@@ -3,7 +3,7 @@
 {% block title %}Noah Trupin | Projects{% endblock %}
 
 {% block content %}
-    <h3>Projects and Research</h3>
+    <h1>Projects and Research</h1>
     {% if g.user != None %}
         <p><a href="{{ url_for('projects.create') }}">New Project</a></p>
     {% endif %}

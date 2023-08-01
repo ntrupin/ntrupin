@@ -1,5 +1,7 @@
-html {
+html, body {
     scroll-behavior: smooth;
+    height: 100%;
+    width: 100%;
 }
 
 .header {
@@ -54,7 +56,7 @@ li.pinned::before {
     height: 16px;
     float: left;
     margin-left: -20px;
-    margin-top: 8px;
+    margin-top: 10px;
     background-image: url(/static/images/thumbtack-solid.svg);
 }
 

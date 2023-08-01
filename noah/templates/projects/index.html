@@ -12,11 +12,11 @@
             <li class="pinned">
                 <hgroup>
                     <a href="{{ url_for('projects.show', id=project.id) }}">
-                        {% if not project.public %}<mark>Private</mark> {% endif %}<b>{{ project.name }}</b>
+                        {% if not project.public %}<mark>Private</mark> {% endif %}<b style="font-size:larger;">{{ project.name }}</b>
                     </a>
                     {% if project["brief"] != None %}
                         <p style="margin-bottom:0;">
-                            {{ project["prief"] }}
+                            {{ project["brief"] }}
                         </p>
                     {% endif %}
                     <p>
@@ -28,10 +28,10 @@
             </li>
         {% endfor %}
         {% for project in projects if not project["pinned"] %}
-            <li>
+            <li style="list-style:none;background-image:none;background-repeat:none;background-position:0;">
                 <hgroup>
                     <a href="{{ url_for('projects.show', id=project.id) }}">
-                        {% if not project.public %}<mark>Private</mark> {% endif %}<b>{{ project.name }}</b>
+                        {% if not project.public %}<mark>Private</mark> {% endif %}<b style="font-size:larger;">{{ project.name }}</b>
                     </a>
                     {% if project["brief"] != None %}
                         <p style="margin-bottom:0;">

@@ -64,6 +64,10 @@ h1 {
     text-decoration-color: var(--primary);
 }
 
+h1, h2, h3 {
+    margin-bottom: calc(var(--typography-spacing-vertical) / 2);
+}
+
 a {
     color: var(--text-color);
     text-decoration: underline;
@@ -84,6 +88,15 @@ img[src*=".svg"]:hover {
     filter: var(--svg-primary);
 }
 
+textarea {
+    resize: vertical;
+}
+
+
+details[role=list] summary::after, li[role=list]>a::after {
+    display: none;
+}
+
 /* misc styles */
 
 .header {
@@ -92,10 +105,6 @@ img[src*=".svg"]:hover {
 
 .container {
     padding: 0 32px 32px 32px;
-}
-
-textarea { 
-    resize: vertical; 
 }
 
 .headshot {
@@ -115,10 +124,6 @@ textarea {
 
 .nav_menu {
     cursor: pointer;
-}
-
-details[role=list] summary::after, li[role=list]>a::after {
-    display: none;
 }
 
 .svg_link {

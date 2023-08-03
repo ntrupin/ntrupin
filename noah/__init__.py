@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 
 from flask import Flask, render_template
+from noah.pages import show_name
 
 # create and configure application
 def create_app() -> Flask:
@@ -31,24 +32,27 @@ def create_app() -> Flask:
     from . import projects
     app.register_blueprint(projects.bp)
 
+    from . import pages
+    app.register_blueprint(pages.bp)
+
     from . import rss
     app.register_blueprint(rss.bp)
 
     @app.route("/")
     def index():
-        return render_template("index.html")
+        return show_name("index")
     
     @app.route("/education")
     def education():
-        return render_template("education.html")
+        return show_name("education")
     
     @app.route("/about")
     def about():
-        return render_template("about.html")
+        return show_name("about")
     
     @app.route("/experience")
     def experience():
-        return render_template("experience.html")
+        return show_name("experience")
     
     @app.errorhandler(403)
     def forbidden(e):

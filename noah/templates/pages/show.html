@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Noah Trupin | {{ page["name"] }}{% endblock %}
+
+{% block content %}
+    <div>
+        {{ page["content"]|safe }}
+    </div>
+    <div>
+        {% if g.user['id'] == page['author_id'] %}
+            <a href="{{ url_for('pages.update', id=page['id']) }}">Edit</a>
+        {% endif %}
+    </div>
+{% endblock %}

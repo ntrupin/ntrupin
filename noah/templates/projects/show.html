@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
+{% block title %}Noah Trupin | {{ project["name"] }}{% endblock %}
+
 {% block content %}
     <hgroup>
         <a href="{{ url_for('projects.index') }}">All Projects and Research</a>
-        <h1>{{ project["name"] }}</h1>
+        <h1 style="margin-bottom:0;">{{ project["name"] }}</h1>
 
         <p>
             {% if project.continuous %}

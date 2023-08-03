@@ -38,7 +38,6 @@ def create():
         if error is not None:
             flash(error)
         else:
-            print(g.user["id"])
             execute(
                 f"INSERT INTO projects ({', '.join(FIELDS)}, author_id)"
                 " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",

@@ -25,9 +25,22 @@ create table projects (
     name TEXT NOT NULL,
     startdate TIMESTAMP,
     enddate TIMESTAMP,
+    link TEXT,
+    github TEXT,
     brief TEXT,
     content TEXT NOT NULL,
     public BOOLEAN NOT NULL DEFAULT FALSE,
     pinned BOOLEAN NOT NULL DEFAULT FALSE,
+    continuous BOOLEAN NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (author_id) REFERENCES users (id)
+);
+
+create table pages (
+    id SERIAL PRIMARY KEY,
+    author_id INTEGER NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    name TEXT NOT NULL,
+    content TEXT NOT NULL,
+    public BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (author_id) REFERENCES users (id)
 );

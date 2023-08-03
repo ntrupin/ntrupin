@@ -43,7 +43,7 @@
 }
 
 :root {
-    --font-family: 'Lustria', serif;
+    --font-family: 'Open Sans', sans-serif;
     --text-color: var(--color);
     --form-element-active-border-color: var(--primary);
     --form-element-focus-color: var(--primary-focus);

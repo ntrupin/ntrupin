@@ -19,8 +19,10 @@ def create_app() -> Flask:
 
     # inject current time into template 
     @app.context_processor
-    def inject_now():
-        return { "now": datetime.utcnow() }
+    def inject_vars():
+        return { 
+            "now": datetime.utcnow()
+        }
     
     from . import db
     db.init_app(app)

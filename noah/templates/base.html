@@ -42,7 +42,8 @@
         <section class="sidebar">
             <div class="sidebar_full">
                 <hgroup class="sidebar_full">
-                    <img alt="Noah Trupin" src="{{ url_for('static', filename='images/noah.jpeg') }}" class="headshot" />
+                    <!-- src="{{ url_for('static', filename='images/noah.jpeg' )}}" -->
+                    <img alt="Noah Trupin" src="https://avatars.githubusercontent.com/u/41525667?v=4" class="headshot" />
                     <h4>Noah Trupin</h4>
                     <p style="margin-bottom:0;"><small>Undergrad CS @ Purdue</small></p>
                 </hgroup>
@@ -66,7 +67,7 @@
                 <ul>
                     <li>
                         <a href="{{ url_for('index') }}">
-                            <img alt="Noah Trupin" src="{{ url_for('static', filename='images/noah.jpeg') }}" class="headshot" />
+                            <img alt="Noah Trupin" src="https://avatars.githubusercontent.com/u/41525667?v=4" class="headshot" />
                         </a>
                     </li>
                     <li>
@@ -109,7 +110,7 @@
         <footer class="footer">
             <!--<hr />-->
             {% block footer %}
-                &copy; 2018-{{ now.year }} <a href="/">Noah Trupin</a>.
+                &copy; 2018-{{ now.year }} <a href="/">Noah Trupin</a>
             {% endblock %}
         </footer>
     </div>

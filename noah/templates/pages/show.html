@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Noah Trupin | {{ page["name"] }}{% endblock %}
+{% block title %}Noah Trupin{{ " | " + page["name"] if page["name"] != "Index" }}{% endblock %}
 
 {% block content %}
     <div>

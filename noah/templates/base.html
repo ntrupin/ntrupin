@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
     {% block head %}
-        <!--<link rel="preload" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" crossorigin="anonymous" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-        <link rel="preload" href="{{ url_for('static', filename='css/style.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'" />-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" crossorigin="anonymous" media="screen" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark-reasonable.min.css" crossorigin="anonymous" media="screen and (prefers-color-scheme: dark)" />
+        <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" crossorigin="anonymous" media="screen" />
+        <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark-reasonable.min.css" crossorigin="anonymous" media="screen and (prefers-color-scheme: dark)" />
         <noscript>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" />
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark-reasonable.min.css" />
         </noscript>
         <title>{% block title %}{% endblock %}</title>
         <meta charset="utf-8" />
@@ -115,7 +114,7 @@
             {% endblock %}
         </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script defer src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

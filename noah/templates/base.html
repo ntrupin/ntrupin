@@ -53,9 +53,9 @@
                     <div>
                         <nav>
                             <ul>
-                                <li style="padding:10px;"><a href="mailto:natrupin@gmail.com"><img alt="Email Icon" src="{{ url_for('static', filename='images/envelope-solid.svg') }}" class="svg_link" /></a></li>
-                                <li style="padding:10px;"><a href="https://github.com/ntrupin"><img alt="GitHub Logo" src="{{ url_for('static', filename='images/github.svg') }}" class="svg_link" /></a></li>
-                                <li style="padding:10px;"><a href="https://linkedin.com/in/ntrupin"><img alt="LinkedIn Logo" src="{{ url_for('static', filename='images/linkedin.svg') }}" class="svg_link" /></a></li>
+                                <li style="padding:10px;"><a href="mailto:natrupin@gmail.com"><img alt="Email Icon" src="{{ url_for('static', filename='images/envelope-solid.svg') }}" class="svg svg_link" /></a></li>
+                                <li style="padding:10px;"><a href="https://github.com/ntrupin"><img alt="GitHub Logo" src="{{ url_for('static', filename='images/github.svg') }}" class="svg svg_link" /></a></li>
+                                <li style="padding:10px;"><a href="https://linkedin.com/in/ntrupin"><img alt="LinkedIn Logo" src="{{ url_for('static', filename='images/linkedin.svg') }}" class="svg svg_link" /></a></li>
                             </ul>
                         </nav>
                     </div>
@@ -86,7 +86,7 @@
                     <li>
                         <details role="list" dir="rtl">
                             <summary aria-haspopup="listbox" role="link listitem">
-                                <img src="{{ url_for('static', filename='images/bars-solid.svg') }}" width="24px" height="24px" alt="Menu button" />
+                                <img class="svg" src="{{ url_for('static', filename='images/bars-solid.svg') }}" width="24px" height="24px" alt="Menu button" />
                             </summary>
                             <ul role="listbox listitem">
                                 {% if request.path != "/" %}

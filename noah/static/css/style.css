@@ -79,12 +79,12 @@ a:hover {
     text-decoration-color: var(--primary);
 }
 
-img[src*=".svg"] {
+.svg {
     filter: var(--svg-color);
     transition: filter 0.25s ease-in-out;
 }
 
-img[src*=".svg"]:hover {
+.svg:hover {
     filter: var(--svg-primary);
 }
 

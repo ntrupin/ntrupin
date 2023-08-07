@@ -119,7 +119,9 @@
             {% endblock %}
         </footer>
     </div>
+    {% page is defined and "```" in page["content"]  %}
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    {% endif %}
     <script defer src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

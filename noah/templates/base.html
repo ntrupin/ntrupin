@@ -42,8 +42,10 @@
         <section class="sidebar">
             <div class="sidebar_full">
                 <hgroup class="sidebar_full">
-                    <!-- src="{{ url_for('static', filename='images/noah.jpeg' )}}" -->
-                    <img alt="Noah Trupin" src="https://avatars.githubusercontent.com/u/41525667?v=4" class="headshot" />
+                    <picture alt="Noah Trupin">
+                        <source srcset="{{ url_for('static', filename='images/headshots/noah-lawrence.webp') }}" type="image/webp" />
+                        <img src="{{ url_for('static', filename='images/headshots/noah-lawrence.png') }}" class="headshot" />
+                    </picture>
                     <h4>Noah Trupin</h4>
                     <p style="margin-bottom:0;"><small>Undergrad CS @ Purdue</small></p>
                 </hgroup>
@@ -67,7 +69,10 @@
                 <ul>
                     <li>
                         <a href="{{ url_for('index') }}">
-                            <img alt="Noah Trupin" src="https://avatars.githubusercontent.com/u/41525667?v=4" class="headshot" />
+                            <picture>
+                                <source srcset="{{ url_for('static', filename='images/headshots/noah-lawrence.webp') }}" type="image/webp" />
+                                <img src="{{ url_for('static', filename='images/headshots/noah-lawrence.png') }}" class="headshot" alt="Noah Trupin" />
+                            </picture>
                         </a>
                     </li>
                     <li>
@@ -81,7 +86,7 @@
                     <li>
                         <details role="list" dir="rtl">
                             <summary aria-haspopup="listbox" role="link listitem">
-                                <img src="{{ url_for('static', filename='images/bars-solid.svg') }}" width="24px" height="24px" />
+                                <img src="{{ url_for('static', filename='images/bars-solid.svg') }}" width="24px" height="24px" alt="Menu button" />
                             </summary>
                             <ul role="listbox listitem">
                                 {% if request.path != "/" %}

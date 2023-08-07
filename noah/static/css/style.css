@@ -108,8 +108,8 @@ details[role=list] summary::after, li[role=list]>a::after {
 }
 
 .headshot {
-    max-width: 100px;
     clip-path: circle();
+    width: 3.5rem;
     aspect-ratio: 1 / 1;
 }
 
@@ -177,7 +177,7 @@ li.pinned::before {
     }
 
     .headshot {
-        max-width: 85%;
+        width: 85%;
         margin-left: auto;
         margin-right: auto;
         margin-bottom: 25px;

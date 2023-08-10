@@ -119,7 +119,7 @@
             {% endblock %}
         </footer>
     </div>
-    {% if page is defined and "<code class=" in page["content"] %}
+    {% if (page is defined and "<code class=" in page["content"]) or (project is defined and "<code class=" in project["content"]) %}
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     {% endif %}
     <script defer src="{{ url_for('static', filename='js/script.js') }}"></script>

@@ -8,6 +8,7 @@ from flask import current_app, g
 # fetch current db
 # connects to db if no connection active
 def get_db():
+    print("HERE!!!")
     if "db" not in g:
         g.db = psycopg2.connect(
             current_app.config["DB_URL"]

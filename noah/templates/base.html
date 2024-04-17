@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     {% block head %}
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.indigo.min.css" />
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
         <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" crossorigin="anonymous" media="screen" />
         <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark-reasonable.min.css" crossorigin="anonymous" media="screen and (prefers-color-scheme: dark)" />
@@ -86,9 +86,9 @@
                 </ul>
                 <ul class="nav_menu">
                     <li>
-                        <details role="list" dir="rtl">
+                        <details class="dropdown" role="list" dir="rtl">
                             <summary aria-haspopup="listbox" role="link listitem">
-                                <img class="svg" src="{{ url_for('static', filename='images/bars-solid.svg') }}" width="24px" height="24px" alt="Menu button" />
+                                <img class="svg" src="{{ url_for('static', filename='images/bars-solid.svg') }}" width="24px" height="24px" al="Menu button" />
                             </summary>
                             <ul role="listbox listitem">
                                 {% if request.path != "/" %}

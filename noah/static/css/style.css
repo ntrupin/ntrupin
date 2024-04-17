@@ -154,7 +154,7 @@ li.pinned::before {
 }
 
 .sidebar_collapsed {
-    background-color: var(--background-color);
+    background-color: var(--pico-background-color);
     margin-left: -10px;
     margin-right: -10px;
 }

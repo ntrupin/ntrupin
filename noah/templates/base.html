@@ -86,11 +86,11 @@
                 </ul>
                 <ul class="nav_menu">
                     <li>
-                        <details class="dropdown" role="list" dir="rtl">
+                        <details class="dropdown" role="list">
                             <summary aria-haspopup="listbox" role="link listitem">
                                 <img class="svg" src="{{ url_for('static', filename='images/bars-solid.svg') }}" width="24px" height="24px" al="Menu button" />
                             </summary>
-                            <ul role="listbox listitem">
+                            <ul role="listbox listitem" style="left: -350% !important;">
                                 {% if request.path != "/" %}
                                 <li><a href="{{ url_for('index') }}">Home</a></li>
                                 {% endif %}

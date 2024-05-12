@@ -20,7 +20,7 @@ def setup(app: flask.Flask):
     app.teardown_appcontext(close)
     app.cli.add_command(init_db_command)
 
-def query(cmd: str, args: list[Any] = []) -> list[psycopg2.extras.RealDictRow] | None:
+def query(cmd: str, args: list[Any] = []):
     with get().cursor(cursor_factory=psycopg2.extras.RealDictCursor) as curs:
         curs.execute(cmd, args)
         if curs.description is not None:

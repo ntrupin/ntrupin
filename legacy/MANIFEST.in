@@ -1,4 +1,0 @@
-include noah/schema.sql
-graft noah/static
-graft noah/templates
-global-exclude *.pyc

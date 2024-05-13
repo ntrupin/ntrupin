@@ -146,6 +146,11 @@ li.pinned::before {
   filter: var(--svg-color);
 }
 
+.svg_link {
+  width: 20px;
+  height: 20px;
+}
+
 details[role=list] summary::after, li[role=list]>a::after {
   display: none;
 }

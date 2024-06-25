@@ -44,6 +44,9 @@ app.register_blueprint(pages.bp)
 from lib import projects
 app.register_blueprint(projects.bp)
 
+from lib import links
+app.register_blueprint(links.bp)
+
 from lib import rss
 app.register_blueprint(rss.bp)
 

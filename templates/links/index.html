@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Noah Trupin | Reading List{% endblock %}
+
+{% block content %}
+<h1>Reading List</h1>
+{% if g.user != None %}
+<p><a href="{{ url_for('links.create') }}">New Link</a></p>
+{% endif %}
+{% for link in links %}
+<p style="text-align:left;margin-bottom:0;">
+  <span style="float:right;">
+    {{ link.created.strftime('%Y-%m-%d') }}
+  </span>
+  <b><a href="{{ link.url }}">{{ link.text }}</a></b>
+</p>
+{% endfor %}
+{% endblock %}

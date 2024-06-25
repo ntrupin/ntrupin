@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% from "links/form.html" import form_for %}
+
+{% block header %}
+<h1>{% block title %}New Link{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+{{ form_for(request.form) }}
+{% endblock %}

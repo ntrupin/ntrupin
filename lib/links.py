@@ -1,3 +1,4 @@
+import datetime
 from flask import (
     Blueprint, render_template, g, redirect, url_for, flash,
     request
@@ -15,7 +16,8 @@ FIELDS = ["text", "url", "pinned"]
 @bp.route("/")
 def index():
     links = get_links()
-    return render_template("links/index.html", links=links)
+    cutoff = datetime.datetime(2024, 6, 26)
+    return render_template("links/index.html", links=links, cutoff=cutoff)
 
 @bp.route("/create", methods=["GET", "POST"])
 @login_required

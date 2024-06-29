@@ -8,7 +8,20 @@
 {% if g.user != None %}
 <p><a href="{{ url_for('links.create') }}">New Link</a></p>
 {% endif %}
-{% for link in links %}
+<p><b>Pinned</b></p>
+{% for link in links if link.pinned %}
+<p style="text-align:left;margin-bottom:10px!important;">
+  {% if link.created >= cutoff %}
+  <span style="float:right;">
+    {{ link.created.strftime('%Y-%m-%d') }}
+  </span>
+  {% endif %}
+  <b><a href="{{ link.url }}">{{ link.text }}</a></b>
+</p>
+{% endfor %}
+<hr />
+<p><b>All</b></p>
+{% for link in links if not link.pinned %}
 <p style="text-align:left;margin-bottom:10px!important;">
   {% if link.created >= cutoff %}
   <span style="float:right;">

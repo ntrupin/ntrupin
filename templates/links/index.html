@@ -25,7 +25,7 @@
 <p style="text-align:left;margin-bottom:10px!important;">
   {% if link.created >= cutoff %}
   <span style="float:right;">
-    <{{ link.created.strftime('%Y-%m-%d') }}
+    {{ link.created.strftime('%Y-%m-%d') }}
   </span>
   {% endif %}
   <b><a href="{{ link.url }}">{{ link.text }}</a></b>

@@ -1,20 +1,7 @@
 # Hi! I'm Noah
 
-I'm an undergraduate computer science student at **Purdue University**.
+I'm an undergraduate student majoring in computer science with a concentration in machine intelligence at **Purdue University**. I am currently a research assistant at the **Cognitive Robot Autonomy & Learning (CoRAL)** Lab, advised by professor Ahmed Quereshi and Zixing Weng, where I work with vision language models.
 
-Feel free to look around or check out [my website](https://ntrupin.com)!
+Previously, I worked on parallel optimization and conjugate gradient method research with the **Yang Group** under professor Xiaotao Yang, backend development at **Straato**, simulation physics at **The Lawrenceville School** with Dr. Keith Voss, and regression modeling with the **Stroud Water Research Center** under Dr. Stephen Laubach.
 
-<details open><summary>GitHub Statistics</summary><p>
-    <a href="https://github.com/ntrupin">
-        <picture>
-            <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ntrupin/github-stats/master/generated/overview.svg#gh-dark-mode-only" />
-            <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/ntrupin/github-stats/master/generated/overview.svg#gh-light-mode-only" />
-            <img src="https://raw.githubusercontent.com/ntrupin/github-stats/master/generated/overview.svg#gh-dark-mode-only" />
-        </picture>
-        <picture>
-            <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ntrupin/github-stats/master/generated/languages.svg#gh-dark-mode-only" />
-            <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/ntrupin/github-stats/master/generated/languages.svg#gh-light-mode-only" />
-            <img src="https://raw.githubusercontent.com/ntrupin/github-stats/master/generated/languages.svg#gh-dark-mode-only" />
-        </picture>
-    </a>
-</p></details>
+Feel free to look around or check out [my website](https://ntrupin.com).

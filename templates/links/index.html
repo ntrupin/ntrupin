@@ -24,7 +24,7 @@
 {% for link in links if not link.pinned %}
 <p style="text-align:left;margin-bottom:10px!important;">
   {% if link.created >= cutoff %}
-  <span style="float:right;">
+  <span style="float:right;font-family:monospace;font-size:smaller;">
     {{ link.created.strftime('%Y-%m-%d') }}
   </span>
   {% endif %}

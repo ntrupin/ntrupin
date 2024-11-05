@@ -21,7 +21,7 @@
 
         <title>{% block title %}{% endblock %}</title>
         <meta charset="utf-8" />
-        <link rel="icon" href="{{ url_for('static', 'favicon.png') }}">
+        <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="title" content="Noah Trupin">
         <meta name="description" content="Noah Trupin's website. Projects, writings, etc." />
@@ -29,7 +29,7 @@
         <meta property="og:url" content="https://ntrupin.com/">
         <meta property="og:title" content="Noah Trupin">
         <meta property="og:description" content="Noah Trupin's website. Projects, writings, etc.">
-        <meta property="og:image" content="{{ url_for('static', 'favicon.png') }}">
+        <meta property="og:image" content="{{ url_for('static', filename='images/favicon.png') }}">
         {% endblock %}
     </head>
     <body class="container">

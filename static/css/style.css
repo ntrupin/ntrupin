@@ -8,7 +8,7 @@
 }
 
 :root {
-  --pico-font-family: 'Mona Sans';
+  --pico-font-family: 'Inter', serif;
 }
 
 [data-theme="light"]

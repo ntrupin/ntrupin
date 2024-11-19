@@ -16,7 +16,7 @@
     {{ link.created.strftime('%Y-%m-%d') }}
   </span>
   {% endif %}
-  <b><a href="{{ link.url }}">{{ link.text }}</a></b>
+  <b><a target="_blank" rel="noopener noreferrer" href="{{ link.url }}">{{ link.text }}</a></b>
 </p>
 {% endfor %}
 <hr />

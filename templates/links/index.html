@@ -28,6 +28,9 @@
     {{ link.created.strftime('%Y-%m-%d') }}
   </span>
   {% endif %}
+  {% if g.user != None %}
+  <a href="{{ url_for('links.update', id=link.id) }}">Edit</a>
+  {% endif %}
   <b><a target="_blank" rel="noopener noreferrer" href="{{ link.url }}">{{ link.text }}</a></b>
 </p>
 {% endfor %}

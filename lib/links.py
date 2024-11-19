@@ -62,7 +62,7 @@ def update(id):
                 " WHERE ID = %s",
                 args=[text, url, pinned, id]
             )
-            return redirect(url_for("links.show_id", id=id))
+            return redirect(url_for("links.index"))
 
     return render_template("links/update.html", link=link)
 

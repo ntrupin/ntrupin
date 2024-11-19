@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
     <head>
         {% block head %}
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -7,7 +7,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
         {# <link rel="preload" href="{{ url_for('static', filename='fonts/Mona-Sans.woff2') }}" as="font" type="font/woff2" crossorigin> #}
 
-        {% set colors = ["blue"] %}
+        {% set colors = ["jade"] %}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.{{ colors|random }}.min.css" />
 
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />

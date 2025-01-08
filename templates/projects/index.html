@@ -1,9 +1,9 @@
-{% extends "base.html" %}
+{% extends "minimal.html" %}
 
 {% block title %}Noah Trupin | Projects{% endblock %}
 
 {% block content %}
-    <h1>Projects</h1>
+    <h1>projects</h1>
     {% if g.user != None %}
         <p><a href="{{ url_for('projects.create') }}">New Project</a></p>
     {% endif %}
@@ -12,23 +12,7 @@
             <li class="pinned">
                 <hgroup>
                     <a href="{{ url_for('projects.show_id', id=project.id) if project.urlid == None else url_for('projects.show_name', name=project.urlid) }}">
-                        {% if not project.public %}<mark>Private</mark> {% endif %}<b style="font-size:larger;">{{ project.name }}</b></a>
-                    <ul style="position:relative;top:-2px;padding-left:0px;display:inline;">
-                        {% if project["github"] != None %}
-                            <li style="padding-left:10px;display:inline-block;">
-                                <a href="{{ project.github }}">
-                                    <img alt="{{ project.name }} GitHub" src="{{ url_for('static', filename='images/github.svg') }}" class="svg svg_link" />
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if project["link"] != None %}
-                            <li style="padding-left:10px;display:inline-block;">
-                                <a href="{{ project.link }}">
-                                    <img alt="{{ project.name }} link" src="{{ url_for('static', filename='images/link-solid.svg') }}" class="svg svg_link" />
-                                </a>
-                            </i>
-                        {% endif %}
-                    </ul>
+                    {% if not project.public %}<mark>Private</mark> {% endif %}<b style="font-size:larger;">{{ project.name }}</b></a>
 
                     {% if project["brief"] != None %}
                         <p style="margin-bottom:0;">
@@ -56,23 +40,7 @@
             <li style="list-style:none;background-image:none;background-repeat:none;background-position:0;">
                 <hgroup>
                     <a href="{{ url_for('projects.show_id', id=project.id) if project.urlid == None else url_for('projects.show_name', name=project.urlid) }}">
-                        {% if not project.public %}<mark>Private</mark> {% endif %}<b style="font-size:larger;">{{ project.name }}</b></a>
-                    <ul style="position:relative;top:-2px;padding-left:0px;display:inline;">
-                        {% if project["github"] != None %}
-                            <li style="padding-left:10px;display:inline-block;">
-                                <a href="{{ project.github }}">
-                                    <img alt="{{ project.name }} GitHub" src="{{ url_for('static', filename='images/github.svg') }}" class="svg svg_link" />
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if project["link"] != None %}
-                            <li style="padding-left:10px;display:inline-block;">
-                                <a href="{{ project.link }}">
-                                    <img alt="{{ project.name }} link" src="{{ url_for('static', filename='images/link-solid.svg') }}" class="svg svg_link" />
-                                </a>
-                            </i>
-                        {% endif %}
-                    </ul>
+                    {% if not project.public %}<mark>Private</mark> {% endif %}<b style="font-size:larger;">{{ project.name }}</b></a>
 
                     {% if project["brief"] != None %}
                         <p style="margin-bottom:0;">

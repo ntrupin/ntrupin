@@ -32,7 +32,7 @@ def inject_vars():
 
 @app.route("/")
 def index():
-    return pages.show_name("index")
+    return render_template("index.html")
 
 from lib import auth
 app.register_blueprint(auth.bp)

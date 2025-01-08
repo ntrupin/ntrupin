@@ -1,29 +1,26 @@
-{% extends "base.html" %}
+{% extends "minimal.html" %}
 
 {% block title %}Noah Trupin | {{ project["name"] }}{% endblock %}
 
 {% block content %}
     <hgroup>
-        <a href="{{ url_for('projects.index') }}">All Projects</a>
-        <h1 style="margin-bottom:0;">{{ project["name"] }}</h1>
+        <h1>{{ project["name"] }}</h1>
 
         <p>
             {% if project.continuous %}
-                <small>
-                    {% if project["startdate"] != None %}
-                        Created {{ project["startdate"].strftime('%B %d, %Y') }} | 
-                    {% endif %}
-                    Continuous project
-                </small>
+            {% if project["startdate"] != None %}
+            Created {{ project["startdate"].strftime('%B %d, %Y') }} | 
+            {% endif %}
+            Continuous project
             {% else %}
-                {% if project["startdate"] != None %}
-                    <small>{{ project["startdate"].strftime('%B %d, %Y') }} - {{ project["enddate"].strftime('%B %d, %Y') if project["enddate"] != None else "Current" }}</small>
-                {% endif %}
+            {% if project["startdate"] != None %}
+            {{ project["startdate"].strftime('%B %d, %Y') }} - {{ project["enddate"].strftime('%B %d, %Y') if project["enddate"] != None else "Current" }}
+            {% endif %}
             {% endif %}
         </p>
     </hgroup>
     <div>
-        <ul>
+        <ul style="margin-bottom:1rem;list-style:none;">
             {% if project["link"] %}
                 <li>
                     Link: <a href="{{ project.link }}">{{ project.link }}</a>

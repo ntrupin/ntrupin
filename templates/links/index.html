@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{% extends "minimal.html" %}
 
 {% block title %}Noah Trupin | Reading List{% endblock %}
 
 {% block content %}
-<h1>Reading List</h1>
-<p>Papers, websites, and cool people. Things I've read or am meaning to read. All entries before June 26, 2024 undated.</p>
+<h1>reading list</h1>
+<p>papers, websites, and cool people. things i've read or am meaning to read. all entries before june 26, 2024 undated.</p>
 {% if g.user != None %}
 <p><a href="{{ url_for('links.create') }}">New Link</a></p>
 {% endif %}
-<p><b>Pinned</b></p>
+<p><b>pinned</b></p>
 {% for link in links if link.pinned %}
 <p style="text-align:left;margin-bottom:10px!important;">
   {% if link.created >= cutoff %}
@@ -19,22 +19,22 @@
   {% if g.user != None %}
   <a href="{{ url_for('links.update', id=link.id) }}">Edit</a>
   {% endif %}
-  <b><a target="_blank" rel="noopener noreferrer" href="{{ link.url }}">{{ link.text }}</a></b>
+  <a target="_blank" rel="noopener noreferrer" href="{{ link.url }}" class="plain-link">{{ link.text }}</a>
 </p>
 {% endfor %}
 <hr />
-<p><b>All</b></p>
+<p><b>all</b></p>
 {% for link in links if not link.pinned %}
 <p style="text-align:left;margin-bottom:10px!important;">
   {% if link.created >= cutoff %}
-  <span style="float:right;font-family:monospace;font-size:smaller;">
+  <span style="float:right;font-family:monospace;">
     {{ link.created.strftime('%Y-%m-%d') }}
   </span>
   {% endif %}
   {% if g.user != None %}
   <a href="{{ url_for('links.update', id=link.id) }}">Edit</a>
   {% endif %}
-  <b><a target="_blank" rel="noopener noreferrer" href="{{ link.url }}">{{ link.text }}</a></b>
+  <a target="_blank" rel="noopener noreferrer" href="{{ link.url }}" class="plain-link">{{ link.text }}</a>
 </p>
 {% endfor %}
 {% endblock %}

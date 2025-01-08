@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+    <head>
+        {% block head %}
+        <link rel="preload" href="{{ url_for('static', filename='fonts/Mona-Sans.woff2') }}" as="font" type="font/woff2" crossorigin>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/minimal.css') }}" />
+
+        <title>{% block title %}{% endblock %}</title>
+        <meta charset="utf-8" />
+        <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="title" content="Noah Trupin">
+        <meta name="description" content="Noah Trupin's website. Projects, writings, etc." />
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://ntrupin.com/">
+        <meta property="og:title" content="Noah Trupin">
+        <meta property="og:description" content="Noah Trupin's website. Projects, writings, etc.">
+        <meta property="og:image" content="{{ url_for('static', filename='images/sinner.png') }}">
+        {% endblock %}
+    </head>
+    <body>
+        <header>
+            {% block header %}
+            {% if omitHeader is not defined or not omitHeader %}
+            <div class="hero">
+                <img class="headshot" title="me at a starbucks in chicago, november 2023" alt="me at a starbucks in chicago, november 2023" src="{{ url_for('static', filename='images/me_sipping_coffee.png') }}" />
+            <p class="intro">i'm noah trupin, an undergraduate computer science student at purdue university. i like to build things and, on occasion, do research. i currently work in the <a href="https://corallab.net/">cognitive robot autonomy and learning lab</a>.</p>
+                <div class="links">
+                    <a href="{{ url_for('projects.index') }}">projects</a>
+                    <a href="{{ url_for('pages.show_name', name='education') }}">education</a>
+                    <a href="{{ url_for('pages.show_name', name='about') }}">about</a>
+                    <a href="{{ url_for('links.index') }}">reading list</a>
+                </div>
+            </div>
+            {% else %}
+            {% if request.path != "/" %}
+            <div class="content">
+                <a href="{{ url_for('index') }}">&#8606; go home</a>
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endblock %}
+        </header>
+        <main class="content">
+            {% block content %}{% endblock %}
+        </main>
+        <footer class="hero">
+            {% block footer %}
+            {% if request.path != "/" %}
+            &copy; 2018-{{ now.year }} <a href="/">noah trupin</a><br />
+            {% endif %}
+            {% endblock %}
+        </footer>
+    </body>
+<html>

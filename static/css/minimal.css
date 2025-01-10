@@ -120,7 +120,7 @@ a:hover {
   margin-right: auto;
   margin-bottom: 15;
   max-width: 42em;
-  padding: 10px;
+  padding: 20px;
 }
 
 .content * {
@@ -138,12 +138,7 @@ a:hover {
   margin-bottom: 1.2rem;
 }
 
-.content a {
-  font-size: 1.2rem;
-}
-
 .content p {
-  font-size: 1.2rem;
   margin-bottom: 1rem;
 }
 
@@ -160,12 +155,7 @@ a:hover {
   margin-bottom: 1rem;
 }
 
-.content li {
-  font-size: 1.2rem;
-}
-
 .content pre {
-  font-size: 1.2rem;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -pre-wrap;

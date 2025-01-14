@@ -124,10 +124,9 @@ header {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 15;
-  max-width: 42em;
   padding: 20px;
   justify-content: space-between;
-  width: 100%;
+  width: calc(100% - 40px);
 }
 
 .navbar .links {

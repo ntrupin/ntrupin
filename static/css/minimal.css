@@ -11,14 +11,14 @@
   --font-family: 'Mona Sans', sans-serif;
   --bg-color: #ffffff;
   --font-color: #000000;
-  --primary-color: #00b478;
+  --primary-color: /*#00b478*/ rgb(71, 159, 239);
 }
 
 @media only screen and (prefers-color-scheme: dark) {
   :root {
     --bg-color: #ffffff;
     --font-color: #000000;
-    --primary-color: #00b478;
+    --primary-color: /*#00b478*/ rgb(71, 159, 239);
   }
 }
 
@@ -70,6 +70,10 @@ a:hover {
   -moz-text-decoration-color: var(--primary-color);
 }
 
+header {
+  width: 100%;
+}
+
 .plain-link {
   color: var(--text-color);
 }
@@ -112,6 +116,32 @@ a:hover {
 
 .hero .links * {
   font-size: 1.2rem;
+}
+
+.navbar {
+  display: flex;
+  margin-top: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15;
+  max-width: 42em;
+  padding: 20px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.navbar .links {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .navbar .links {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 0;
+    justify-content: center;
+  }
 }
 
 .content {

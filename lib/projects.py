@@ -124,6 +124,6 @@ def get_projects():
         f"SELECT p.id, {', '.join(FIELDS)}, created, author_id, username"
         " FROM projects p JOIN users u ON p.author_id = u.id"
         " WHERE public IS TRUE OR p.author_id = %s"
-        " ORDER BY enddate DESC NULLS FIRST, startdate DESC",
+        " ORDER BY startdate DESC NULLS FIRST, startdate DESC",
         args=[(g.user or {"id": None})["id"]]
     )

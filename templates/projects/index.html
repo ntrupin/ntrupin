@@ -23,9 +23,8 @@
                         {% if project.continuous %}
                             <small>
                                 {% if project["startdate"] != None %}
-                                    Created {{ project["startdate"].strftime('%B %d, %Y') }} | 
+                                    Started {{ project["startdate"].strftime('%B %d, %Y') }}
                                 {% endif %}
-                                Continuous project
                             </small>
                         {% else %}
                             {% if project["startdate"] != None %}
@@ -51,9 +50,8 @@
                         {% if project.continuous %}
                             <small>
                                 {% if project["startdate"] != None %}
-                                    Created {{ project["startdate"].strftime('%B %d, %Y') }} |  
+                                    Started {{ project["startdate"].strftime('%B %d, %Y') }}
                                 {% endif %}
-                                Continuous project
                             </small>
                         {% else %}
                             {% if project["startdate"] != None %}

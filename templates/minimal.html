@@ -29,6 +29,8 @@
                     <a href="{{ url_for('pages.show_name', name='about') }}">about</a>
                     <a href="{{ url_for('projects.index') }}">projects</a>
                     <a href="{{ url_for('links.index') }}">reading list</a>
+                    {# <a href="{{ url_for('static', filename='files/ntrupin_resume.pdf') }}">resume</a> #}
+                    {# <a href="{{ url_for('pages.show_name', name='contact') }}">contact</a> #}
                 </div>
             </div>
             {% else %}
@@ -38,6 +40,8 @@
                     <a href="{{ url_for('pages.show_name', name='about') }}">about</a>
                     <a href="{{ url_for('projects.index') }}">projects</a>
                     <a href="{{ url_for('links.index') }}">reading list</a>
+                    {# <a href="{{ url_for('static', filename='files/ntrupin_resume.pdf') }}">resume</a> #}
+                    {# <a href="{{ url_for('pages.show_name', name='contact') }}">contact</a> #}
                 </ul>
             </div>
             {% endif %}

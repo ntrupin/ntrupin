@@ -59,8 +59,8 @@ a {
   text-decoration-color: transparent;
   text-decoration-thickness: 0.1rem;
   transition: all 0.25s ease-in;
+
   word-wrap:break-word;
-  white-space:pre-wrap;
   word-break:break-word;
 
   -webkit-text-decoration-color: transparent;

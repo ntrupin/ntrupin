@@ -85,7 +85,7 @@ def show_id(id):
         session["project"] = project
         return redirect(url_for("projects.show_name", name=project["urlid"]))
     project["content"] = markdown.markdown(project["content"], extensions=["fenced_code", "tables", "nl2br", "toc"])
-    return render_template("projects/show.html", project=project, parent="projects.index", omitHeader=True)
+    return render_template("projects/show.html", project=project, parent="projects.index")
 
 @bp.route("/<string:name>", methods=["GET"])
 def show_name(name):
@@ -94,7 +94,7 @@ def show_name(name):
     if len(project) == 0:
         abort(404, description="Project not found.")
     project["content"] = markdown.markdown(project["content"], extensions=["fenced_code", "tables", "nl2br", "toc"])
-    return render_template("projects/show.html", project=project, parent="projects.index", omitHeader=True)
+    return render_template("projects/show.html", project=project, parent="projects.index")
 
 @bp.route("/<int:id>/delete", methods=["POST"])
 @login_required

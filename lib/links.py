@@ -17,7 +17,7 @@ FIELDS = ["text", "url", "pinned"]
 def index():
     links = get_links()
     cutoff = datetime.datetime(2024, 6, 26)
-    return render_template("links/index.html", links=links, cutoff=cutoff, omitHeader=True)
+    return render_template("links/index.html", links=links, cutoff=cutoff)
 
 @bp.route("/create", methods=["GET", "POST"])
 @login_required

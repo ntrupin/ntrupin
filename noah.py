@@ -33,6 +33,7 @@ def inject_vars():
 @app.route("/")
 def index():
     return render_template("index.html")
+    #return pages.show_name("index")
 
 from lib import auth
 app.register_blueprint(auth.bp)
@@ -52,8 +53,8 @@ app.register_blueprint(rss.bp)
 
 @app.errorhandler(403)
 def forbidden(e):
-    return render_template("403.html", omitHeader=True), 403
+    return render_template("403.html"), 403
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template("404.html", omitHeader=True), 404
+    return render_template("404.html"), 404

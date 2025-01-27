@@ -9,14 +9,14 @@
 
 :root {
   --font-family: 'Mona Sans', sans-serif;
-  --bg-color: #ffffff;
+  --bg-color: #fff8e7;
   --font-color: #000000;
   --primary-color: /*#00b478*/ rgb(71, 159, 239);
 }
 
 @media only screen and (prefers-color-scheme: dark) {
   :root {
-    --bg-color: #ffffff;
+    --bg-color: #fff8e7;
     --font-color: #000000;
     --primary-color: /*#00b478*/ rgb(71, 159, 239);
   }
@@ -42,6 +42,7 @@
 }*/
 
 body {
+  background-color: var(--bg-color);
   align-items: center;
   box-sizing: border-box;
   display: flex;

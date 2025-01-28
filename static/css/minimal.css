@@ -9,14 +9,14 @@
 
 :root {
   --font-family: 'Mona Sans', sans-serif;
-  --bg-color: #fff8e7;
+  --bg-color: #ffffff;
   --font-color: #000000;
   --primary-color: /*#00b478*/ rgb(71, 159, 239);
 }
 
 @media only screen and (prefers-color-scheme: dark) {
   :root {
-    --bg-color: #fff8e7;
+    --bg-color: #ffffff;
     --font-color: #000000;
     --primary-color: /*#00b478*/ rgb(71, 159, 239);
   }
@@ -95,7 +95,7 @@ header {
 }
 
 .hero {
-  margin-top: 2rem;
+  margin-top: 2rem; /* 2rem */
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 15;

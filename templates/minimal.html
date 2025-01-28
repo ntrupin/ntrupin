@@ -22,7 +22,7 @@
         <header>
             {% block header %}
             {% if request.path == "/" %}
-            <div class="hero">
+            <div class="hero hero--main">
                 <img class="headshot" title="me at a starbucks in chicago, november 2023" alt="me at a starbucks in chicago, november 2023" src="{{ url_for('static', filename='images/me_sipping_coffee.png') }}" />
             <p class="intro">i'm noah trupin, an undergraduate computer science student at purdue university. i like to build things and, on occasion, do research. i currently work in the <a href="https://corallab.net/">cognitive robot autonomy and learning lab</a>.</p>
                 <div class="links">

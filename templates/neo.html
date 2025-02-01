@@ -26,6 +26,9 @@
       <div class="navbar">
         {% if request.path != "/" %}
         <a href="{{ url_for('index') if parent is not defined else url_for(parent) }}">&#8606; {{ 'Home' if parent is not defined else 'Back' }}</a>
+        {% else %}
+        <p style="display:inline;margin:0;padding:0;">>o)<br />
+        &nbsp; (_></p>
         {% endif %}
         <ul class="links">
           {#<a href="{{ url_for('pages.show_name', name='about') }}">About</a>

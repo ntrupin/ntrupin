@@ -52,7 +52,7 @@ body {
 }
 
 .content {
-  margin-top: 2rem;
+  /*margin-top: 2rem;*/
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 15;
@@ -68,6 +68,33 @@ body {
   max-width: 42em;
   padding: 20px;
 }
+
+.navbar {
+  display: flex;
+  margin-top: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+  max-width: 42em;
+  padding: 20px;
+  justify-content: space-between;
+  width: calc(100% - 40px);
+}
+
+.navbar .links {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .navbar .links {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 0;
+    justify-content: center;
+  }
+}
+
 
 a {
   color: var(--primary-color);

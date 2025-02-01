@@ -1,14 +1,14 @@
-{% extends "minimal.html" %}
+{% extends "neo.html" %}
 
 {% block title %}Noah Trupin | Reading List{% endblock %}
 
 {% block content %}
-<h1>reading list</h1>
-<p>papers, websites, and cool people. things i've read or am meaning to read. all entries before june 26, 2024 undated.</p>
+<h1>Reading List</h1>
+<p>Papers, websites, and cool people. Things I've read or am meaning to read. All entries before June 26, 2024 undated.</p>
 {% if g.user != None %}
 <p><a href="{{ url_for('links.create') }}">New Link</a></p>
 {% endif %}
-<p><b>pinned</b></p>
+<p><b>Pinned</b></p>
 {% for link in links if link.pinned %}
 <p style="text-align:left;margin-bottom:10px!important;">
   {% if link.created >= cutoff %}
@@ -23,7 +23,7 @@
 </p>
 {% endfor %}
 <hr />
-<p><b>all</b></p>
+<p><b>All</b></p>
 {% for link in links if not link.pinned %}
 <p style="text-align:left;margin-bottom:10px!important;">
   {% if link.created >= cutoff %}

@@ -1,0 +1,101 @@
+@font-face {
+  font-family: 'Mona Sans';
+  src:
+    url('/static/fonts/Mona-Sans.woff2') format('woff2 supports variations'),
+    url('/static/fonts/Mona-Sans.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-stretch: 75% 125%;
+}
+
+:root {
+  --font-family: "Raleway", sans-serif;
+  --bg-color: #ffffff;
+  --font-color: #000000;
+  --primary-color: /*#00b478*/ rgb(71, 159, 239);
+}
+
+@media only screen and (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #ffffff;
+    --font-color: #000000;
+    --primary-color: /*#00b478*/ rgb(71, 159, 239);
+  }
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--bg-color);
+}
+
+/* * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}*/
+
+body {
+  background-color: var(--bg-color);
+  box-sizing: border-box;
+  font-family: var(--font-family);
+  font-optical-sizing: auto;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  margin-top: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15;
+  max-width: 42em;
+  padding: 20px;
+}
+
+.footer {
+  margin-top: 15;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2rem;
+  max-width: 42em;
+  padding: 20px;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 0.1rem;
+  transition: all 0.25s ease-in;
+  word-wrap: break-word;
+  word-break: break-word;
+
+  -webkit-text-decoration-color: transparent;
+  -moz-text-decoration-color: transparent;
+}
+
+a:hover {
+  text-decoration-color: var(--primary-color);
+  -webkit-text-decoration-color: var(--primary-color);
+  -moz-text-decoration-color: var(--primary-color);
+}
+
+.h-underline:after {
+  content:' ';
+  display:block;
+  border: 1px solid var(--primary-color);
+}
+
+.ul-naked {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}

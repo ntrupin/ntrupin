@@ -1,15 +1,15 @@
-{% extends "minimal.html" %}
+{% extends "neo.html" %}
 
 {% block title %}Noah Trupin | Projects{% endblock %}
 
 {% block content %}
-    <h1>projects</h1>
+    <h1>Projects</h1>
     {% if g.user != None %}
         <p><a href="{{ url_for('projects.create') }}">New Project</a></p>
     {% endif %}
     <ul>
         {% for project in projects if project["pinned"] %}
-            <li class="pinned">
+            <li class="li-pinned">
                 <hgroup>
                     <a href="{{ url_for('projects.show_id', id=project.id) if project.urlid == None else url_for('projects.show_name', name=project.urlid) }}">
                     {% if not project.public %}<mark>Private</mark> {% endif %}<b style="font-size:larger;">{{ project.name }}</b></a>

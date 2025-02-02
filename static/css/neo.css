@@ -106,6 +106,10 @@ a:hover {
   -moz-text-decoration-color: var(--primary-color);
 }
 
+img {
+  max-width: 100%;
+}
+
 .h-underline:after {
   content:' ';
   display:block;
@@ -116,4 +120,20 @@ a:hover {
   list-style-type: none;
   margin: 0;
   padding: 0;
+}
+
+.li-pinned {
+  list-style: none;
+}
+
+.li-pinned::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  float: left;
+  margin-left: -20px;
+  margin-top: 5px;
+  background-image: url(/static/images/thumbtack-solid.svg);
+  background-repeat: no-repeat;
 }

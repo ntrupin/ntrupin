@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from lib import pages
 
 def create_app() -> Flask:
@@ -30,10 +30,14 @@ def inject_vars():
         "now": datetime.utcnow()
     }
 
+@app.route("/index.html")
+def redirect_index():
+    return redirect('/', code=301)
+
 @app.route("/")
 def index():
-    return render_template("index.html")
-    #return pages.show_name("index")
+    # return r
+    return pages.show_name("index")
 
 from lib import auth
 app.register_blueprint(auth.bp)

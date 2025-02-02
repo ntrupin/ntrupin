@@ -1,4 +1,4 @@
-{% extends "minimal.html" %}
+{% extends "neo.html" %}
 
 {% block title %}Noah Trupin{{ " | " + page["name"] if page["name"] != "Index" }}{% endblock %}
 
@@ -6,6 +6,7 @@
 <div>
     {{ page["content"]|safe }}
 </div>
+<br />
 <div>
     {% if g.user['id'] == page['author_id'] %}
     <a href="{{ url_for('pages.update', id=page['id']) }}">Edit</a>

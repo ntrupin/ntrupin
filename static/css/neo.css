@@ -1,14 +1,5 @@
-@font-face {
-  font-family: 'Mona Sans';
-  src:
-    url('/static/fonts/Mona-Sans.woff2') format('woff2 supports variations'),
-    url('/static/fonts/Mona-Sans.woff2') format('woff2-variations');
-  font-weight: 200 900;
-  font-stretch: 75% 125%;
-}
-
 :root {
-  --font-family: "Raleway", sans-serif;
+  --font-family: system-ui, sans-serif; /* "Raleway", sans-serif; */
   --bg-color: #ffffff;
   --font-color: #000000;
   --primary-color: /*#00b478*/ rgb(71, 159, 239);

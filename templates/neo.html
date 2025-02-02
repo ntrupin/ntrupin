@@ -2,9 +2,6 @@
 <html lang="en" data-theme="light">
   <head>
     {% block head %}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/neo.css') }}" />
 
     <title>{% block title %}{% endblock %}</title>
@@ -27,8 +24,7 @@
         {% if request.path != "/" %}
         <a href="{{ url_for('index') if parent is not defined else url_for(parent) }}">&#8606; {{ 'Home' if parent is not defined else 'Back' }}</a>
         {% else %}
-        <p style="display:inline;margin:0;padding:0;">>o)<br />
-        &nbsp; (_></p>
+        <p style="display:inline;margin:0;padding:0;">&nbsp;</p>
         {% endif %}
         <ul class="links">
           {#<a href="{{ url_for('pages.show_name', name='about') }}">About</a>

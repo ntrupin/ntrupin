@@ -76,7 +76,7 @@ body {
   display: none;
 }
 
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {*/
   .navbar .links {
     display: inline-flex;
     flex-wrap: wrap;
@@ -84,7 +84,7 @@ body {
     margin-top: 0;
     justify-content: center;
   }
-}
+/*}*/
 
 
 a {

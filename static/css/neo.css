@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 :root {
-  --font-family: system-ui, sans-serif; /* "Raleway", sans-serif; */
+  --font-family: "Inter", sans-serif; /* "Raleway", sans-serif; */
   --bg-color: #ffffff;
   --font-color: #000000;
   --primary-color: /*#00b478*/ rgb(71, 159, 239);

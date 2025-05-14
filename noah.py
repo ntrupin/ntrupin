@@ -2,6 +2,8 @@ import os
 from datetime import datetime
 
 from flask import Flask, render_template, redirect
+import markdown
+
 from lib import pages
 
 def create_app() -> Flask:
@@ -37,7 +39,12 @@ def redirect_index():
 @app.route("/")
 def index():
     # return r
-    return pages.show_name("index")
+    page = dict(pages.get_page_by_fuzzy_name("index"))
+    page["content"] = markdown.markdown(
+        page["content"],
+        extensions=["fenced_code", "tables", "nl2br", "toc"]
+    )
+    return render_template("index.html", page=page), 200
 
 from lib import auth
 app.register_blueprint(auth.bp)

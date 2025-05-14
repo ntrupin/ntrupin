@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/post.css') }}" />
+
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="{{ url_for('static', filename='images/ghibli.png') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="title" content="Noah Trupin">
+    <meta name="description" content="Noah Trupin's website. Projects, writings, etc." />
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ntrupin.com/">
+    <meta property="og:title" content="Noah Trupin">
+    <meta property="og:description" content="Noah Trupin's website. Projects, writings, etc.">
+    <meta property="og:image" content="{{ url_for('static', filename='images/ghibli.png') }}">
+    {% endblock %}
+  </head>
+  <body>
+    <header class="header">
+      {% block header %}
+      {% endblock %}
+    </header>
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="footer">
+      {% block footer %}
+      &copy; 2018-{{ now.year }} <a href="/">Noah Trupin</a><br />
+      {% endblock %}
+    </footer>
+  </body>
+<html>

@@ -40,10 +40,16 @@ def redirect_index():
 def index():
     # return r
     page = dict(pages.get_page_by_fuzzy_name("index"))
+    extended = dict(pages.get_page_by_fuzzy_name("cv"))
     page["content"] = markdown.markdown(
         page["content"],
         extensions=["fenced_code", "tables", "nl2br", "toc"]
     )
+    page["extended"] = markdown.markdown(
+        extended["content"],
+        extensions=["fenced_code", "tables", "nl2br"]
+    )
+    page["extended_id"] = extended["id"]
     return render_template("index.html", page=page), 200
 
 from lib import auth

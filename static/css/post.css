@@ -19,6 +19,7 @@
 body {
   background-color: var(--bg-color);
   box-sizing: border-box;
+  color: var(--font-color);
   font-family: var(--font-family);
   font-optical-sizing: auto;
   justify-content: flex-start;
@@ -74,14 +75,8 @@ body {
   padding: 1rem;
 }
 
-.flex-body {
-  text-align: center;
-  padding: 1rem;
-}
-
-.flex-full {
-  width: 48rem;
-  padding: 1rem;
+.flex-extended {
+  margin: 1rem;
 }
 
 .headshot {
@@ -112,6 +107,7 @@ body {
     margin: 0 auto;
     margin-bottom: 10px;
     width: calc(1 / 3 * 100%);
+    border-radius: 10px;
   }
 }
 
@@ -141,4 +137,20 @@ a:hover {
   text-decoration-color: var(--primary-color);
   -webkit-text-decoration-color: var(--primary-color);
   -moz-text-decoration-color: var(--primary-color);
+}
+
+.h-underline:after {
+  content:' ';
+  display:block;
+  border: 1px solid var(--primary-color);
+}
+
+.ul-naked {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.indent {
+  margin-left: 2em;
 }

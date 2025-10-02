@@ -3,8 +3,8 @@ from datetime import datetime
 from flask import abort, Blueprint, redirect, render_template, request, url_for
 from markdown import markdown
 
-from noah import db, meta, models
-from noah.auth import login_required
+from server import db, meta, models
+from server.auth import login_required
 
 bp = Blueprint("writing", __name__, url_prefix="/writing")
 

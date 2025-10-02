@@ -3,7 +3,7 @@ import os
 
 from flask import Flask, redirect, render_template
 
-from noah import db, meta
+from server import db, meta
 
 def create_app() -> Flask:
     app = Flask(
@@ -13,7 +13,7 @@ def create_app() -> Flask:
     )
     app.secret_key = os.getenv("SECRET_KEY")
 
-    from noah.auth import setup as auth_setup
+    from server.auth import setup as auth_setup
     auth_setup(app)
 
     return app
@@ -54,8 +54,8 @@ def index():
 def cv():
     return show_id(2)
 
-from noah.auth import bp as auth_bp
+from server.auth import bp as auth_bp
 app.register_blueprint(auth_bp)
 
-from noah.writing import bp as writing_bp, show_id
+from server.writing import bp as writing_bp, show_id
 app.register_blueprint(writing_bp)

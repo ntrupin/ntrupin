@@ -36,7 +36,7 @@ def page_not_found(_):
     cfg = meta.Metadata()
     return render_template("404.jinja", **cfg.serialize()), 404
 
-@app.route("/index.html")
+@app.route("/index/")
 def redirect_index():
     return redirect('/', code=301)
 
@@ -50,12 +50,12 @@ def index():
         updates=updates
     )
 
-@app.route("/cv")
+@app.route("/cv/")
 def cv():
-    return show_id(2)
+    return show_canonical("cv")
 
 from server.auth import bp as auth_bp
 app.register_blueprint(auth_bp)
 
-from server.writing import bp as writing_bp, show_id
+from server.writing import bp as writing_bp, show_canonical
 app.register_blueprint(writing_bp)

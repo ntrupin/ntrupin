@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 from flask import abort, Blueprint, redirect, render_template, request, url_for
 
@@ -31,6 +32,14 @@ def get_writing_by_url(canonical_url: str) -> models.Writing | None:
         return models.Writing.from_dict(writing_data[0])
     return None
 
+def title_to_canonical(title: str) -> str:
+    url = title.lower().strip()
+    url = re.sub(r"\s+", "-", url)
+    url = url.replace("&", "-and-")
+    url = re.sub(r"[^\w\-]+", "", url)
+    url = re.sub(r"\-+", "-", url)
+    return url
+
 def create_writing(title: str, content: str | None, public: bool) -> int:
     database = db.get()
     now = datetime.utcnow().isoformat()
@@ -41,7 +50,7 @@ def create_writing(title: str, content: str | None, public: bool) -> int:
         "updated_at": now,
         "title": title,
         "content": content,
-        "canonical_url": None,
+        "canonical_url": title_to_canonical(title),
         "public": public,
     }
     response = (
@@ -58,6 +67,7 @@ def update_writing(id: int, title: str, content: str | None, public: bool) -> in
         "updated_at": now,
         "title": title,
         "content": content,
+        "canonical_url": title_to_canonical(title),
         "public": public,
     }
     #if public:
@@ -79,7 +89,7 @@ def delete_writing(id: int) -> None:
         .execute()
     )
 
-@bp.route("/<int:id>", methods=["GET"])
+@bp.route("/<int:id>/", methods=["GET"])
 def show_id(id: int):
     writing = get_writing_by_id(id)
     if not writing:
@@ -91,17 +101,17 @@ def show_id(id: int):
     cfg = meta.Metadata()
     return render_template("writing/show.jinja", **cfg.serialize(), writing=writing)
 
-@bp.route("/<string:canonical>", methods=["GET"])
-def show_canonical(canonical: str):
-    writing = get_writing_by_url(canonical)
+@bp.route("/<string:name>/", methods=["GET"])
+def show_canonical(name: str):
+    writing = get_writing_by_url(name)
     if not writing:
         abort(404)
     writing.content = md.render(writing.content or "Nothing to see here.")
 
     cfg = meta.Metadata()
-    return render_template("writing/show.jinja", **cfg.serialize(), writings=writing)
+    return render_template("writing/show.jinja", **cfg.serialize(), writing=writing)
 
-@bp.route("/new", methods=["GET", "POST"])
+@bp.route("/new/", methods=["GET", "POST"])
 @login_required
 def create():
     if request.method == "POST":
@@ -115,7 +125,7 @@ def create():
     cfg = meta.Metadata()
     return render_template("writing/create.jinja", **cfg.serialize())
 
-@bp.route("/<int:id>/edit", methods=["GET", "POST"])
+@bp.route("/<int:id>/edit/", methods=["GET", "POST"])
 @login_required
 def update(id: int):
     writing = get_writing_by_id(id)
@@ -134,7 +144,7 @@ def update(id: int):
     cfg = meta.Metadata()
     return render_template("writing/update.jinja", **cfg.serialize(), writing=writing)
 
-@bp.route("/<int:id>/delete", methods=["POST"])
+@bp.route("/<int:id>/delete/", methods=["POST"])
 @login_required
 def delete(id: int):
     delete_writing(id)

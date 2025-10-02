@@ -1,0 +1,7 @@
+{% extends "base.jinja" %}
+
+{% from "writing/form.jinja" import form_for %}
+
+{% block content %}
+{{ form_for(request.form) }}
+{% endblock %}

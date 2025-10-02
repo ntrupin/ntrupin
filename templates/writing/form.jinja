@@ -1,0 +1,16 @@
+{% macro form_for(object) %}
+<form method="post">
+    <label for="title">Title</label>
+    <input name="title" id="title" value="{{ object["title"] }}" class="w-full" required />
+
+    <label for="content">Content</label>
+    <textarea name="content" id="content" class="w-full">{{ object["content"] }}</textarea>
+
+    <input type="checkbox" name="public" id="public" {{ "checked" if object["public"] == true }} />
+    <label for="public">Public</label>
+
+    <br />
+
+    <input type="submit" value="Save" />
+</form>
+{% endmacro %}

@@ -1,0 +1,37 @@
+{% extends "base.jinja" %}
+{% block content %}
+<h1 class="title font-semibold text-2xl tracking-tighter">
+    Login
+</h1>
+{# <form method="post">
+    <label for="username">Username</label>
+    <input name="username" id="username" required>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+    <input type="submit" value="Log In">
+</form> #}
+<form method="post" class="mt-10 space-y-2">
+  <input 
+    type="text" 
+    name="username" 
+    id="username" 
+    placeholder="Username" 
+    required
+    class="border px-2 py-1 text-sm"
+  >
+  <input 
+    type="password" 
+    name="password" 
+    id="password" 
+    placeholder="Password" 
+    required
+    class="border px-2 py-1 text-sm"
+  >
+  <button 
+    type="submit"
+    class="px-2 py-1 text-sm"
+  >
+    Log In
+  </button>
+</form>
+{% endblock %}

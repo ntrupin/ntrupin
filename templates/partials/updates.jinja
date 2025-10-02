@@ -1,0 +1,12 @@
+<div class="space-y-3">
+  {% for update in updates %}
+  <a class="block md:grid md:grid-cols-12 md:gap-x-4">
+    <p class="text-neutral-600 tabular-nums md:col-span-2 md:self-start">
+      {{ update.date.strftime("%b") }}&nbsp;{{ update.date.year }}
+    </p>
+    <p class="text-neutral-900 tracking-tight leading-snug md:col-span-10 md:self-start min-w-0">
+      {{ update.description }}
+    </p>
+  </a>
+  {% endfor %}
+</div>

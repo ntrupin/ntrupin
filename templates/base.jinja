@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" class="text-black bg-white">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title }}</title>
+
+    <meta name="description" content="{{ description }}" />
+    <meta name="robots" content="{{ robots }}" />
+    <meta name="googlebot" content="{{ googlebot }}" />
+
+    <meta property="og:title" content="{{ openGraph.title }}" />
+    <meta property="og:description" content="{{ openGraph.description }}" />
+    <meta property="og:url" content="{{ openGraph.url }}" />
+    <meta property="og:locale" content="{{ openGraph.locale }}" />
+    <meta property="og:type" content="{{ openGraph.type }}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="{{ openGraph.title }}" />
+    <meta name="twitter:description" content="{{ openGraph.description }}" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" />
+  </head>
+  <body class="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
+    <main class="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
+      {% include "partials/nav.jinja" %}
+      {% block content %}{% endblock %}
+      {% include "partials/footer.jinja" %}
+    </main>
+  </body>
+</html>

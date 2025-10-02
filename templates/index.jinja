@@ -1,0 +1,21 @@
+{% extends "base.jinja" %}
+{% block content %}
+<section>
+    <h1 class="mb-8 text-2xl font-semibold tracking-tighter">Noah Trupin</h1>
+    <p class="mb-4">
+        I am a third-year undergraduate student at Purdue University studying computer science (honors) with a concentration in machine intelligence and a (completed) minor in mathematics. I am also a research assistant at the Cognitive Robot Autonomy and Learning Lab, advised by Zixing Wang and Ahmed Qureshi.
+    </p>
+    <p class="mb-4">
+        I am interested, broadly, in augmenting <i>how agents learn and interact with the world</i> from both systems and machine learning perspectives. My current research involves optimal diffusion policy.
+    </p>
+    <div class="mb-4">
+        {% include "partials/updates.jinja" %}
+    </div>
+    <p class="mb-4">
+        Previously, I built out the bank-side infrastructure for Google Autofill at Capital One. I also designed parallel routines for solving large sparse systems in seismology with the Yang Group, developed experimental trading environments at Straato, built interactive physics simulation software for Sentinel, deployed sensors and modeled water quality data for endangered rivers with Stroud, and worked on optical music recognition and playback.
+    </p>
+    <p class="mb-4">
+       I have received awards from Purdue CS and L3Harris for my work. 
+    </p>
+</section>
+{% endblock %}

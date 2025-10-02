@@ -1,4 +1,17 @@
-from markdown import markdown
+from markdown import Markdown
+from markdown.extensions import Extension
+from markdown.inlinepatterns import EscapeInlineProcessor, ESCAPE_RE
+from markdown.util import AtomicString
 
-def render(md: str) -> str:
-    return markdown(md, extensions=["fenced_code", "tables", "nl2br", "toc"])
+class KeepBackslashProcessor(EscapeInlineProcessor):
+    def handleMatch(self, m, _):
+        return AtomicString(m.group(0)), m.start(0), m.end(0)
+
+class KeepBackslashExtension(Extension):
+    def extendMarkdown(self, md: Markdown):
+        md.inlinePatterns.deregister("escape")
+        md.inlinePatterns.register(KeepBackslashProcessor(ESCAPE_RE, md), "escape", 180)
+
+def render(text: str) -> str:
+    md = Markdown(extensions=[KeepBackslashExtension()])
+    return md.convert(text)

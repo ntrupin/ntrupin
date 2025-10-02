@@ -1,9 +1,8 @@
 from datetime import datetime
 
 from flask import abort, Blueprint, redirect, render_template, request, url_for
-from markdown import markdown
 
-from server import db, meta, models
+from server import db, md, meta, models
 from server.auth import login_required
 
 bp = Blueprint("writing", __name__, url_prefix="/writing")
@@ -87,7 +86,7 @@ def show_id(id: int):
         abort(404)
     if writing.canonical_url:
         return redirect(url_for("writing.show_canonical", name=writing.canonical_url))
-    writing.content = markdown(writing.content or "Nothing to see here.")
+    writing.content = md.render(writing.content or "Nothing to see here.")
 
     cfg = meta.Metadata()
     return render_template("writing/show.jinja", **cfg.serialize(), writing=writing)
@@ -97,7 +96,7 @@ def show_canonical(canonical: str):
     writing = get_writing_by_url(canonical)
     if not writing:
         abort(404)
-    writing.content = markdown.markdown(writing.content or "Nothing to see here.")
+    writing.content = md.render(writing.content or "Nothing to see here.")
 
     cfg = meta.Metadata()
     return render_template("writing/show.jinja", **cfg.serialize(), writings=writing)

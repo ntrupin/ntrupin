@@ -231,6 +231,9 @@
   .flex {
     display: flex;
   }
+  .inline {
+    display: inline;
+  }
   .w-full {
     width: 100%;
   }

@@ -8,8 +8,8 @@ from server import db, meta
 def create_app() -> Flask:
     app = Flask(
         __name__,
-        template_folder="../templates",
-        static_folder="../static",
+        template_folder="./templates",
+        static_folder="./static",
     )
     app.secret_key = os.getenv("SECRET_KEY")
 

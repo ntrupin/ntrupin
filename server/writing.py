@@ -8,6 +8,16 @@ from server.auth import login_required
 
 bp = Blueprint("writing", __name__, url_prefix="/writing")
 
+def get_writings() -> list[models.Writing]:
+    database = db.get()
+    writings_data = (
+        database.table("writing")
+        .select("*")
+        .order("published_at", desc=True)
+        .execute()
+    ).data
+    return [models.Writing.from_dict(w) for w in writings_data]
+
 def get_writing_by_id(id: int) -> models.Writing | None:
     database = db.get()
     writing_data = (
@@ -149,3 +159,10 @@ def update(id: int):
 def delete(id: int):
     delete_writing(id)
     return redirect(url_for("index"))
+
+@bp.route("/", methods=["GET"])
+def index():
+    writings = get_writings()
+
+    cfg = meta.Metadata()
+    return render_template("writing/index.jinja", **cfg.serialize(), writings=writings)

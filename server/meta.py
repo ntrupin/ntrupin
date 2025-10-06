@@ -1,6 +1,8 @@
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 
+from flask import request
+
 BASE = "https://ntrupin.com/"
 
 @dataclass
@@ -11,7 +13,7 @@ class Metadata:
     openGraph: dict = field(default_factory=lambda: { # type: ignore
         "title": "Noah Trupin",
         "description": "Noah Trupin's personal website.",
-        "url": BASE,
+        "url": BASE + request.path,
         "siteName": "Noah Trupin",
         "locale": "en_US",
         "type": "website"

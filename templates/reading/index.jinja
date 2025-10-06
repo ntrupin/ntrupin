@@ -6,7 +6,7 @@
     </h1>
     <div class="space-y-3">
         {% for reading in readings %}
-        <a href="{{ reading.link }}" class="block md:grid md:grid-cols-12 md:gap-x-4">
+        <a href="{{ reading.link }}" class="block md:grid md:grid-cols-12 md:gap-x-4" rel="noopener noreferrer">
             <p class="text-neutral-600 tabular-nums md:col-span-3 md:self-start">
                 {{ reading.created_at.strftime("%b %d, %Y") }}
             </p>

@@ -1,7 +1,7 @@
 from datetime import datetime
 import re
 
-from flask import abort, Blueprint, redirect, render_template, request, url_for
+from flask import abort, Blueprint, g, redirect, render_template, request, url_for
 
 from server import db, md, meta, models
 from server.auth import login_required
@@ -14,6 +14,7 @@ def get_writings() -> list[models.Writing]:
         database.table("writing")
         .select("*")
         .order("published_at", desc=True)
+        .or_(f"{'user_id.eq.' + str(g.user['id']) + ',' if g.user else ''}public.eq.true")
         .execute()
     ).data
     return [models.Writing.from_dict(w) for w in writings_data]
@@ -24,6 +25,7 @@ def get_writing_by_id(id: int) -> models.Writing | None:
         database.table("writing")
         .select("*")
         .eq("id", id)
+        .or_(f"{'user_id.eq.' + str(g.user['id']) + ',' if g.user else ''}public.eq.true")
         .execute()
     ).data
     if writing_data:
@@ -36,6 +38,7 @@ def get_writing_by_url(canonical_url: str) -> models.Writing | None:
         database.table("writing")
         .select("*")
         .eq("canonical_url", canonical_url)
+        .or_(f"{'user_id.eq.' + str(g.user['id']) + ',' if g.user else ''}public.eq.true")
         .execute()
     ).data
     if writing_data:
@@ -55,8 +58,8 @@ def create_writing(title: str, content: str | None, public: bool) -> int:
     now = datetime.utcnow().isoformat()
     writing = {
         "created_at": now,
-        "user_id": 1,
-        "published_at": now if public else None,
+        "user_id": g.user["id"],
+        "published_at": now,
         "updated_at": now,
         "title": title,
         "content": content,

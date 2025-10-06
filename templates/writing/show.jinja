@@ -4,6 +4,9 @@
 <section>
     <h1 class="title font-semibold text-2xl tracking-tighter">
         {{ writing.title }}
+        {% if writing.public == false %}
+            <span class="text-red-400">(Private)</span>
+        {% endif %}
     </h1>
     <div class="flex justify-between items-center mt-2 mb-8 text-sm">
         <p class="text-sm text-neutral-600">

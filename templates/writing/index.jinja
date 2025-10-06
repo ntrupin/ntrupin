@@ -13,6 +13,9 @@
             </p>
             <p class="text-neutral-900 font-semibold tracking-tight leading-snug md:col-span-9 md:self-start min-w-0">
                 {{ writing.title }}
+                {% if writing.public == false %}
+                    <span class="text-red-400">(Private)</span>
+                {% endif %}
             </p>
         </a>
         {% endfor %}

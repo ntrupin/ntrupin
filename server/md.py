@@ -13,5 +13,16 @@ class KeepBackslashExtension(Extension):
         md.inlinePatterns.register(KeepBackslashProcessor(ESCAPE_RE, md), "escape", 180)
 
 def render(text: str) -> str:
-    md = Markdown(extensions=[KeepBackslashExtension()])
+    md = Markdown(
+        extensions=[
+            "footnotes", 
+            KeepBackslashExtension()
+        ],
+        extension_configs={
+            "footnotes": {
+                "UNIQUE_IDS": True,
+                "BACKLINK_TEXT": "",
+            }
+        }
+    )
     return md.convert(text)

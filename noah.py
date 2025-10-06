@@ -57,5 +57,8 @@ def cv():
 from server.auth import bp as auth_bp
 app.register_blueprint(auth_bp)
 
+from server.reading import bp as reading_bp
+app.register_blueprint(reading_bp)
+
 from server.writing import bp as writing_bp, show_canonical
 app.register_blueprint(writing_bp)

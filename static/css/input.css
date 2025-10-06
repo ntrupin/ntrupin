@@ -33,6 +33,10 @@ html {
   min-width: 360px;
 }
 
+.prose {
+  counter-reset: sidenote-counter;
+}
+
 .prose .anchor {
   @apply absolute invisible no-underline;
 
@@ -150,11 +154,8 @@ table {
   text-wrap: balance;
 }
 
-.sidenote {
-  counter-increment: sidenote-counter;
-}
-
 .sidenote::before {
+  counter-increment: sidenote-counter;
   content: counter(sidenote-counter);
   font-size: 75%;
   position: relative;

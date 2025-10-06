@@ -112,6 +112,7 @@ def show_id(id: int):
     writing.content = md.render(writing.content or "Nothing to see here.")
 
     cfg = meta.Metadata()
+    cfg.openGraph["url"] += request.path
     return render_template("writing/show.jinja", **cfg.serialize(), writing=writing)
 
 @bp.route("/<string:name>/", methods=["GET"])

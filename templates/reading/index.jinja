@@ -2,16 +2,16 @@
 {% block content %}
 <section>
     <h1 class="mb-8 font-semibold text-2xl tracking-tighter">
-        Writing
+        Reading
     </h1>
     <div class="space-y-3">
-        {% for writing in writings %}
+        {% for reading in readings %}
         <a href="{{ reading.link }}" class="block md:grid md:grid-cols-12 md:gap-x-4">
             <p class="text-neutral-600 tabular-nums md:col-span-3 md:self-start">
                 {{ reading.created_at.strftime("%b %d, %Y") }}
             </p>
-            <p class="text-neutral-900 font-semibold tracking-tight leading-snug md:col-span-9 md:self-start min-w-0">
-                {{ reading.title }}
+            <p class="text-neutral-900 tracking-tight leading-snug md:col-span-9 md:self-start min-w-0">
+                {{ reading.text }}
             </p>
         </a>
         {% endfor %}

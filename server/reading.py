@@ -21,7 +21,7 @@ def get_readings(n: int = 100) -> list[models.Reading]:
 
 @bp.route("/", methods=["GET"])
 def index():
-    writings = get_readings()
+    reading = get_readings(1000)
 
     cfg = meta.Metadata()
-    return render_template("reading/index.jinja", **cfg.serialize(), writings=writings)
+    return render_template("reading/index.jinja", **cfg.serialize(), readings=reading)

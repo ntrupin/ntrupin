@@ -2,14 +2,14 @@ from dataclasses import dataclass
 from datetime import datetime
 
 @dataclass
-class Writing:
+class Reading:
     id: int
     created_at: datetime
     link: str
     text: str
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Writing":
+    def from_dict(cls, data: dict) -> "Reading":
         return cls(
             id=data["id"],
             created_at=datetime.fromisoformat(data["created_at"]),

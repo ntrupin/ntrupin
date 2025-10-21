@@ -161,8 +161,17 @@ table {
   position: relative;
   top: -0.4rem;
   left: -0.1rem;
+  @apply inline;
+}
+
+.sidenote {
+  @apply block lg:inline;
 }
 
 .sidenote > p {
-  @apply lg:inline;
+  @apply inline;
+}
+
+mjx-container {
+  @apply overflow-y-hidden overflow-x-scroll;
 }

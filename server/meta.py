@@ -35,7 +35,7 @@ class Metadata:
         "/reading": { "name": "Reading" },
         "/writing": { "name": "Writing" },
         "https://linkedin.com/in/ntrupin/": {
-            "name": "LinkedIn",
+            "name": "LI",
             "external": True
         },
     })

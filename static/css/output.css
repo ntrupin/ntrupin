@@ -5,6 +5,7 @@
   :root, :host {
     --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
     --color-red-400: oklch(70.4% 0.191 22.216);
@@ -315,6 +316,9 @@
   .align-middle {
     vertical-align: middle;
   }
+  .font-serif {
+    font-family: var(--font-serif);
+  }
   .text-2xl {
     font-size: var(--text-2xl);
     line-height: var(--tw-leading, var(--text-2xl--line-height));
@@ -454,9 +458,9 @@
       margin-inline: auto;
     }
   }
-  .lg\:w-\[10rem\] {
+  .lg\:w-\[12rem\] {
     @media (width >= 64rem) {
-      width: 10rem;
+      width: 12rem;
     }
   }
   .lg\:translate-y-\[0\.1rem\] {
@@ -648,11 +652,20 @@ table {
   position: relative;
   top: -0.4rem;
   left: -0.1rem;
+  display: inline;
 }
-.sidenote > p {
+.sidenote {
+  display: block;
   @media (width >= 64rem) {
     display: inline;
   }
+}
+.sidenote > p {
+  display: inline;
+}
+mjx-container {
+  overflow-x: scroll;
+  overflow-y: hidden;
 }
 @property --tw-space-y-reverse {
   syntax: "*";

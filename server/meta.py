@@ -3,7 +3,7 @@ from datetime import datetime
 
 from flask import request
 
-BASE = "https://ntrupin.com/"
+BASE = "https://ntrupin.com"
 
 @dataclass
 class Metadata:

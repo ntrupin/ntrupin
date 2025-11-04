@@ -54,6 +54,16 @@ def index():
 def cv():
     return show_canonical("cv")
 
+@app.route("/play/<string:name>/")
+def play(name: str):
+    cfg = meta.Metadata()
+    return render_template(
+        "react.jinja",
+        **cfg.serialize(),
+        name=name
+    )
+
+
 from server.auth import bp as auth_bp
 app.register_blueprint(auth_bp)
 

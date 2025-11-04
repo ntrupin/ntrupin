@@ -1,6 +1,11 @@
 {
   "dependencies": {
     "@tailwindcss/cli": "^4.1.13",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "tailwindcss": "^4.1.13"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12"
   }
 }

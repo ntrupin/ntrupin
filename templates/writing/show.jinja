@@ -2,6 +2,9 @@
 {% block content %}
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
 <section>
+    {% if g.user != None %}
+    <a class="underline transition-all decoration-neutral-400 underline-offset-2 decoration-[0.1em]" href="{{ url_for('writing.update', id=writing.id) }}">Edit</a>
+    {% endif %}
     <h1 class="title font-semibold text-2xl tracking-tighter">
         {{ writing.title }}
         {% if writing.public == false %}

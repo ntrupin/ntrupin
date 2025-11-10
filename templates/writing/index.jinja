@@ -1,6 +1,9 @@
 {% extends "base.jinja" %}
 {% block content %}
 <section>
+    {% if g.user != None %}
+    <a class="underline transition-all decoration-neutral-400 underline-offset-2 decoration-[0.1em]" href="{{ url_for('writing.create') }}">New</a>
+    {% endif %}
     <h1 class="mb-8 font-semibold text-2xl tracking-tighter">
         Writing
     </h1>

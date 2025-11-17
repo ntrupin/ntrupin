@@ -7,6 +7,9 @@
     <h1 class="mb-8 font-semibold text-2xl tracking-tighter">
         Writing
     </h1>
+    <p class="mb-4">
+    A collection of my writing on various subject. Pieces here do not represent the opinion or will of my institutions or employers.
+    </p>
     <div class="space-y-3">
         {% for writing in writings %}
         <a href="{{ url_for('writing.show_canonical', name=writing.canonical_url) if writing.canonical_url else url_for('writing.show_id', id=writing.id) }}" class="block md:grid md:grid-cols-12 md:gap-x-4">

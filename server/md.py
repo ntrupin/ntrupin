@@ -40,7 +40,8 @@ class MathSafeExtension(Extension):
 def render(text: str) -> str:
     md = Markdown(
         extensions=[
-            "footnotes", 
+            "footnotes",
+            "fenced_code",
             MathSafeExtension()
         ],
         extension_configs={

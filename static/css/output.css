@@ -984,7 +984,8 @@ html {
   --tw-font-weight: var(--font-weight-medium);
   font-weight: var(--font-weight-medium);
 }
-.prose ul {
+.prose ul:not(.cv-list) {
+  list-style-type: disc;
   padding-left: calc(var(--spacing) * 6);
 }
 .prose ol {

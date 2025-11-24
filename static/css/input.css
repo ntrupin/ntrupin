@@ -111,6 +111,10 @@ html {
   @apply font-medium;
 }
 
+.prose ul.cv-list {
+  @apply pl-6;
+}
+
 .prose ul:not(.cv-list) {
   @apply list-disc pl-6;
 }

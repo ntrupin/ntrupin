@@ -32,8 +32,8 @@ class Metadata:
     links: dict = field(default_factory=lambda: { # type: ignore
         "/": { "name": "Home" },
         "/cv": { "name": "CV" },
-        "/reading": { "name": "Reading" },
-        "/writing": { "name": "Writing" },
+        # "/reading": { "name": "Reading" },
+        # "/writing": { "name": "Writing" },
         "https://linkedin.com/in/ntrupin/": {
             "name": "LI",
             "external": True

@@ -33,6 +33,10 @@ html {
   min-width: 360px;
 }
 
+.index p > a {
+  @apply underline transition-all decoration-blue-400 hover:decoration-blue-600 visited:decoration-purple-400 underline-offset-2 decoration-[0.1em] dark:decoration-blue-600 dark:hover:decoration-blue-400 dark:visited:decoration-purple-600;
+}
+
 .prose {
   counter-reset: sidenote-counter;
 }
@@ -52,11 +56,11 @@ html {
 }
 
 .prose a {
-  @apply underline transition-all decoration-neutral-400 underline-offset-2 decoration-[0.1em];
+  @apply underline transition-all decoration-neutral-400 underline-offset-2 decoration-[0.1em] dark:decoration-neutral-600;
 }
 
 .prose .anchor:after {
-  @apply text-neutral-300;
+  @apply text-neutral-300 dark:text-neutral-700;
   content: '#';
 }
 
@@ -65,7 +69,7 @@ html {
 }
 
 .prose pre {
-  @apply bg-neutral-50 rounded-lg overflow-x-auto border border-neutral-200 py-2 px-3 text-sm;
+  @apply bg-neutral-50 rounded-lg overflow-x-auto border border-neutral-200 py-2 px-3 text-sm dark:bg-neutral-900 dark:border-neutral-900;
 }
 
 .prose code {
@@ -88,7 +92,7 @@ html {
 }
 
 .prose p {
-  @apply my-4 text-neutral-800;
+  @apply my-4 text-neutral-800 dark:text-neutral-200;
 }
 
 .prose h1 {

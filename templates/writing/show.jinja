@@ -12,7 +12,7 @@
         {% endif %}
     </h1>
     <div class="flex justify-between items-center mt-2 mb-8 text-sm">
-        <p class="text-sm text-neutral-600">
+        <p class="text-sm text-neutral-600 dark:text-neutral-400">
             {{ writing.published_at.strftime("%B %d, %Y")  }}
             {% if writing.published_at != writing.updated_at %}
                 | Updated {{ writing.updated_at.strftime("%B %d, %Y") }}

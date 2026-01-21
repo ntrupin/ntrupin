@@ -13,10 +13,10 @@
     <div class="space-y-3">
         {% for writing in writings %}
         <a href="{{ url_for('writing.show_canonical', name=writing.canonical_url) if writing.canonical_url else url_for('writing.show_id', id=writing.id) }}" class="block md:grid md:grid-cols-12 md:gap-x-4">
-            <p class="text-neutral-600 tabular-nums md:col-span-3 md:self-start">
+            <p class="text-neutral-600 tabular-nums md:col-span-3 md:self-start dark:text-neutral-400">
                 {{ writing.published_at.strftime("%b %d, %Y") }}
             </p>
-            <p class="text-neutral-900 font-semibold tracking-tight leading-snug md:col-span-9 md:self-start min-w-0">
+            <p class="text-neutral-900 font-semibold tracking-tight leading-snug md:col-span-9 md:self-start min-w-0 dark:text-neutral-100">
                 {{ writing.title }}
                 {% if writing.public == false %}
                     <span class="text-red-400">(Private)</span>

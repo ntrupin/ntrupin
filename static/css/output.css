@@ -873,6 +873,15 @@
       color: var(--color-white);
     }
   }
+  .dark\:hover\:text-neutral-100 {
+    @media (prefers-color-scheme: dark) {
+      &:hover {
+        @media (hover: hover) {
+          color: var(--color-neutral-100);
+        }
+      }
+    }
+  }
   .dark\:hover\:text-neutral-200 {
     @media (prefers-color-scheme: dark) {
       &:hover {

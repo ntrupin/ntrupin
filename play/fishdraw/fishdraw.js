@@ -779,17 +779,34 @@ function poissondisk(W, H, r, samples) {
 }
 
 
-function draw_svg(polylines){
-  let o = `<svg xmlns="http://www.w3.org/2000/svg" width="520" height="320">`
-  o += `<rect x="0" y="0" width="520" height="320" fill="floralwhite"/><rect x="10" y="10" width="500" height="300" stroke="black" stroke-width="1" fill="none"/><path stroke="black" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" d="`
+function draw_svg(polylines, opts = {}){
+  const width = opts.width ?? 520;
+  const height = opts.height ?? 320;
+  const offsetX = opts.offsetX ?? opts.offset ?? 10;
+  const offsetY = opts.offsetY ?? opts.offset ?? 10;
+  const frameWidth = opts.frameWidth ?? (width - 2 * offsetX);
+  const frameHeight = opts.frameHeight ?? (height - 2 * offsetY);
+  const bg = opts.background ?? 'floralwhite';
+  const stroke = opts.stroke ?? 'black';
+  const strokeWidth = opts.strokeWidth ?? 1;
+  const fill = opts.fill ?? 'none';
+  const fillRule = opts.fillRule ?? 'nonzero';
+  const drawFrame = opts.drawFrame ?? true;
+
+  let o = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`;
+  o += `<rect x="0" y="0" width="${width}" height="${height}" fill="${bg}"/>`;
+  if (drawFrame){
+    o += `<rect x="${offsetX}" y="${offsetY}" width="${frameWidth}" height="${frameHeight}" stroke="${stroke}" stroke-width="${strokeWidth}" fill="none"/>`;
+  }
+  o += `<path stroke="${stroke}" stroke-width="${strokeWidth}" fill="${fill}" fill-rule="${fillRule}" stroke-linecap="round" stroke-linejoin="round" d="`;
   for (let i = 0; i < polylines.length; i++){
     o += '\nM ';
     for (let j = 0; j < polylines[i].length; j++){
       let [x,y] = polylines[i][j];
-      o += `${(~~((x+10)*100)) /100} ${(~~((y+10)*100)) /100} `;
+      o += `${(~~((x+offsetX)*100)) /100} ${(~~((y+offsetY)*100)) /100} `;
     }
   }
-  o += `\n"/></svg>`
+  o += `\n"/></svg>`;
   return o;
 }
 
@@ -2177,10 +2194,14 @@ function fish(arg){
   concat();
 }
 
-function reframe(polylines,pad=20,text=null){
+function reframe(polylines,pad=20,text=null,opts={}){
   
-  let W = (500-pad*2);
-  let H = (300-pad*2) - (text?10:0);
+  let frameW = opts.width ?? 500;
+  let frameH = opts.height ?? 300;
+  let textGap = opts.textGap ?? 10;
+
+  let W = (frameW - pad*2);
+  let H = (frameH - pad*2) - (text ? textGap : 0);
   let bbox = get_bbox(polylines.flat());
   let sw = W/bbox.w;
   let sh = H/bbox.h;
@@ -2190,15 +2211,20 @@ function reframe(polylines,pad=20,text=null){
   for (let i = 0; i < polylines.length; i++){
     for (let j = 0; j < polylines[i].length; j++){
       let [x,y] = polylines[i][j];
-      x = (x - bbox.x) * s + px+pad;
-      y = (y - bbox.y) * s + py+pad;
+      x = (x - bbox.x) * s + px + pad;
+      y = (y - bbox.y) * s + py + pad;
       polylines[i][j] = [x,y];
     }
   }
+
+  if (!text){
+    return polylines;
+  }
+
   let [tw,tp] = put_text(text);
   tp = tp.map(p=>scl_poly(shr_poly(p,-0.3),0.3,0.3));
   tw *= 0.3;
-  polylines.push(...tp.map(p=>trsl_poly(p,250-tw/2,300-pad+5)));
+  polylines.push(...tp.map(p=>trsl_poly(p,(frameW/2)-tw/2,frameH-pad+5)));
   return polylines;
 }
 
@@ -2314,83 +2340,90 @@ function rndtri(a,b,c){
 function generate_params(){
 
   let arg = default_params();
-  arg.body_curve_type =   choice([0,1]);
-  arg.body_curve_amount = rndtri(0.5,0.85,0.98);
-  arg.body_length = rndtri(200,350,420);
-  arg.body_height = rndtri(45,90,150);
-  arg.scale_type = choice([0,1,2,3]);
-  arg.scale_scale = rndtri(0.8,1,1.5);
-  arg.pattern_type = choice([0,1,2,3,4]);
-  arg.pattern_scale = rndtri(0.5,1,2);
-  arg.dorsal_texture_type = choice([0,1]);
-  arg.dorsal_type = choice([0,1]);
-  arg.dorsal_length = rndtri(30,90,180);
+
+  // Softer, rounder bodies
+  arg.body_curve_type = choice([1,0]); // bias toward the rounder spline
+  arg.body_curve_amount = rndtri(0.7,0.9,0.99);
+  arg.body_length = rndtri(160,230,320);
+  arg.body_height = rndtri(70,120,190);
+
+  // Scales and patterns: keep interiors simple for low-res training
+  arg.scale_type = 0;
+  arg.scale_scale = rndtri(0.7,0.9,1.1);
+  arg.pattern_type = choice([0,0,1]); // mostly plain
+  arg.pattern_scale = rndtri(0.9,1.2,1.6);
+
+  // Fins trimmed for small, cute proportions
+  arg.dorsal_texture_type = 0; // reduce interior hatching
+  arg.dorsal_type = choice([0,0,1]); // more rounded dorsal
+  arg.dorsal_length = rndtri(25,70,120);
   if (arg.dorsal_type == 0){
-    arg.dorsal_start = ~~rndtri(7,8,15);
-    arg.dorsal_end   = ~~rndtri(20,27,28);
+    arg.dorsal_start = ~~rndtri(7,9,13);
+    arg.dorsal_end   = ~~rndtri(18,23,27);
   }else{
-    arg.dorsal_start = ~~rndtri(11,12,16);
-    arg.dorsal_end   = ~~rndtri(19,21,24);
+    arg.dorsal_start = ~~rndtri(11,12,15);
+    arg.dorsal_end   = ~~rndtri(18,20,23);
   }
-  arg.wing_texture_type = choice([0,1]);
-  arg.wing_type = choice([0,1]);
+
+  arg.wing_texture_type = 0;
+  arg.wing_type = choice([0,0,1]); // keep paired fins rounded/compact
   if (arg.wing_type == 0){
-    arg.wing_length = rndtri(40,130,200);
+    arg.wing_length = rndtri(40,100,160);
   }else{
-    arg.wing_length = rndtri(40,150,350);
+    arg.wing_length = rndtri(60,130,220);
   }
   if (arg.wing_texture_type == 0){
-    arg.wing_width = rndtri(7,10,20);
-    arg.wing_y = rndtri(0.45,0.7,0.85);
+    arg.wing_width = rndtri(10,14,24);
+    arg.wing_y = rndtri(0.5,0.7,0.85);
   }else{
-    arg.wing_width = rndtri(20,30,50);
-    arg.wing_y = rndtri(0.45,0.65,0.75);
+    arg.wing_width = rndtri(18,26,40);
+    arg.wing_y = rndtri(0.5,0.65,0.78);
   }
   
   arg.wing_start = ~~rndtri(5,6,8);
   arg.wing_end = ~~rndtri(5,6,8);
 
-  arg.pelvic_texture_type = arg.dorsal_texture_type ? choice([0,1]) : 0;
+  arg.pelvic_texture_type = 0;
   arg.pelvic_type = choice([0,1]);
-  arg.pelvic_length = rndtri(30,85,140);
+  arg.pelvic_length = rndtri(30,70,110);
   if (arg.pelvic_type == 0){
     arg.pelvic_start = ~~rndtri(7,9,11);
-    arg.pelvic_end = ~~rndtri(13,14,15);
+    arg.pelvic_end = ~~rndtri(12,14,15);
   }else{
-    arg.pelvic_start = ~~rndtri(7,9,12);
+    arg.pelvic_start = ~~rndtri(8,10,12);
     arg.pelvic_end = arg.pelvic_start+2;
   }
 
-  arg.anal_texture_type = arg.dorsal_texture_type ? choice([0,1]) : 0;
+  arg.anal_texture_type = 0;
   arg.anal_type = choice([0,1]);
-  arg.anal_length = rndtri(20,50,80);
-  arg.anal_start = ~~rndtri(16,19,23);
-  arg.anal_end = ~~rndtri(25,29,31);
+  arg.anal_length = rndtri(18,40,70);
+  arg.anal_start = ~~rndtri(16,19,22);
+  arg.anal_end = ~~rndtri(23,27,30);
 
-  arg.tail_type = choice([0,1,2,3,4,5]);
-  arg.tail_length = rndtri(50,75,180);
+  arg.tail_type = choice([0,1,2,3]); // skip the spiky extremes
+  arg.tail_length = rndtri(45,70,140);
 
-  arg.finlet_type = choice([0,1,2,3]);
+  arg.finlet_type = choice([0,1,2]); // fewer sharp finlets
 
   arg.neck_type = choice([0,1]);
-  arg.nose_height = rndtri(-50,0,35);
-  arg.head_length = rndtri(20,30,35);
-  arg.mouth_size = ~~rndtri(6,8,11);
+  arg.nose_height = rndtri(-10,5,25);
+  arg.head_length = rndtri(22,30,38);
+  arg.mouth_size = ~~rndtri(4,6,9);
 
-  arg.head_texture_amount = ~~rndtri(30,60,160);
-  arg.has_moustache = choice([0,0,0,1]);
-  arg.has_beard = choice([0,0,0,0,0,1]);
-  arg.moustache_length = ~~rndtri(10,20,40);
-  arg.beard_length = ~~rndtri(20,30,50);
+  arg.head_texture_amount = ~~rndtri(0,6,18);
+  arg.has_moustache = choice([0,0,0,1]); // rare whiskers
+  arg.has_beard = 0;
+  arg.moustache_length = ~~rndtri(6,14,24);
+  arg.beard_length = ~~rndtri(15,22,30);
 
-  arg.eye_type = choice([0,1]);
-  arg.eye_size = rndtri(8,10,28)//arg.body_height/6//Math.min(arg.body_height/6,rndtri(8,10,30));
+  arg.eye_type = choice([1,1,0]); // bigger, rounder eyes
+  arg.eye_size = rndtri(14,18,30);
 
-  arg.jaw_size = rndtri(0.7,1,1.4);
+  arg.jaw_size = rndtri(0.65,0.9,1.15);
 
-  arg.has_teeth = choice([0,1,1]);
-  arg.teeth_length = rndtri(5,8,15);
-  arg.teeth_space = rndtri(3,3.5,6);
+  arg.has_teeth = choice([0,0,1]); // mostly toothless
+  arg.teeth_length = rndtri(3,6,10);
+  arg.teeth_space = rndtri(2.5,3,4.5);
 
   return arg;
 }
@@ -2562,7 +2595,7 @@ function str_to_seed(str){
   return n;
 }
 
-function main(seed){
+function main(seed, options = {}){
   if (seed === undefined){
     jsr = ~~(Math.random()*10000);
     let name = binomen();
@@ -2570,7 +2603,16 @@ function main(seed){
   }
   jsr = str_to_seed(seed);
   let drawing = fish(generate_params());
-  return (cleanup(reframe(drawing,20,seed+'.')));
+  let text = options.text === undefined ? seed + '.' : options.text;
+  let pad = options.pad ?? 20;
+  let width = options.width ?? 500;
+  let height = options.height ?? 300;
+  let textGap = options.textGap ?? 10;
+  return cleanup(reframe(drawing,pad,text,{width,height,textGap}));
+}
+
+if (typeof module !== "undefined"){
+  module.exports = {main,generate_params,default_params,fish,reframe,cleanup,draw_svg,binomen,str_to_seed};
 }
 
 

@@ -26,7 +26,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 
 // node_modules/react/cjs/react.development.js
 var require_react_development = __commonJS({
-  "node_modules/react/cjs/react.development.js"(exports, module) {
+  "node_modules/react/cjs/react.development.js"(exports, module2) {
     "use strict";
     (function() {
       function defineDeprecationWarning(methodName, info) {
@@ -423,8 +423,8 @@ var require_react_development = __commonJS({
         if (null === enqueueTaskImpl)
           try {
             var requireString = ("require" + Math.random()).slice(0, 7);
-            enqueueTaskImpl = (module && module[requireString]).call(
-              module,
+            enqueueTaskImpl = (module2 && module2[requireString]).call(
+              module2,
               "timers"
             ).setImmediate;
           } catch (_err) {
@@ -998,12 +998,12 @@ var require_react_development = __commonJS({
 
 // node_modules/react/index.js
 var require_react = __commonJS({
-  "node_modules/react/index.js"(exports, module) {
+  "node_modules/react/index.js"(exports, module2) {
     "use strict";
     if (false) {
-      module.exports = null;
+      module2.exports = null;
     } else {
-      module.exports = require_react_development();
+      module2.exports = require_react_development();
     }
   }
 });
@@ -1269,12 +1269,12 @@ var require_scheduler_development = __commonJS({
 
 // node_modules/scheduler/index.js
 var require_scheduler = __commonJS({
-  "node_modules/scheduler/index.js"(exports, module) {
+  "node_modules/scheduler/index.js"(exports, module2) {
     "use strict";
     if (false) {
-      module.exports = null;
+      module2.exports = null;
     } else {
-      module.exports = require_scheduler_development();
+      module2.exports = require_scheduler_development();
     }
   }
 });
@@ -1525,13 +1525,13 @@ var require_react_dom_development = __commonJS({
 
 // node_modules/react-dom/index.js
 var require_react_dom = __commonJS({
-  "node_modules/react-dom/index.js"(exports, module) {
+  "node_modules/react-dom/index.js"(exports, module2) {
     "use strict";
     if (false) {
       checkDCE();
-      module.exports = null;
+      module2.exports = null;
     } else {
-      module.exports = require_react_dom_development();
+      module2.exports = require_react_dom_development();
     }
   }
 });
@@ -21437,13 +21437,13 @@ var require_react_dom_client_development = __commonJS({
 
 // node_modules/react-dom/client.js
 var require_client = __commonJS({
-  "node_modules/react-dom/client.js"(exports, module) {
+  "node_modules/react-dom/client.js"(exports, module2) {
     "use strict";
     if (false) {
       checkDCE();
-      module.exports = null;
+      module2.exports = null;
     } else {
-      module.exports = require_react_dom_client_development();
+      module2.exports = require_react_dom_client_development();
     }
   }
 });
@@ -21707,19 +21707,19 @@ var require_react_jsx_runtime_development = __commonJS({
 
 // node_modules/react/jsx-runtime.js
 var require_jsx_runtime = __commonJS({
-  "node_modules/react/jsx-runtime.js"(exports, module) {
+  "node_modules/react/jsx-runtime.js"(exports, module2) {
     "use strict";
     if (false) {
-      module.exports = null;
+      module2.exports = null;
     } else {
-      module.exports = require_react_jsx_runtime_development();
+      module2.exports = require_react_jsx_runtime_development();
     }
   }
 });
 
 // play/fishdraw/main.tsx
-var import_react = __toESM(require_react());
-var import_client = __toESM(require_client());
+var import_react = __toESM(require_react(), 1);
+var import_client = __toESM(require_client(), 1);
 
 // play/fishdraw/fishdraw.js
 var jsr = Math.random() * 4294967295;
@@ -22398,6 +22398,34 @@ function pt_seg_dist(p, p0, p1) {
   let dy = y - yy;
   return Math.sqrt(dx * dx + dy * dy);
 }
+function approx_poly_dp(polyline, epsilon) {
+  if (polyline.length <= 2) {
+    return polyline;
+  }
+  let dmax = 0;
+  let argmax = -1;
+  for (let i = 1; i < polyline.length - 1; i++) {
+    let d = pt_seg_dist(
+      polyline[i],
+      polyline[0],
+      polyline[polyline.length - 1]
+    );
+    if (d > dmax) {
+      dmax = d;
+      argmax = i;
+    }
+  }
+  let ret = [];
+  if (dmax > epsilon) {
+    let L = approx_poly_dp(polyline.slice(0, argmax + 1), epsilon);
+    let R = approx_poly_dp(polyline.slice(argmax, polyline.length), epsilon);
+    ret = ret.concat(L.slice(0, L.length - 1)).concat(R);
+  } else {
+    ret.push(polyline[0].slice());
+    ret.push(polyline[polyline.length - 1].slice());
+  }
+  return ret;
+}
 function distsq(x0, y0, x1, y1) {
   let dx = x0 - x1;
   let dy = y0 - y1;
@@ -22471,6 +22499,34 @@ function poissondisk(W, H, r, samples) {
   }
   ;
 }
+function draw_svg(polylines, opts = {}) {
+  const width = opts.width ?? 520;
+  const height = opts.height ?? 320;
+  const offsetX = opts.offsetX ?? opts.offset ?? 10;
+  const offsetY = opts.offsetY ?? opts.offset ?? 10;
+  const frameWidth = opts.frameWidth ?? width - 2 * offsetX;
+  const frameHeight = opts.frameHeight ?? height - 2 * offsetY;
+  const bg = opts.background ?? "floralwhite";
+  const stroke = opts.stroke ?? "black";
+  const strokeWidth = opts.strokeWidth ?? 1;
+  const drawFrame = opts.drawFrame ?? true;
+  let o = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">`;
+  o += `<rect x="0" y="0" width="${width}" height="${height}" fill="${bg}"/>`;
+  if (drawFrame) {
+    o += `<rect x="${offsetX}" y="${offsetY}" width="${frameWidth}" height="${frameHeight}" stroke="${stroke}" stroke-width="${strokeWidth}" fill="none"/>`;
+  }
+  o += `<path stroke="${stroke}" stroke-width="${strokeWidth}" fill="none" stroke-linecap="round" stroke-linejoin="round" d="`;
+  for (let i = 0; i < polylines.length; i++) {
+    o += "\nM ";
+    for (let j = 0; j < polylines[i].length; j++) {
+      let [x, y] = polylines[i][j];
+      o += `${~~((x + offsetX) * 100) / 100} ${~~((y + offsetY) * 100) / 100} `;
+    }
+  }
+  o += `
+"/></svg>`;
+  return o;
+}
 function pow(a, b) {
   return Math.sign(a) * Math.pow(Math.abs(a), b);
 }
@@ -22513,6 +22569,13 @@ function squama(w, h, m = 3) {
 }
 function trsl_poly(poly, x, y) {
   return poly.map((xy) => [xy[0] + x, xy[1] + y]);
+}
+function scl_poly(poly, sx, sy) {
+  if (sy === void 0) sy = sx;
+  return poly.map((xy) => [xy[0] * sx, xy[1] * sy]);
+}
+function shr_poly(poly, sx) {
+  return poly.map((xy) => [xy[0] + xy[1] * sx, xy[1]]);
 }
 function rot_poly(poly, th) {
   let qoly = [];
@@ -23594,6 +23657,56 @@ function fish(arg) {
   }
   return bd.concat(f0).concat(f1).concat(f2).concat(f3).concat(f4).concat(f5).concat(fh).concat(sh).concat(sh2).concat(sh3).concat();
 }
+function reframe(polylines, pad = 20, text = null, opts = {}) {
+  let frameW = opts.width ?? 500;
+  let frameH = opts.height ?? 300;
+  let textGap = opts.textGap ?? 10;
+  let W = frameW - pad * 2;
+  let H = frameH - pad * 2 - (text ? textGap : 0);
+  let bbox = get_bbox(polylines.flat());
+  let sw = W / bbox.w;
+  let sh = H / bbox.h;
+  let s = Math.min(sw, sh);
+  let px = (W - bbox.w * s) / 2;
+  let py = (H - bbox.h * s) / 2;
+  for (let i = 0; i < polylines.length; i++) {
+    for (let j = 0; j < polylines[i].length; j++) {
+      let [x, y] = polylines[i][j];
+      x = (x - bbox.x) * s + px + pad;
+      y = (y - bbox.y) * s + py + pad;
+      polylines[i][j] = [x, y];
+    }
+  }
+  if (!text) {
+    return polylines;
+  }
+  let [tw, tp] = put_text(text);
+  tp = tp.map((p) => scl_poly(shr_poly(p, -0.3), 0.3, 0.3));
+  tw *= 0.3;
+  polylines.push(...tp.map((p) => trsl_poly(p, frameW / 2 - tw / 2, frameH - pad + 5)));
+  return polylines;
+}
+function cleanup(polylines) {
+  for (let i = polylines.length - 1; i >= 0; i--) {
+    polylines[i] = approx_poly_dp(polylines[i], 0.1);
+    for (let j = 0; j < polylines[i].length; j++) {
+      for (let k = 0; k < polylines[i][j].length; k++) {
+        polylines[i][j][k] = ~~(polylines[i][j][k] * 1e4) / 1e4;
+      }
+    }
+    if (polylines[i].length < 2) {
+      polylines.splice(i, 1);
+      continue;
+    }
+    if (polylines[i].length == 2) {
+      if (dist(...polylines[0], ...polylines[1]) < 0.9) {
+        polylines.splice(i, 1);
+        continue;
+      }
+    }
+  }
+  return polylines;
+}
 function default_params() {
   return {
     body_curve_type: 0,
@@ -23678,78 +23791,257 @@ function rndtri(a, b, c) {
 }
 function generate_params() {
   let arg = default_params();
-  arg.body_curve_type = choice([0, 1]);
-  arg.body_curve_amount = rndtri(0.5, 0.85, 0.98);
-  arg.body_length = rndtri(200, 350, 420);
-  arg.body_height = rndtri(45, 90, 150);
-  arg.scale_type = choice([0, 1, 2, 3]);
-  arg.scale_scale = rndtri(0.8, 1, 1.5);
-  arg.pattern_type = choice([0, 1, 2, 3, 4]);
-  arg.pattern_scale = rndtri(0.5, 1, 2);
+  arg.body_curve_type = choice([1, 0]);
+  arg.body_curve_amount = rndtri(0.7, 0.9, 0.99);
+  arg.body_length = rndtri(160, 230, 320);
+  arg.body_height = rndtri(70, 120, 190);
+  arg.scale_type = choice([1, 0, 2]);
+  arg.scale_scale = rndtri(0.7, 0.95, 1.2);
+  arg.pattern_type = choice([0, 1, 2, 4]);
+  arg.pattern_scale = rndtri(0.6, 0.9, 1.4);
   arg.dorsal_texture_type = choice([0, 1]);
-  arg.dorsal_type = choice([0, 1]);
-  arg.dorsal_length = rndtri(30, 90, 180);
+  arg.dorsal_type = choice([0, 0, 1]);
+  arg.dorsal_length = rndtri(25, 70, 120);
   if (arg.dorsal_type == 0) {
-    arg.dorsal_start = ~~rndtri(7, 8, 15);
-    arg.dorsal_end = ~~rndtri(20, 27, 28);
+    arg.dorsal_start = ~~rndtri(7, 9, 13);
+    arg.dorsal_end = ~~rndtri(18, 23, 27);
   } else {
-    arg.dorsal_start = ~~rndtri(11, 12, 16);
-    arg.dorsal_end = ~~rndtri(19, 21, 24);
+    arg.dorsal_start = ~~rndtri(11, 12, 15);
+    arg.dorsal_end = ~~rndtri(18, 20, 23);
   }
   arg.wing_texture_type = choice([0, 1]);
-  arg.wing_type = choice([0, 1]);
+  arg.wing_type = choice([0, 0, 1]);
   if (arg.wing_type == 0) {
-    arg.wing_length = rndtri(40, 130, 200);
+    arg.wing_length = rndtri(40, 100, 160);
   } else {
-    arg.wing_length = rndtri(40, 150, 350);
+    arg.wing_length = rndtri(60, 130, 220);
   }
   if (arg.wing_texture_type == 0) {
-    arg.wing_width = rndtri(7, 10, 20);
-    arg.wing_y = rndtri(0.45, 0.7, 0.85);
+    arg.wing_width = rndtri(10, 14, 24);
+    arg.wing_y = rndtri(0.5, 0.7, 0.85);
   } else {
-    arg.wing_width = rndtri(20, 30, 50);
-    arg.wing_y = rndtri(0.45, 0.65, 0.75);
+    arg.wing_width = rndtri(18, 26, 40);
+    arg.wing_y = rndtri(0.5, 0.65, 0.78);
   }
   arg.wing_start = ~~rndtri(5, 6, 8);
   arg.wing_end = ~~rndtri(5, 6, 8);
   arg.pelvic_texture_type = arg.dorsal_texture_type ? choice([0, 1]) : 0;
   arg.pelvic_type = choice([0, 1]);
-  arg.pelvic_length = rndtri(30, 85, 140);
+  arg.pelvic_length = rndtri(30, 70, 110);
   if (arg.pelvic_type == 0) {
     arg.pelvic_start = ~~rndtri(7, 9, 11);
-    arg.pelvic_end = ~~rndtri(13, 14, 15);
+    arg.pelvic_end = ~~rndtri(12, 14, 15);
   } else {
-    arg.pelvic_start = ~~rndtri(7, 9, 12);
+    arg.pelvic_start = ~~rndtri(8, 10, 12);
     arg.pelvic_end = arg.pelvic_start + 2;
   }
   arg.anal_texture_type = arg.dorsal_texture_type ? choice([0, 1]) : 0;
   arg.anal_type = choice([0, 1]);
-  arg.anal_length = rndtri(20, 50, 80);
-  arg.anal_start = ~~rndtri(16, 19, 23);
-  arg.anal_end = ~~rndtri(25, 29, 31);
-  arg.tail_type = choice([0, 1, 2, 3, 4, 5]);
-  arg.tail_length = rndtri(50, 75, 180);
-  arg.finlet_type = choice([0, 1, 2, 3]);
+  arg.anal_length = rndtri(18, 40, 70);
+  arg.anal_start = ~~rndtri(16, 19, 22);
+  arg.anal_end = ~~rndtri(23, 27, 30);
+  arg.tail_type = choice([0, 1, 2, 3]);
+  arg.tail_length = rndtri(45, 70, 140);
+  arg.finlet_type = choice([0, 1, 2]);
   arg.neck_type = choice([0, 1]);
-  arg.nose_height = rndtri(-50, 0, 35);
-  arg.head_length = rndtri(20, 30, 35);
-  arg.mouth_size = ~~rndtri(6, 8, 11);
-  arg.head_texture_amount = ~~rndtri(30, 60, 160);
+  arg.nose_height = rndtri(-10, 5, 25);
+  arg.head_length = rndtri(22, 30, 38);
+  arg.mouth_size = ~~rndtri(4, 6, 9);
+  arg.head_texture_amount = ~~rndtri(25, 50, 110);
   arg.has_moustache = choice([0, 0, 0, 1]);
-  arg.has_beard = choice([0, 0, 0, 0, 0, 1]);
-  arg.moustache_length = ~~rndtri(10, 20, 40);
-  arg.beard_length = ~~rndtri(20, 30, 50);
-  arg.eye_type = choice([0, 1]);
-  arg.eye_size = rndtri(8, 10, 28);
-  arg.jaw_size = rndtri(0.7, 1, 1.4);
-  arg.has_teeth = choice([0, 1, 1]);
-  arg.teeth_length = rndtri(5, 8, 15);
-  arg.teeth_space = rndtri(3, 3.5, 6);
+  arg.has_beard = 0;
+  arg.moustache_length = ~~rndtri(6, 14, 24);
+  arg.beard_length = ~~rndtri(15, 22, 30);
+  arg.eye_type = choice([1, 1, 0]);
+  arg.eye_size = rndtri(14, 18, 30);
+  arg.jaw_size = rndtri(0.65, 0.9, 1.15);
+  arg.has_teeth = choice([0, 0, 1]);
+  arg.teeth_length = rndtri(3, 6, 10);
+  arg.teeth_space = rndtri(2.5, 3, 4.5);
   return arg;
+}
+function binomen() {
+  let data = [
+    ["A", "AB", "AL", "AN", "AP", "AR", "AU", "BA", "BE", "BO", "BRA", "CA", "CAR", "CENT", "CHAE", "CHAN", "CHI", "CHRO", "CHRY", "CO", "CTE", "CY", "CYP", "DE", "E", "EU", "GA", "GAS", "GNA", "GO", "HE", "HIP", "HO", "HY", "LA", "LAB", "LE", "LI", "LO", "LU", "MAC", "ME", "MIC", "MO", "MU", "MY", "NA", "NAN", "NE", "NO", "O", "ON", "OP", "OS", "PA", "PER", "PHO", "PI", "PLA", "PLEU", "PO", "PSEU", "PTE", "RA", "RHI", "RHOM", "RU", "SAL", "SAR", "SCA", "SCOM", "SE", "SI", "STE", "TAU", "TEL", "THO", "TRI", "XE", "XI"],
+    ["BE", "BI", "BO", "BU", "CA", "CAM", "CAN", "CE", "CENT", "CHA", "CHEI", "CHI", "CHO", "CHY", "CI", "CIRR", "CO", "DI", "DO", "DON", "DOP", "GA", "GAS", "GO", "HI", "HYN", "LA", "LAB", "LE", "LEOT", "LI", "LICH", "LIS", "LO", "LOS", "LU", "LY", "MA", "ME", "MI", "MICH", "MO", "MU", "NA", "NE", "NEC", "NI", "NO", "NOCH", "NOP", "NOS", "PA", "PE", "PEN", "PHA", "PHI", "PHO", "PHY", "PHYO", "PI", "PIP", "PIS", "PO", "POG", "POPH", "RA", "RAE", "RAM", "REOCH", "RI", "RICH", "RIP", "RIS", "RO", "ROI", "ROP", "ROS", "RY", "RYN", "SE", "SO", "TA", "TE", "TEL", "THAL", "THE", "THO", "THOP", "THU", "TI", "TICH", "TO", "TOG", "TOP", "TOS", "VA", "XI", "XO"],
+    ["BIUS", "BUS", "CA", "CHUS", "CION", "CON", "CUS", "DA", "DES", "DEUS", "DON", "DUS", "GER", "GON", "GUS", "HUS", "LA", "LEA", "LIS", "LIUS", "LUS", "MA", "MIS", "MUS", "NA", "NIA", "NIO", "NIUS", "NOPS", "NUS", "PHEUS", "PHIS", "PIS", "PUS", "RA", "RAS", "RAX", "RIA", "RION", "RIS", "RUS", "RYS", "SA", "SER", "SIA", "SIS", "SUS", "TER", "TES", "TEUS", "THUS", "THYS", "TIA", "TIS", "TUS", "TYS"],
+    ["A", "AE", "AL", "AN", "AR", "AT", "AU", "AUST", "AY", "BA", "BAR", "BE", "BI", "BO", "CA", "CAL", "CAM", "CAN", "CAR", "CAU", "CE", "CHI", "CHRY", "COR", "CRY", "CU", "CYA", "DA", "DE", "DEN", "DI", "DIA", "DO", "DOR", "DU", "E", "FA", "FAS", "FES", "FI", "FLO", "FOR", "FRE", "FUR", "GLA", "GO", "HA", "HE", "HIP", "HO", "HYP", "I", "IM", "IN", "JA", "LA", "LAB", "LE", "LEU", "LI", "LO", "LU", "MA", "MAC", "MAR", "ME", "MO", "MOO", "MOR", "NA", "NE", "NI", "NIG", "NO", "O", "OR", "PA", "PAL", "PE", "PEC", "PHO", "PLA", "PLU", "PO", "PRO", "PU", "PUL", "RA", "RE", "RHOM", "RI", "RO", "ROST", "RU", "SA", "SAL", "SE", "SO", "SPI", "SPLEN", "STRIA", "TAU", "THO", "TRI", "TY", "U", "UN", "VA", "VI", "VIT", "VUL", "WAL", "XAN"],
+    ["BA", "BAR", "BER", "BI", "BO", "BOI", "BU", "CA", "CAN", "CAU", "CE", "CEL", "CHA", "CHEL", "CHOP", "CI", "CIA", "CIL", "CIO", "CO", "COS", "CU", "DA", "DE", "DEL", "DI", "DIA", "DO", "FAS", "FEL", "FI", "FOR", "GA", "GE", "GI", "HA", "HYN", "KE", "LA", "LAN", "LE", "LEA", "LEU", "LI", "LIA", "LO", "LON", "LOP", "MA", "ME", "MEN", "MI", "MIE", "MO", "NA", "NE", "NEA", "NEL", "NEN", "NI", "NIF", "NO", "NOI", "NOP", "NU", "PA", "PE", "PER", "PHA", "PHE", "PI", "PIN", "PO", "QUI", "RA", "RAC", "RE", "REN", "RES", "RI", "RIA", "RIEN", "RIF", "RO", "ROR", "ROS", "ROST", "RU", "RYTH", "SA", "SE", "SI", "SO", "SU", "TA", "TAE", "TE", "TER", "THAL", "THO", "THU", "TI", "TIG", "TO", "TU", "VA", "VE", "VES", "VI", "VIT", "XEL", "XI", "ZO"],
+    ["BEUS", "CA", "CENS", "CEPS", "CEUS", "CHA", "CHUS", "CI", "CUS", "DA", "DAX", "DENS", "DES", "DI", "DIS", "DUS", "FER", "GA", "GI", "GUS", "KEI", "KI", "LA", "LAS", "LI", "LIS", "LIUS", "LOR", "LUM", "LUS", "MA", "MIS", "MUS", "NA", "NEUS", "NI", "NII", "NIS", "NIUS", "NUS", "PIS", "PUS", "RA", "RE", "RI", "RIAE", "RIE", "RII", "RIO", "RIS", "RIX", "RONS", "RU", "RUM", "RUS", "SA", "SEUS", "SI", "SIS", "SUS", "TA", "TEUS", "THUS", "TI", "TIS", "TOR", "TUM", "TUS", "TZI", "ZI"]
+  ];
+  let freq = [
+    [27, 2, 4, 4, 2, 2, 2, 5, 2, 2, 3, 4, 2, 5, 3, 2, 2, 2, 3, 8, 3, 3, 2, 2, 7, 2, 3, 2, 2, 2, 6, 3, 2, 4, 5, 2, 5, 2, 3, 2, 2, 5, 5, 4, 2, 3, 2, 3, 2, 2, 9, 2, 2, 2, 7, 2, 2, 2, 2, 2, 5, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 3, 3, 2, 3],
+    [2, 2, 3, 3, 5, 2, 11, 6, 4, 2, 7, 2, 4, 4, 3, 3, 5, 4, 9, 2, 2, 4, 5, 13, 3, 3, 12, 3, 3, 2, 8, 3, 4, 15, 6, 2, 3, 10, 3, 3, 2, 2, 2, 8, 7, 3, 4, 20, 2, 2, 3, 4, 3, 2, 10, 2, 6, 2, 2, 5, 2, 2, 13, 2, 2, 14, 3, 2, 2, 9, 4, 2, 5, 42, 2, 4, 2, 6, 3, 3, 11, 2, 19, 2, 3, 2, 5, 3, 2, 4, 2, 27, 2, 2, 2, 2, 2, 2],
+    [3, 3, 7, 7, 3, 2, 3, 2, 5, 2, 13, 7, 2, 3, 4, 2, 13, 2, 2, 2, 24, 18, 13, 17, 12, 4, 2, 5, 3, 19, 3, 2, 2, 3, 7, 3, 2, 5, 2, 6, 29, 3, 2, 2, 2, 3, 4, 4, 16, 2, 6, 12, 5, 5, 6, 2],
+    [23, 3, 11, 6, 6, 3, 8, 2, 2, 2, 3, 3, 9, 3, 8, 2, 2, 3, 2, 2, 2, 2, 6, 2, 2, 3, 4, 3, 4, 2, 2, 2, 2, 2, 2, 15, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 3, 2, 2, 3, 2, 2, 2, 7, 2, 2, 3, 3, 4, 4, 13, 7, 3, 10, 2, 2, 2, 5, 2, 3, 6, 4, 14, 2, 3, 2, 5, 2, 2, 3, 2, 3, 2, 2, 2, 3, 5, 2, 2, 3, 2, 3, 5, 2, 5, 2, 3, 3, 3, 3, 3, 7, 2, 3, 2, 4, 3, 2, 2, 2, 2],
+    [5, 2, 2, 4, 4, 2, 2, 10, 6, 2, 3, 5, 3, 2, 2, 6, 12, 2, 3, 6, 2, 22, 4, 4, 2, 7, 5, 6, 10, 2, 2, 2, 9, 7, 4, 2, 2, 2, 39, 3, 10, 3, 2, 20, 2, 10, 2, 2, 12, 9, 3, 8, 2, 4, 19, 5, 5, 3, 3, 12, 2, 9, 3, 2, 7, 3, 4, 3, 6, 2, 8, 5, 2, 4, 25, 2, 4, 3, 2, 26, 2, 2, 2, 21, 2, 2, 4, 6, 5, 3, 6, 4, 6, 2, 14, 2, 19, 2, 2, 2, 2, 21, 3, 14, 2, 3, 5, 2, 5, 2, 2, 2, 3],
+    [2, 7, 4, 3, 5, 2, 5, 2, 13, 6, 2, 2, 6, 8, 2, 4, 3, 4, 2, 5, 2, 5, 11, 3, 7, 19, 2, 2, 2, 11, 10, 4, 6, 12, 3, 15, 4, 6, 2, 18, 3, 3, 11, 4, 14, 2, 2, 3, 2, 13, 2, 3, 2, 4, 21, 7, 2, 10, 8, 13, 31, 2, 5, 5, 2, 2, 10, 68, 2, 3]
+  ];
+  let name = choice(data[0], freq[0]);
+  let n = ~~(rand() * 3);
+  for (let i = 0; i < n; i++) {
+    name += choice(data[1], freq[1]);
+  }
+  name += choice(data[2], freq[2]);
+  name += " ";
+  name += choice(data[3], freq[3]);
+  n = ~~(rand() * 3);
+  for (let i = 0; i < n; i++) {
+    name += choice(data[4], freq[4]);
+  }
+  name += choice(data[5], freq[5]);
+  name = name.replace(/([A-Z])\1\1+/g, "$1$1");
+  return name[0] + name.slice(1).toLowerCase();
+}
+var hershey_raw = {
+  "501": "  9I[RFJ[ RRFZ[ RMTWT",
+  "502": " 24G\\KFK[ RKFTFWGXHYJYLXNWOTP RKPTPWQXRYTYWXYWZT[K[",
+  "503": " 19H]ZKYIWGUFQFOGMILKKNKSLVMXOZQ[U[WZYXZV",
+  "504": " 16G\\KFK[ RKFRFUGWIXKYNYSXVWXUZR[K[",
+  "505": " 12H[LFL[ RLFYF RLPTP RL[Y[",
+  "506": "  9HZLFL[ RLFYF RLPTP",
+  "507": " 23H]ZKYIWGUFQFOGMILKKNKSLVMXOZQ[U[WZYXZVZS RUSZS",
+  "508": "  9G]KFK[ RYFY[ RKPYP",
+  "509": "  3NVRFR[",
+  "510": " 11JZVFVVUYTZR[P[NZMYLVLT",
+  "511": "  9G\\KFK[ RYFKT RPOY[",
+  "512": "  6HYLFL[ RL[X[",
+  "513": " 12F^JFJ[ RJFR[ RZFR[ RZFZ[",
+  "514": "  9G]KFK[ RKFY[ RYFY[",
+  "515": " 22G]PFNGLIKKJNJSKVLXNZP[T[VZXXYVZSZNYKXIVGTFPF",
+  "516": " 14G\\KFK[ RKFTFWGXHYJYMXOWPTQKQ",
+  "517": " 25G]PFNGLIKKJNJSKVLXNZP[T[VZXXYVZSZNYKXIVGTFPF RSWY]",
+  "518": " 17G\\KFK[ RKFTFWGXHYJYLXNWOTPKP RRPY[",
+  "519": " 21H\\YIWGTFPFMGKIKKLMMNOOUQWRXSYUYXWZT[P[MZKX",
+  "520": "  6JZRFR[ RKFYF",
+  "521": " 11G]KFKULXNZQ[S[VZXXYUYF",
+  "522": "  6I[JFR[ RZFR[",
+  "523": " 12F^HFM[ RRFM[ RRFW[ R\\FW[",
+  "524": "  6H\\KFY[ RYFK[",
+  "525": "  7I[JFRPR[ RZFRP",
+  "526": "  9H\\YFK[ RKFYF RK[Y[",
+  "601": " 18I\\XMX[ RXPVNTMQMONMPLSLUMXOZQ[T[VZXX",
+  "602": " 18H[LFL[ RLPNNPMSMUNWPXSXUWXUZS[P[NZLX",
+  "603": " 15I[XPVNTMQMONMPLSLUMXOZQ[T[VZXX",
+  "604": " 18I\\XFX[ RXPVNTMQMONMPLSLUMXOZQ[T[VZXX",
+  "605": " 18I[LSXSXQWOVNTMQMONMPLSLUMXOZQ[T[VZXX",
+  "606": "  9MYWFUFSGRJR[ ROMVM",
+  "607": " 23I\\XMX]W`VaTbQbOa RXPVNTMQMONMPLSLUMXOZQ[T[VZXX",
+  "608": " 11I\\MFM[ RMQPNRMUMWNXQX[",
+  "609": "  9NVQFRGSFREQF RRMR[",
+  "610": " 12MWRFSGTFSERF RSMS^RaPbNb",
+  "611": "  9IZMFM[ RWMMW RQSX[",
+  "612": "  3NVRFR[",
+  "613": " 19CaGMG[ RGQJNLMOMQNRQR[ RRQUNWMZM\\N]Q][",
+  "614": " 11I\\MMM[ RMQPNRMUMWNXQX[",
+  "615": " 18I\\QMONMPLSLUMXOZQ[T[VZXXYUYSXPVNTMQM",
+  "616": " 18H[LMLb RLPNNPMSMUNWPXSXUWXUZS[P[NZLX",
+  "617": " 18I\\XMXb RXPVNTMQMONMPLSLUMXOZQ[T[VZXX",
+  "618": "  9KXOMO[ ROSPPRNTMWM",
+  "619": " 18J[XPWNTMQMNNMPNRPSUTWUXWXXWZT[Q[NZMX",
+  "620": "  9MYRFRWSZU[W[ ROMVM",
+  "621": " 11I\\MMMWNZP[S[UZXW RXMX[",
+  "622": "  6JZLMR[ RXMR[",
+  "623": " 12G]JMN[ RRMN[ RRMV[ RZMV[",
+  "624": "  6J[MMX[ RXMM[",
+  "625": " 10JZLMR[ RXMR[P_NaLbKb",
+  "626": "  9J[XMM[ RMMXM RM[X[",
+  "710": "  6MWRYQZR[SZRY"
+};
+var hershey_cache = {};
+function compile_hershey(i) {
+  if (hershey_cache[i]) {
+    return hershey_cache[i];
+  }
+  var entry = hershey_raw[i];
+  if (entry == null) {
+    return;
+  }
+  var ordR = 82;
+  var bound = entry.substring(3, 5);
+  var xmin = bound.charCodeAt(0) - ordR;
+  var xmax = bound.charCodeAt(1) - ordR;
+  var content = entry.substring(5);
+  var polylines = [[]];
+  var j = 0;
+  while (j < content.length) {
+    var digit = content.substring(j, j + 2);
+    if (digit == " R") {
+      polylines.push([]);
+    } else {
+      var x = digit.charCodeAt(0) - ordR;
+      var y = digit.charCodeAt(1) - ordR;
+      polylines[polylines.length - 1].push([x, y]);
+    }
+    j += 2;
+  }
+  let data = {
+    xmin,
+    xmax,
+    polylines
+  };
+  hershey_cache[i] = data;
+  return data;
+}
+function put_text(txt) {
+  let base = 500;
+  let x = 0;
+  let o = [];
+  for (let i = 0; i < txt.length; i++) {
+    let ord = txt.charCodeAt(i);
+    let idx;
+    if (65 <= ord && ord <= 90) {
+      idx = base + 1 + (ord - 65);
+    } else if (97 <= ord && ord <= 122) {
+      idx = base + 101 + (ord - 97);
+    } else if (ord == 46) {
+      idx = 710;
+    } else if (ord == 32) {
+      x += 10;
+      continue;
+    } else {
+      continue;
+    }
+    let { xmin, xmax, polylines } = compile_hershey(idx);
+    polylines = polylines.map((p) => trsl_poly(p, x - xmin, 0));
+    o.push(...polylines);
+    x += xmax - xmin;
+  }
+  return [x, o];
+}
+function str_to_seed(str) {
+  let n = 1;
+  for (let i = 0; i < str.length; i++) {
+    let x = str.charCodeAt(i) + 1;
+    n ^= x << 7 + i % 5;
+    n ^= n << 17;
+    n ^= n >> 13;
+    n ^= n << 5;
+    n = (n >>> 0) % 4294967295;
+  }
+  return n;
+}
+function main(seed, options = {}) {
+  if (seed === void 0) {
+    jsr = ~~(Math.random() * 1e4);
+    let name = binomen();
+    seed = name;
+  }
+  jsr = str_to_seed(seed);
+  let drawing = fish(generate_params());
+  let text = options.text === void 0 ? seed + "." : options.text;
+  let pad = options.pad ?? 20;
+  let width = options.width ?? 500;
+  let height = options.height ?? 300;
+  let textGap = options.textGap ?? 10;
+  return cleanup(reframe(drawing, pad, text, { width, height, textGap }));
+}
+if (typeof module !== "undefined") {
+  module.exports = { main, generate_params, default_params, fish, reframe, cleanup, draw_svg, binomen, str_to_seed };
 }
 
 // play/fishdraw/main.tsx
-var import_jsx_runtime = __toESM(require_jsx_runtime());
+var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
 function bboxFromPolylines(polylines) {
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   for (const line of polylines) {

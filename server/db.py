@@ -17,7 +17,7 @@ def get_user(username: str) -> dict | None:
     database = get()
     user = (
         database.table("users")
-        .select("*")
+        .select("id,username,password")
         .eq("username", username)
         .execute()
     ).data

@@ -1,23 +1,19 @@
-from datetime import datetime
-import re
+from flask import Blueprint, render_template
 
-from flask import abort, Blueprint, g, redirect, render_template, request, url_for
-
-from server import db, md, meta, models
-from server.auth import login_required
+from server import db, meta, models
 
 bp = Blueprint("reading", __name__, url_prefix="/reading")
 
 def get_readings(n: int = 100) -> list[models.Reading]:
     database = db.get()
-    writings_data = (
+    readings_data = (
         database.table("reading")
         .select("*")
         .limit(n)
         .order("created_at", desc=True)
         .execute()
     ).data
-    return [models.Reading.from_dict(w) for w in writings_data]
+    return [models.Reading.from_dict(w) for w in readings_data]
 
 @bp.route("/", methods=["GET"])
 def index():

@@ -24,7 +24,10 @@ def login():
             return redirect(url_for("auth.login"))
 
         session.clear()
-        session["user"] = user
+        session["user"] = {
+            "id": user["id"],
+            "username": user["username"],
+        }
         return redirect(url_for("index"))
 
     cfg = meta.Metadata()

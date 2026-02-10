@@ -22,7 +22,7 @@ class Metadata:
         "index": True,
         "follow": True
     })
-    googleBot: dict = field(default_factory=lambda: { # type: ignore
+    googlebot: dict = field(default_factory=lambda: { # type: ignore
         "index": True,
         "follow": True,
         "max-video-preview": -1,
@@ -49,6 +49,6 @@ class Metadata:
 
         data = asdict(self)
         data["robots"] = botify(self.robots)
-        data["googleBot"] = botify(self.googleBot)
+        data["googlebot"] = botify(self.googlebot)
         data["timestamp"] = datetime.utcnow().isoformat()
         return data

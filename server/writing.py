@@ -8,24 +8,30 @@ from server.auth import login_required
 
 bp = Blueprint("writing", __name__, url_prefix="/writing")
 
-def get_writings() -> list[models.Writing]:
-    database = db.get()
+WRITING_INDEX_COLUMNS = "id,title,published_at,public,canonical_url"
+
+def writing_visibility_filter() -> str:
+    if g.user:
+        return f"user_id.eq.{g.user['id']},public.eq.true"
+    return "public.eq.true"
+
+def visible_writing_query(columns: str = "*"):
+    return db.get().table("writing").select(columns).or_(writing_visibility_filter())
+
+def get_writings() -> list[dict]:
     writings_data = (
-        database.table("writing")
-        .select("*")
+        visible_writing_query(WRITING_INDEX_COLUMNS)
         .order("published_at", desc=True)
-        .or_(f"{'user_id.eq.' + str(g.user['id']) + ',' if g.user else ''}public.eq.true")
         .execute()
     ).data
-    return [models.Writing.from_dict(w) for w in writings_data]
+    for writing in writings_data:
+        writing["published_at"] = datetime.fromisoformat(writing["published_at"])
+    return writings_data
 
 def get_writing_by_id(id: int) -> models.Writing | None:
-    database = db.get()
     writing_data = (
-        database.table("writing")
-        .select("*")
+        visible_writing_query()
         .eq("id", id)
-        .or_(f"{'user_id.eq.' + str(g.user['id']) + ',' if g.user else ''}public.eq.true")
         .execute()
     ).data
     if writing_data:
@@ -33,12 +39,9 @@ def get_writing_by_id(id: int) -> models.Writing | None:
     return None
 
 def get_writing_by_url(canonical_url: str) -> models.Writing | None:
-    database = db.get()
     writing_data = (
-        database.table("writing")
-        .select("*")
+        visible_writing_query()
         .eq("canonical_url", canonical_url)
-        .or_(f"{'user_id.eq.' + str(g.user['id']) + ',' if g.user else ''}public.eq.true")
         .execute()
     ).data
     if writing_data:
@@ -117,7 +120,6 @@ def show_id(id: int):
     writing.html = writing.html or content_to_html(writing.content)
 
     cfg = meta.Metadata()
-    cfg.openGraph["url"] += request.path
     return render_template("writing/show.jinja", **cfg.serialize(), writing=writing)
 
 @bp.route("/<string:name>/", methods=["GET"])

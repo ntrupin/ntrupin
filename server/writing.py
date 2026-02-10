@@ -53,6 +53,9 @@ def title_to_canonical(title: str) -> str:
     url = re.sub(r"\-+", "-", url)
     return url
 
+def content_to_html(content: str | None) -> str:
+    return md.render(content or "Nothing to see here.")
+
 def create_writing(title: str, content: str | None, public: bool) -> int:
     database = db.get()
     now = datetime.utcnow().isoformat()
@@ -63,6 +66,7 @@ def create_writing(title: str, content: str | None, public: bool) -> int:
         "updated_at": now,
         "title": title,
         "content": content,
+        "html": content_to_html(content),
         "canonical_url": title_to_canonical(title),
         "public": public,
     }
@@ -80,6 +84,7 @@ def update_writing(id: int, title: str, content: str | None, public: bool) -> in
         "updated_at": now,
         "title": title,
         "content": content,
+        "html": content_to_html(content),
         "canonical_url": title_to_canonical(title),
         "public": public,
     }
@@ -109,7 +114,7 @@ def show_id(id: int):
         abort(404)
     if writing.canonical_url:
         return redirect(url_for("writing.show_canonical", name=writing.canonical_url))
-    writing.content = md.render(writing.content or "Nothing to see here.")
+    writing.html = writing.html or content_to_html(writing.content)
 
     cfg = meta.Metadata()
     cfg.openGraph["url"] += request.path
@@ -120,7 +125,7 @@ def show_canonical(name: str):
     writing = get_writing_by_url(name)
     if not writing:
         abort(404)
-    writing.content = md.render(writing.content or "Nothing to see here.")
+    writing.html = writing.html or content_to_html(writing.content)
 
     cfg = meta.Metadata()
     return render_template("writing/show.jinja", **cfg.serialize(), writing=writing)

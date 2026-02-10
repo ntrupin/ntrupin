@@ -10,6 +10,7 @@ class Writing:
     updated_at: datetime
     title: str
     content: str | None
+    html: str | None
     canonical_url: str | None
     public: bool
 
@@ -23,6 +24,7 @@ class Writing:
             updated_at=datetime.fromisoformat(data["updated_at"]),
             title=data["title"],
             content=data.get("content"),
+            html=data.get("html"),
             canonical_url=data.get("canonical_url"),
             public=data["public"]
         )
@@ -36,6 +38,7 @@ class Writing:
             "updated_at": self.updated_at.isoformat(),
             "title": self.title,
             "content": self.content,
+            "html": self.html,
             "canonical_url": self.canonical_url,
             "public": self.public
         }

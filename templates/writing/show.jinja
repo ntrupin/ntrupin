@@ -20,7 +20,7 @@
         </p>
     </div>
     <article class="prose">
-        {{ writing.content }}
+        {{ writing.html | safe }}
     </article>
 </section>
 <script src="{{ url_for('static', filename='js/sidenotes.js') }}"></script>

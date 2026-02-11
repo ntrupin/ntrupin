@@ -10,3 +10,8 @@
   </div>
   {% endfor %}
 </div>
+{% if request.path != "/updates/" %}
+<div class="updates-more">
+  <a href="{{ url_for('updates') }}" class="updates-more-link">All updates →</a>
+</div>
+{% endif %}

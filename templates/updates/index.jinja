@@ -1,0 +1,11 @@
+{% extends "base.jinja" %}
+{% block content %}
+<section class="page-section">
+  <h1 class="page-title">Updates</h1>
+  <p class="section-intro">All updates from research, internships, and projects.</p>
+  <section class="updates-panel" aria-labelledby="all-updates-heading">
+    <h2 id="all-updates-heading" class="section-title">All updates</h2>
+    {% include "partials/updates.jinja" %}
+  </section>
+</section>
+{% endblock %}

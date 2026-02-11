@@ -50,6 +50,18 @@ def index():
         updates=updates
     )
 
+@app.route("/updates/")
+def updates():
+    cfg = meta.Metadata(
+        title="Updates | Noah Trupin",
+        description="All updates from Noah Trupin."
+    )
+    return render_template(
+        "updates/index.jinja",
+        **cfg.serialize(),
+        updates=db.get_updates()
+    )
+
 @app.route("/cv/")
 def cv():
     return show_canonical("cv")

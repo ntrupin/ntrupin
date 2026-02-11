@@ -1,23 +1,19 @@
 {% extends "base.jinja" %}
 {% block content %}
-<section>
-    <h1 class="mb-8 font-semibold text-2xl tracking-tighter">
-        Reading
-    </h1>
-    <p class="mb-4">
-        Papers, books, and other links I find interesting.
-    </p>
-    <div class="space-y-3">
-        {% for reading in readings %}
-        <a target="_blank" href="{{ reading.link }}" class="block md:grid md:grid-cols-12 md:gap-x-4" rel="noopener noreferrer">
-            <p class="text-neutral-600 tabular-nums md:col-span-3 md:self-start">
-                {{ reading.created_at.strftime("%b %d, %Y") }}
-            </p>
-            <p class="text-neutral-900 tracking-tight leading-snug md:col-span-9 md:self-start min-w-0">
-                {{ reading.text }}
-            </p>
-        </a>
-        {% endfor %}
-    </div>
+<section class="page-section">
+  <h1 class="page-title">Reading</h1>
+  <p class="section-intro">Papers, books, and other links I find interesting.</p>
+  <div class="collection-list">
+    {% for reading in readings %}
+    <a target="_blank" href="{{ reading.link }}" class="collection-item" rel="noopener noreferrer">
+      <p class="collection-date">
+        {{ reading.created_at.strftime("%b %d, %Y") }}
+      </p>
+      <p class="collection-title">
+        {{ reading.text }}
+      </p>
+    </a>
+    {% endfor %}
+  </div>
 </section>
 {% endblock %}

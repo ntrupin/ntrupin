@@ -1,16 +1,29 @@
 {% macro form_for(object) %}
-<form method="post">
-    <label for="title">Title</label>
-    <input name="title" id="title" value="{{ object["title"] }}" class="w-full" required />
+{% if object is mapping %}
+{% set title_value = object.get("title", "") %}
+{% set content_value = object.get("content", "") %}
+{% set public_value = object.get("public", false) %}
+{% else %}
+{% set title_value = object.title if object and object.title is defined else "" %}
+{% set content_value = object.content if object and object.content is defined else "" %}
+{% set public_value = object.public if object and object.public is defined else false %}
+{% endif %}
+<form method="post" class="form-stack">
+  <div class="form-field">
+    <label for="title" class="form-label">Title</label>
+    <input name="title" id="title" value="{{ title_value }}" class="form-input" required />
+  </div>
 
-    <label for="content">Content</label>
-    <textarea name="content" id="content" class="w-full">{{ object["content"] }}</textarea>
+  <div class="form-field">
+    <label for="content" class="form-label">Content</label>
+    <textarea name="content" id="content" class="form-input form-textarea">{{ content_value }}</textarea>
+  </div>
 
-    <input type="checkbox" name="public" id="public" {{ "checked" if object["public"] == true }} />
-    <label for="public">Public</label>
+  <div class="form-checkbox-row">
+    <input type="checkbox" name="public" id="public" class="form-checkbox" {{ "checked" if public_value == true }} />
+    <label for="public" class="form-checkbox-label">Public</label>
+  </div>
 
-    <br />
-
-    <input type="submit" value="Save" />
+  <button type="submit" class="button-primary">Save</button>
 </form>
 {% endmacro %}

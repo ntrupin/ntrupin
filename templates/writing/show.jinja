@@ -1,27 +1,30 @@
 {% extends "base.jinja" %}
 {% block content %}
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
-<section>
-    {% if g.user != None %}
-    <a class="underline transition-all decoration-neutral-400 underline-offset-2 decoration-[0.1em]" href="{{ url_for('writing.update', id=writing.id) }}">Edit</a>
+<section class="article-page">
+  {% if g.user != None %}
+  <a class="button-link" href="{{ url_for('writing.update', id=writing.id) }}">Edit</a>
+  {% endif %}
+  <h1 class="title page-title">
+    {{ writing.title }}
+    {% if writing.public == false %}
+    <span class="badge-private">Private</span>
     {% endif %}
-    <h1 class="title font-semibold text-2xl tracking-tighter">
-        {{ writing.title }}
-        {% if writing.public == false %}
-            <span class="text-red-400">(Private)</span>
-        {% endif %}
-    </h1>
-    <div class="flex justify-between items-center mt-2 mb-8 text-sm">
-        <p class="text-sm text-neutral-600 dark:text-neutral-400">
-            {{ writing.published_at.strftime("%B %d, %Y")  }}
-            {% if writing.published_at != writing.updated_at %}
-                | Updated {{ writing.updated_at.strftime("%B %d, %Y") }}
-            {% endif %}
-        </p>
-    </div>
+  </h1>
+  <div class="article-meta">
+    <p>
+      {{ writing.published_at.strftime("%B %d, %Y")  }}
+      {% if writing.published_at != writing.updated_at %}
+      | Updated {{ writing.updated_at.strftime("%B %d, %Y") }}
+      {% endif %}
+    </p>
+  </div>
+  <div class="article-layout" data-sidenote-root>
     <article class="prose">
-        {{ writing.html | safe }}
+      {{ writing.html | safe }}
     </article>
+    <aside class="sidenote-column" data-sidenote-column aria-label="Sidenotes"></aside>
+  </div>
 </section>
 <script src="{{ url_for('static', filename='js/sidenotes.js') }}"></script>
 <script src="{{ url_for('static', filename='js/math.js') }}"></script>

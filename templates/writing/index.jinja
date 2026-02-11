@@ -1,29 +1,27 @@
 {% extends "base.jinja" %}
 {% block content %}
-<section>
-    {% if g.user != None %}
-    <a class="underline transition-all decoration-neutral-400 underline-offset-2 decoration-[0.1em]" href="{{ url_for('writing.create') }}">New</a>
-    {% endif %}
-    <h1 class="mb-8 font-semibold text-2xl tracking-tighter">
-        Writing
-    </h1>
-    <p class="mb-4">
-        A collection of my writing on various subjects. Writings here do not represent the opinions of my institutions or employers.
-    </p>
-    <div class="space-y-3">
-        {% for writing in writings %}
-        <a href="{{ url_for('writing.show_canonical', name=writing.canonical_url) if writing.canonical_url else url_for('writing.show_id', id=writing.id) }}" class="block md:grid md:grid-cols-12 md:gap-x-4">
-            <p class="text-neutral-600 tabular-nums md:col-span-3 md:self-start dark:text-neutral-400">
-                {{ writing.published_at.strftime("%b %d, %Y") }}
-            </p>
-            <p class="text-neutral-900 font-semibold tracking-tight leading-snug md:col-span-9 md:self-start min-w-0 dark:text-neutral-100">
-                {{ writing.title }}
-                {% if writing.public == false %}
-                    <span class="text-red-400">(Private)</span>
-                {% endif %}
-            </p>
-        </a>
-        {% endfor %}
-    </div>
+<section class="page-section">
+  {% if g.user != None %}
+  <a class="button-link" href="{{ url_for('writing.create') }}">New essay</a>
+  {% endif %}
+  <h1 class="page-title">Writing</h1>
+  <p class="section-intro">
+    A collection of my writing on various subjects. Writings here do not represent the opinions of my institutions or employers.
+  </p>
+  <div class="collection-list">
+    {% for writing in writings %}
+    <a href="{{ url_for('writing.show_canonical', name=writing.canonical_url) if writing.canonical_url else url_for('writing.show_id', id=writing.id) }}" class="collection-item">
+      <p class="collection-date">
+        {{ writing.published_at.strftime("%b %d, %Y") }}
+      </p>
+      <p class="collection-title">
+        {{ writing.title }}
+        {% if writing.public == false %}
+        <span class="badge-private">Private</span>
+        {% endif %}
+      </p>
+    </a>
+    {% endfor %}
+  </div>
 </section>
 {% endblock %}

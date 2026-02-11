@@ -3,8 +3,11 @@
 {% from "writing/form.jinja" import form_for %}
 
 {% block content %}
-{{ form_for(request.form if request.form else writing) }}
-<form action="{{ url_for('writing.delete', id=writing['id']) }}" method="post">
-    <input type="submit" value="Delete" onclick="return confirm('Are you sure?');" />
-</form>
+<section class="page-section">
+  <h1 class="page-title">Edit Essay</h1>
+  {{ form_for(request.form if request.form else writing) }}
+  <form action="{{ url_for('writing.delete', id=writing.id) }}" method="post" class="delete-form">
+    <button type="submit" class="button-danger" onclick="return confirm('Are you sure?');">Delete</button>
+  </form>
+</section>
 {% endblock %}

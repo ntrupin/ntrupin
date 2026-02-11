@@ -33,7 +33,7 @@ class Metadata:
         "/": { "name": "Home" },
         "/cv": { "name": "CV" },
         # "/reading": { "name": "Reading" },
-        # "/writing": { "name": "Writing" },
+        "/writing": { "name": "Writing" },
         "https://linkedin.com/in/ntrupin/": {
             "name": "LinkedIn",
             "external": True

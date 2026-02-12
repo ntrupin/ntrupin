@@ -9,6 +9,7 @@
 {% set project_url_value = object.get("project_url") or "" %}
 {% set repo_url_value = object.get("repo_url") or "" %}
 {% set content_value = object.get("content") or "" %}
+{% set pinned_value = object.get("pinned", false) %}
 {% set public_value = object.get("public", false) %}
 {% else %}
 {% set title_value = (object.title or "") if object and object.title is defined else "" %}
@@ -20,6 +21,7 @@
 {% set project_url_value = (object.project_url or "") if object and object.project_url is defined else "" %}
 {% set repo_url_value = (object.repo_url or "") if object and object.repo_url is defined else "" %}
 {% set content_value = (object.content or "") if object and object.content is defined else "" %}
+{% set pinned_value = object.pinned if object and object.pinned is defined else false %}
 {% set public_value = object.public if object and object.public is defined else false %}
 {% endif %}
 <form method="post" class="form-stack">
@@ -71,6 +73,11 @@
     <label for="content" class="form-label">Notes (optional)</label>
     <textarea name="content" id="content" class="form-input form-textarea">{{ content_value }}</textarea>
     <p class="form-help">Markdown for implementation notes, design decisions, and longer write-ups.</p>
+  </div>
+
+  <div class="form-checkbox-row">
+    <input type="checkbox" name="pinned" id="pinned" class="form-checkbox" {{ "checked" if pinned_value == true }} />
+    <label for="pinned" class="form-checkbox-label">Pinned</label>
   </div>
 
   <div class="form-checkbox-row">

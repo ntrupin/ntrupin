@@ -8,7 +8,7 @@ from server.auth import login_required
 
 bp = Blueprint("projects", __name__, url_prefix="/projects")
 
-PROJECT_INDEX_COLUMNS = "id,title,summary,status,stack,published_at,started_on,ended_on,public,canonical_url"
+PROJECT_INDEX_COLUMNS = "id,title,summary,status,stack,published_at,started_on,ended_on,pinned,public,canonical_url"
 
 def projects_visibility_filter() -> str:
     if g.user:
@@ -59,6 +59,7 @@ def content_to_html(content: str | None) -> str | None:
 def get_projects() -> list[dict]:
     projects_data = (
         visible_projects_query(PROJECT_INDEX_COLUMNS)
+        .order("pinned", desc=True)
         .order("published_at", desc=True)
         .execute()
     ).data
@@ -66,6 +67,7 @@ def get_projects() -> list[dict]:
         project["published_at"] = datetime.fromisoformat(project["published_at"])
         project["started_on"] = date.fromisoformat(project["started_on"]) if project.get("started_on") else None
         project["ended_on"] = date.fromisoformat(project["ended_on"]) if project.get("ended_on") else None
+        project["pinned"] = bool(project.get("pinned"))
     return projects_data
 
 def get_project_by_id(id: int) -> models.Project | None:
@@ -98,6 +100,7 @@ def create_project(
     stack: str | None,
     project_url: str | None,
     repo_url: str | None,
+    pinned: bool,
     public: bool,
 ) -> int:
     database = db.get()
@@ -121,6 +124,7 @@ def create_project(
         "stack": normalize_text(stack),
         "project_url": normalize_text(project_url),
         "repo_url": normalize_text(repo_url),
+        "pinned": pinned,
         "public": public,
     }
     response = (
@@ -141,6 +145,7 @@ def update_project(
     stack: str | None,
     project_url: str | None,
     repo_url: str | None,
+    pinned: bool,
     public: bool,
 ) -> int:
     database = db.get()
@@ -161,6 +166,7 @@ def update_project(
         "stack": normalize_text(stack),
         "project_url": normalize_text(project_url),
         "repo_url": normalize_text(repo_url),
+        "pinned": pinned,
         "public": public,
     }
     if normalized_started_on:
@@ -217,6 +223,7 @@ def create():
         stack = request.form.get("stack")
         project_url = request.form.get("project_url")
         repo_url = request.form.get("repo_url")
+        pinned = "pinned" in request.form
         public = "public" in request.form
 
         id = create_project(
@@ -229,6 +236,7 @@ def create():
             stack=stack,
             project_url=project_url,
             repo_url=repo_url,
+            pinned=pinned,
             public=public,
         )
         return redirect(url_for("projects.show_id", id=id))
@@ -253,6 +261,7 @@ def update(id: int):
         stack = request.form.get("stack")
         project_url = request.form.get("project_url")
         repo_url = request.form.get("repo_url")
+        pinned = "pinned" in request.form
         public = "public" in request.form
 
         id = update_project(
@@ -266,6 +275,7 @@ def update(id: int):
             stack=stack,
             project_url=project_url,
             repo_url=repo_url,
+            pinned=pinned,
             public=public,
         )
         return redirect(url_for("projects.show_id", id=id))

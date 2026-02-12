@@ -25,6 +25,9 @@
       <div class="project-list-content">
         <p class="collection-title">
           {{ project.title }}
+          {% if project.pinned == true %}
+          <span class="badge-pinned">Pinned</span>
+          {% endif %}
           {% if project.public == false %}
           <span class="badge-private">Private</span>
           {% endif %}

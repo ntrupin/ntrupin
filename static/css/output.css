@@ -591,6 +591,21 @@ a {
   text-transform: uppercase;
   color: var(--danger);
 }
+.badge-pinned {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--accent);
+  @supports (color: color-mix(in lab, red, red)) {
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+  }
+  border-radius: 999px;
+  padding: 0.1rem 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.67rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
 .button-link, .button-primary, .button-danger {
   display: inline-flex;
   align-items: center;

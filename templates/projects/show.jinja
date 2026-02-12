@@ -7,6 +7,9 @@
   {% endif %}
   <h1 class="title page-title">
     {{ project.title }}
+    {% if project.pinned == true %}
+    <span class="badge-pinned">Pinned</span>
+    {% endif %}
     {% if project.public == false %}
     <span class="badge-private">Private</span>
     {% endif %}

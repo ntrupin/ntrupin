@@ -1,11 +1,11 @@
 {% macro form_for(object) %}
 {% if object is mapping %}
-{% set title_value = object.get("title", "") %}
-{% set content_value = object.get("content", "") %}
+{% set title_value = object.get("title") or "" %}
+{% set content_value = object.get("content") or "" %}
 {% set public_value = object.get("public", false) %}
 {% else %}
-{% set title_value = object.title if object and object.title is defined else "" %}
-{% set content_value = object.content if object and object.content is defined else "" %}
+{% set title_value = (object.title or "") if object and object.title is defined else "" %}
+{% set content_value = (object.content or "") if object and object.content is defined else "" %}
 {% set public_value = object.public if object and object.public is defined else false %}
 {% endif %}
 <form method="post" class="form-stack">

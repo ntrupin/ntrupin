@@ -1,25 +1,25 @@
 {% macro form_for(object) %}
 {% if object is mapping %}
-{% set title_value = object.get("title", "") %}
-{% set summary_value = object.get("summary", "") %}
-{% set started_on_value = object.get("started_on", "") %}
-{% set ended_on_value = object.get("ended_on", "") %}
-{% set status_value = object.get("status", "") %}
-{% set stack_value = object.get("stack", "") %}
-{% set project_url_value = object.get("project_url", "") %}
-{% set repo_url_value = object.get("repo_url", "") %}
-{% set content_value = object.get("content", "") %}
+{% set title_value = object.get("title") or "" %}
+{% set summary_value = object.get("summary") or "" %}
+{% set started_on_value = object.get("started_on") or "" %}
+{% set ended_on_value = object.get("ended_on") or "" %}
+{% set status_value = object.get("status") or "" %}
+{% set stack_value = object.get("stack") or "" %}
+{% set project_url_value = object.get("project_url") or "" %}
+{% set repo_url_value = object.get("repo_url") or "" %}
+{% set content_value = object.get("content") or "" %}
 {% set public_value = object.get("public", false) %}
 {% else %}
-{% set title_value = object.title if object and object.title is defined else "" %}
-{% set summary_value = object.summary if object and object.summary is defined else "" %}
+{% set title_value = (object.title or "") if object and object.title is defined else "" %}
+{% set summary_value = (object.summary or "") if object and object.summary is defined else "" %}
 {% set started_on_value = object.started_on.strftime("%Y-%m-%d") if object and object.started_on is defined and object.started_on else "" %}
 {% set ended_on_value = object.ended_on.strftime("%Y-%m-%d") if object and object.ended_on is defined and object.ended_on else "" %}
-{% set status_value = object.status if object and object.status is defined else "" %}
-{% set stack_value = object.stack if object and object.stack is defined else "" %}
-{% set project_url_value = object.project_url if object and object.project_url is defined else "" %}
-{% set repo_url_value = object.repo_url if object and object.repo_url is defined else "" %}
-{% set content_value = object.content if object and object.content is defined else "" %}
+{% set status_value = (object.status or "") if object and object.status is defined else "" %}
+{% set stack_value = (object.stack or "") if object and object.stack is defined else "" %}
+{% set project_url_value = (object.project_url or "") if object and object.project_url is defined else "" %}
+{% set repo_url_value = (object.repo_url or "") if object and object.repo_url is defined else "" %}
+{% set content_value = (object.content or "") if object and object.content is defined else "" %}
 {% set public_value = object.public if object and object.public is defined else false %}
 {% endif %}
 <form method="post" class="form-stack">

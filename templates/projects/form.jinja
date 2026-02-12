@@ -1,0 +1,83 @@
+{% macro form_for(object) %}
+{% if object is mapping %}
+{% set title_value = object.get("title", "") %}
+{% set summary_value = object.get("summary", "") %}
+{% set started_on_value = object.get("started_on", "") %}
+{% set ended_on_value = object.get("ended_on", "") %}
+{% set status_value = object.get("status", "") %}
+{% set stack_value = object.get("stack", "") %}
+{% set project_url_value = object.get("project_url", "") %}
+{% set repo_url_value = object.get("repo_url", "") %}
+{% set content_value = object.get("content", "") %}
+{% set public_value = object.get("public", false) %}
+{% else %}
+{% set title_value = object.title if object and object.title is defined else "" %}
+{% set summary_value = object.summary if object and object.summary is defined else "" %}
+{% set started_on_value = object.started_on.strftime("%Y-%m-%d") if object and object.started_on is defined and object.started_on else "" %}
+{% set ended_on_value = object.ended_on.strftime("%Y-%m-%d") if object and object.ended_on is defined and object.ended_on else "" %}
+{% set status_value = object.status if object and object.status is defined else "" %}
+{% set stack_value = object.stack if object and object.stack is defined else "" %}
+{% set project_url_value = object.project_url if object and object.project_url is defined else "" %}
+{% set repo_url_value = object.repo_url if object and object.repo_url is defined else "" %}
+{% set content_value = object.content if object and object.content is defined else "" %}
+{% set public_value = object.public if object and object.public is defined else false %}
+{% endif %}
+<form method="post" class="form-stack">
+  <div class="form-field">
+    <label for="title" class="form-label">Title</label>
+    <input name="title" id="title" value="{{ title_value }}" class="form-input" required />
+  </div>
+
+  <div class="form-field">
+    <label for="summary" class="form-label">Summary</label>
+    <textarea name="summary" id="summary" class="form-input form-textarea-short" required>{{ summary_value }}</textarea>
+    <p class="form-help">One or two sentences focused on what shipped and why it matters.</p>
+  </div>
+
+  <div class="form-row-two">
+    <div class="form-field">
+      <label for="started_on" class="form-label">Start date</label>
+      <input type="date" name="started_on" id="started_on" value="{{ started_on_value }}" class="form-input" />
+    </div>
+
+    <div class="form-field">
+      <label for="ended_on" class="form-label">End date</label>
+      <input type="date" name="ended_on" id="ended_on" value="{{ ended_on_value }}" class="form-input" />
+    </div>
+  </div>
+  <p class="form-help">Use only start date for ongoing projects. Leave both blank to use publish date.</p>
+
+  <div class="form-field">
+    <label for="status" class="form-label">Status</label>
+    <input name="status" id="status" value="{{ status_value }}" class="form-input" placeholder="Live, In progress, Archived" />
+  </div>
+
+  <div class="form-field">
+    <label for="stack" class="form-label">Stack</label>
+    <input name="stack" id="stack" value="{{ stack_value }}" class="form-input" placeholder="Python, Flask, Supabase" />
+  </div>
+
+  <div class="form-field">
+    <label for="project_url" class="form-label">Project URL</label>
+    <input type="url" name="project_url" id="project_url" value="{{ project_url_value }}" class="form-input" />
+  </div>
+
+  <div class="form-field">
+    <label for="repo_url" class="form-label">Repository URL</label>
+    <input type="url" name="repo_url" id="repo_url" value="{{ repo_url_value }}" class="form-input" />
+  </div>
+
+  <div class="form-field">
+    <label for="content" class="form-label">Notes (optional)</label>
+    <textarea name="content" id="content" class="form-input form-textarea">{{ content_value }}</textarea>
+    <p class="form-help">Markdown for implementation notes, design decisions, and longer write-ups.</p>
+  </div>
+
+  <div class="form-checkbox-row">
+    <input type="checkbox" name="public" id="public" class="form-checkbox" {{ "checked" if public_value == true }} />
+    <label for="public" class="form-checkbox-label">Public</label>
+  </div>
+
+  <button type="submit" class="button-primary">Save</button>
+</form>
+{% endmacro %}

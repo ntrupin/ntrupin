@@ -1,0 +1,11 @@
+{% extends "base.jinja" %}
+
+{% from "projects/form.jinja" import form_for %}
+
+{% block content %}
+<section class="page-section">
+  <h1 class="page-title">New Project</h1>
+  <p class="section-intro">Lead with the concrete result. Add detailed notes only if they help.</p>
+  {{ form_for(request.form) }}
+</section>
+{% endblock %}

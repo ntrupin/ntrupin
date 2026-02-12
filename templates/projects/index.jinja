@@ -1,0 +1,50 @@
+{% extends "base.jinja" %}
+{% block content %}
+<section class="page-section">
+  {% if g.user != None %}
+  <a class="button-link" href="{{ url_for('projects.create') }}">New project</a>
+  {% endif %}
+  <h1 class="page-title">Projects</h1>
+  <p class="section-intro">
+    Shipped systems, research tools, experiments, etc.
+  </p>
+  <div class="collection-list">
+    {% for project in projects %}
+    <a href="{{ url_for('projects.show_canonical', name=project.canonical_url) if project.canonical_url else url_for('projects.show_id', id=project.id) }}" class="collection-item project-collection-item">
+      <p class="collection-date">
+        {% if project.started_on and project.ended_on %}
+        {{ project.started_on.strftime("%b %Y") }} - {{ project.ended_on.strftime("%b %Y") }}
+        {% elif project.started_on %}
+        {{ project.started_on.strftime("%b %Y") }} - Present
+        {% elif project.ended_on %}
+        Through {{ project.ended_on.strftime("%b %Y") }}
+        {% else %}
+        {{ project.published_at.strftime("%b %d, %Y") }}
+        {% endif %}
+      </p>
+      <div class="project-list-content">
+        <p class="collection-title">
+          {{ project.title }}
+          {% if project.public == false %}
+          <span class="badge-private">Private</span>
+          {% endif %}
+        </p>
+        {% if project.summary %}
+        <p class="project-summary-snippet">{{ project.summary }}</p>
+        {% endif %}
+        {% if project.status or project.stack %}
+        <p class="project-inline-meta">
+          {% if project.status %}
+          <span>{{ project.status }}</span>
+          {% endif %}
+          {% if project.stack %}
+          <span>{{ project.stack }}</span>
+          {% endif %}
+        </p>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

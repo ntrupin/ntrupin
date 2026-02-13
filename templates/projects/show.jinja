@@ -7,6 +7,9 @@
   {% endif %}
   <h1 class="title page-title">
     {{ project.title }}
+    {% if project.research == true %}
+    <span class="badge-research">Research</span>
+    {% endif %}
     {% if project.pinned == true %}
     <span class="badge-pinned">Pinned</span>
     {% endif %}
@@ -37,7 +40,7 @@
     <p class="project-summary">{{ project.summary }}</p>
     {% endif %}
 
-    {% if project.started_on or project.ended_on or project.status or project.stack or project.project_url or project.repo_url %}
+    {% if project.started_on or project.ended_on or project.status or project.stack or project.project_url or project.repo_url or project.paper_url %}
     <div class="project-facts">
       {% if project.started_on or project.ended_on %}
       <div class="project-fact">
@@ -68,7 +71,7 @@
       </div>
       {% endif %}
 
-      {% if project.project_url or project.repo_url %}
+      {% if project.project_url or project.repo_url or project.paper_url %}
       <div class="project-fact">
         <p class="project-fact-label">Links</p>
         <p class="project-fact-value project-links">
@@ -77,6 +80,9 @@
           {% endif %}
           {% if project.repo_url %}
           <a href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer">Source code</a>
+          {% endif %}
+          {% if project.paper_url %}
+          <a href="{{ project.paper_url }}" target="_blank" rel="noopener noreferrer">Paper</a>
           {% endif %}
         </p>
       </div>

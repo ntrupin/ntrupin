@@ -8,7 +8,7 @@ from server.auth import login_required
 
 bp = Blueprint("projects", __name__, url_prefix="/projects")
 
-PROJECT_INDEX_COLUMNS = "id,title,summary,status,stack,published_at,started_on,ended_on,pinned,public,canonical_url"
+PROJECT_INDEX_COLUMNS = "id,title,summary,status,stack,published_at,started_on,ended_on,pinned,research,public,canonical_url"
 
 def projects_visibility_filter() -> str:
     if g.user:
@@ -60,6 +60,7 @@ def get_projects() -> list[dict]:
     projects_data = (
         visible_projects_query(PROJECT_INDEX_COLUMNS)
         .order("pinned", desc=True)
+        .order("research", desc=True)
         .order("published_at", desc=True)
         .execute()
     ).data
@@ -68,6 +69,7 @@ def get_projects() -> list[dict]:
         project["started_on"] = date.fromisoformat(project["started_on"]) if project.get("started_on") else None
         project["ended_on"] = date.fromisoformat(project["ended_on"]) if project.get("ended_on") else None
         project["pinned"] = bool(project.get("pinned"))
+        project["research"] = bool(project.get("research"))
     return projects_data
 
 def get_project_by_id(id: int) -> models.Project | None:
@@ -100,6 +102,8 @@ def create_project(
     stack: str | None,
     project_url: str | None,
     repo_url: str | None,
+    paper_url: str | None,
+    research: bool,
     pinned: bool,
     public: bool,
 ) -> int:
@@ -124,6 +128,8 @@ def create_project(
         "stack": normalize_text(stack),
         "project_url": normalize_text(project_url),
         "repo_url": normalize_text(repo_url),
+        "paper_url": normalize_text(paper_url),
+        "research": research,
         "pinned": pinned,
         "public": public,
     }
@@ -145,6 +151,8 @@ def update_project(
     stack: str | None,
     project_url: str | None,
     repo_url: str | None,
+    paper_url: str | None,
+    research: bool,
     pinned: bool,
     public: bool,
 ) -> int:
@@ -166,6 +174,8 @@ def update_project(
         "stack": normalize_text(stack),
         "project_url": normalize_text(project_url),
         "repo_url": normalize_text(repo_url),
+        "paper_url": normalize_text(paper_url),
+        "research": research,
         "pinned": pinned,
         "public": public,
     }
@@ -223,6 +233,8 @@ def create():
         stack = request.form.get("stack")
         project_url = request.form.get("project_url")
         repo_url = request.form.get("repo_url")
+        paper_url = request.form.get("paper_url")
+        research = "research" in request.form
         pinned = "pinned" in request.form
         public = "public" in request.form
 
@@ -236,6 +248,8 @@ def create():
             stack=stack,
             project_url=project_url,
             repo_url=repo_url,
+            paper_url=paper_url,
+            research=research,
             pinned=pinned,
             public=public,
         )
@@ -261,6 +275,8 @@ def update(id: int):
         stack = request.form.get("stack")
         project_url = request.form.get("project_url")
         repo_url = request.form.get("repo_url")
+        paper_url = request.form.get("paper_url")
+        research = "research" in request.form
         pinned = "pinned" in request.form
         public = "public" in request.form
 
@@ -275,6 +291,8 @@ def update(id: int):
             stack=stack,
             project_url=project_url,
             repo_url=repo_url,
+            paper_url=paper_url,
+            research=research,
             pinned=pinned,
             public=public,
         )

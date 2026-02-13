@@ -19,6 +19,8 @@ class Project:
     stack: str | None
     project_url: str | None
     repo_url: str | None
+    paper_url: str | None
+    research: bool
     pinned: bool
     public: bool
 
@@ -41,6 +43,8 @@ class Project:
             stack=data.get("stack"),
             project_url=data.get("project_url"),
             repo_url=data.get("repo_url"),
+            paper_url=data.get("paper_url"),
+            research=data.get("research", False),
             pinned=data.get("pinned", False),
             public=data["public"],
         )
@@ -63,6 +67,8 @@ class Project:
             "stack": self.stack,
             "project_url": self.project_url,
             "repo_url": self.repo_url,
+            "paper_url": self.paper_url,
+            "research": self.research,
             "pinned": self.pinned,
             "public": self.public,
         }

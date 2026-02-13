@@ -8,7 +8,9 @@
 {% set stack_value = object.get("stack") or "" %}
 {% set project_url_value = object.get("project_url") or "" %}
 {% set repo_url_value = object.get("repo_url") or "" %}
+{% set paper_url_value = object.get("paper_url") or "" %}
 {% set content_value = object.get("content") or "" %}
+{% set research_value = object.get("research", false) %}
 {% set pinned_value = object.get("pinned", false) %}
 {% set public_value = object.get("public", false) %}
 {% else %}
@@ -20,7 +22,9 @@
 {% set stack_value = (object.stack or "") if object and object.stack is defined else "" %}
 {% set project_url_value = (object.project_url or "") if object and object.project_url is defined else "" %}
 {% set repo_url_value = (object.repo_url or "") if object and object.repo_url is defined else "" %}
+{% set paper_url_value = (object.paper_url or "") if object and object.paper_url is defined else "" %}
 {% set content_value = (object.content or "") if object and object.content is defined else "" %}
+{% set research_value = object.research if object and object.research is defined else false %}
 {% set pinned_value = object.pinned if object and object.pinned is defined else false %}
 {% set public_value = object.public if object and object.public is defined else false %}
 {% endif %}
@@ -70,9 +74,19 @@
   </div>
 
   <div class="form-field">
+    <label for="paper_url" class="form-label">Paper URL</label>
+    <input type="url" name="paper_url" id="paper_url" value="{{ paper_url_value }}" class="form-input" />
+  </div>
+
+  <div class="form-field">
     <label for="content" class="form-label">Notes (optional)</label>
     <textarea name="content" id="content" class="form-input form-textarea">{{ content_value }}</textarea>
     <p class="form-help">Markdown for implementation notes, design decisions, and longer write-ups.</p>
+  </div>
+
+  <div class="form-checkbox-row">
+    <input type="checkbox" name="research" id="research" class="form-checkbox" {{ "checked" if research_value == true }} />
+    <label for="research" class="form-checkbox-label">Research</label>
   </div>
 
   <div class="form-checkbox-row">

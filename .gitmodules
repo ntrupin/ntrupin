@@ -1,0 +1,3 @@
+[submodule "server/draft_optimizer"]
+	path = server/draft_optimizer
+	url = https://github.com/ntrupin/draft-optimizer.git

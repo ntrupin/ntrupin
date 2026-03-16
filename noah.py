@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 
-from flask import Flask, redirect, render_template
+from flask import Flask, g, redirect, render_template, request
 
 from server import db, meta
 
@@ -87,3 +87,11 @@ app.register_blueprint(writing_bp)
 
 from server.projects import bp as projects_bp
 app.register_blueprint(projects_bp)
+
+from server.draft_optimizer.draft_optimizer.web import create_blueprint
+draft_bp = create_blueprint()
+@draft_bp.before_request
+def auth():
+    if g.user is None:
+        return "Forbidden", 403
+app.register_blueprint(draft_bp, url_prefix="/baseball-draft")

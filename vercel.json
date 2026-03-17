@@ -1,5 +1,4 @@
 {
-    "$schema": "https://openapi.vercel.sh/vercel.json",
     "version": 2,
     "builds": [
         {
@@ -11,29 +10,10 @@
             "use": "@vercel/static"
         }
     ],
-    "headers": [
+    "routes": [
         {
-            "source": "/static/:path*",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=0, must-revalidate"
-                },
-                {
-                    "key": "CDN-Cache-Control",
-                    "value": "public, max-age=31536000, immutable"
-                },
-                {
-                    "key": "Vercel-CDN-Cache-Control",
-                    "value": "public, max-age=31536000, immutable"
-                }
-            ]
-        }
-    ],
-    "rewrites": [
-        {
-            "source": "/:path*",
-            "destination": "/noah.py"
+            "src": "/(.*)",
+            "dest": "noah.py"
         }
     ]
 }

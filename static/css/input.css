@@ -28,7 +28,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --paper: #141414;
     --surface: #1b1b1b;
     --ink: #e7e6e2;
@@ -49,10 +49,6 @@
     --sh-jsxliterals: #b3b5ff;
     --sh-property: #f0a578;
     --sh-entity: #f0a578;
-  }
-
-  html {
-    color-scheme: dark;
   }
 }
 

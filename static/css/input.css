@@ -6,10 +6,10 @@
   --ink: #1c1c1a;
   --ink-soft: #343430;
   --ink-muted: #65655f;
-  --line: #d7d7d1;
-  --line-strong: #c5c5bd;
-  --accent: #2e4f78;
-  --accent-soft: #b9c8de;
+  --line: #ddd7e4;
+  --line-strong: #cbbfd8;
+  --accent: #705d96;
+  --accent-soft: #ddd4ea;
   --danger: #8f4341;
 
   --font-sans: "Public Sans", "Avenir Next", "Segoe UI", sans-serif;
@@ -34,10 +34,10 @@
     --ink: #e7e6e2;
     --ink-soft: #d7d6d2;
     --ink-muted: #a3a39b;
-    --line: #2c2c29;
-    --line-strong: #40403b;
-    --accent: #9db5d7;
-    --accent-soft: #34445b;
+    --line: #312d36;
+    --line-strong: #474050;
+    --accent: #b8abd8;
+    --accent-soft: #3b3546;
     --danger: #d89d9b;
 
     --sh-class: #6aa8ec;

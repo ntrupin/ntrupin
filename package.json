@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "build": "npm run build:css && npm run build:fishdraw",
+    "build:css": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --minify",
+    "build:fishdraw": "esbuild play/fishdraw/main.tsx --bundle --format=esm --target=es2020 --minify --define:process.env.NODE_ENV=\\\"production\\\" --outfile=static/js/fishdraw.js"
+  },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.13",
     "react": "^19.2.0",

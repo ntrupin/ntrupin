@@ -206,9 +206,15 @@ def show_id(id: int):
     if project.canonical_url:
         return redirect(url_for("projects.show_canonical", name=project.canonical_url))
     project.html = project.html or content_to_html(project.content)
+    needs_math = md.contains_math(project.content or project.html)
 
     cfg = meta.Metadata()
-    return render_template("projects/show.jinja", **cfg.serialize(), project=project)
+    return render_template(
+        "projects/show.jinja",
+        **cfg.serialize(),
+        project=project,
+        needs_math=needs_math,
+    )
 
 @bp.route("/<string:name>/", methods=["GET"])
 def show_canonical(name: str):
@@ -216,9 +222,15 @@ def show_canonical(name: str):
     if not project:
         abort(404)
     project.html = project.html or content_to_html(project.content)
+    needs_math = md.contains_math(project.content or project.html)
 
     cfg = meta.Metadata()
-    return render_template("projects/show.jinja", **cfg.serialize(), project=project)
+    return render_template(
+        "projects/show.jinja",
+        **cfg.serialize(),
+        project=project,
+        needs_math=needs_math,
+    )
 
 @bp.route("/new/", methods=["GET", "POST"])
 @login_required

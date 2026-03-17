@@ -5,6 +5,13 @@ from markdown.preprocessors import Preprocessor
 from markdown.inlinepatterns import EscapeInlineProcessor, ESCAPE_RE
 from markdown.util import AtomicString
 
+MATH_PATTERNS = (
+    re.compile(r'\\\[(?P<math>.+?)\\\]', re.S),   # \[ ... ] (display)
+    re.compile(r'\\\((?P<math>.+?)\\\)', re.S),   # \( ... ) (inline)
+    re.compile(r'\$\$(?P<math>.+?)\$\$', re.S),   # $$ ... $$ (display)
+    re.compile(r'\$(?P<math>.+?)\$', re.S),       # $ ... $ (inline)
+)
+
 class KeepBackslashProcessor(EscapeInlineProcessor):
     _keep_chars = {'[', ']', '(', ')', '$'}
 
@@ -16,16 +23,9 @@ class KeepBackslashProcessor(EscapeInlineProcessor):
             return AtomicString(ch), m.start(0), m.end(0)
 
 class MathJaxStashPreprocessor(Preprocessor):
-    _patterns = [
-        re.compile(r'\\\[(?P<math>.+?)\\\]', re.S),   # \[ ... ] (display)
-        re.compile(r'\\\((?P<math>.+?)\\\)', re.S),   # \( ... ) (inline)
-        re.compile(r'\$\$(?P<math>.+?)\$\$', re.S),   # $$ ... $$ (display)
-        re.compile(r'\$(?P<math>.+?)\$', re.S),       # $ ... $ (inline)
-    ]
-
     def run(self, lines):
         text = "\n".join(lines)
-        for pat in self._patterns:
+        for pat in MATH_PATTERNS:
             def _stash(m):
                 return self.md.htmlStash.store(m.group(0))
             text = pat.sub(_stash, text)
@@ -52,3 +52,8 @@ def render(text: str) -> str:
         }
     )
     return md.convert(text)
+
+def contains_math(text: str | None) -> bool:
+    if not text:
+        return False
+    return any(pattern.search(text) for pattern in MATH_PATTERNS)

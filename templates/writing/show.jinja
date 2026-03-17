@@ -1,6 +1,6 @@
 {% extends "base.jinja" %}
 {% block content %}
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+{% include "partials/mathjax.jinja" %}
 <section class="article-page">
   {% if g.user != None %}
   <a class="button-link" href="{{ url_for('writing.update', id=writing.id) }}">Edit</a>
@@ -27,5 +27,4 @@
   </div>
 </section>
 <script src="{{ url_for('static', filename='js/sidenotes.js') }}"></script>
-<script src="{{ url_for('static', filename='js/math.js') }}"></script>
 {% endblock %}

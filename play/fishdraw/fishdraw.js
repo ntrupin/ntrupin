@@ -2611,11 +2611,6 @@ function main(seed, options = {}){
   return cleanup(reframe(drawing,pad,text,{width,height,textGap}));
 }
 
-if (typeof module !== "undefined"){
-  module.exports = {main,generate_params,default_params,fish,reframe,cleanup,draw_svg,binomen,str_to_seed};
-}
-
-
 /* if (typeof module != "undefined"){
   module.exports = {main,generate_params,default_params,fish,reframe,cleanup,draw_svg,binomen,str_to_seed};
   if (require.main === module) {

@@ -2,10 +2,11 @@ from datetime import datetime
 import os
 
 from flask import g
-import supabase
 
 def get():
     if "db" not in g:
+        import supabase
+
         url = os.getenv("SUPABASE_URL")
         key = os.getenv("SUPABASE_KEY")
         if not url or not key:

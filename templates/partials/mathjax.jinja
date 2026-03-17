@@ -1,0 +1,4 @@
+{% if needs_math %}
+<script src="{{ url_for('static', filename='js/math.js') }}"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+{% endif %}

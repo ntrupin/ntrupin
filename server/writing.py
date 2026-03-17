@@ -118,9 +118,15 @@ def show_id(id: int):
     if writing.canonical_url:
         return redirect(url_for("writing.show_canonical", name=writing.canonical_url))
     writing.html = writing.html or content_to_html(writing.content)
+    needs_math = md.contains_math(writing.content or writing.html)
 
     cfg = meta.Metadata()
-    return render_template("writing/show.jinja", **cfg.serialize(), writing=writing)
+    return render_template(
+        "writing/show.jinja",
+        **cfg.serialize(),
+        writing=writing,
+        needs_math=needs_math,
+    )
 
 @bp.route("/<string:name>/", methods=["GET"])
 def show_canonical(name: str):
@@ -128,9 +134,15 @@ def show_canonical(name: str):
     if not writing:
         abort(404)
     writing.html = writing.html or content_to_html(writing.content)
+    needs_math = md.contains_math(writing.content or writing.html)
 
     cfg = meta.Metadata()
-    return render_template("writing/show.jinja", **cfg.serialize(), writing=writing)
+    return render_template(
+        "writing/show.jinja",
+        **cfg.serialize(),
+        writing=writing,
+        needs_math=needs_math,
+    )
 
 @bp.route("/new/", methods=["GET", "POST"])
 @login_required

@@ -1,9 +1,13 @@
 from datetime import datetime
 import os
 
-from flask import Flask, g, redirect, render_template, request
+from flask import Flask, Response, g, make_response, redirect, render_template, request
 
 from server import db, meta
+
+ANON_BROWSER_CACHE_CONTROL = "public, max-age=0, must-revalidate"
+ANON_CDN_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=86400"
+PRIVATE_CACHE_CONTROL = "private, no-store, max-age=0"
 
 def create_app() -> Flask:
     app = Flask(
@@ -40,15 +44,28 @@ def page_not_found(_):
 def redirect_index():
     return redirect('/', code=301)
 
+def cache_anonymous_page(response: Response) -> Response:
+    response.vary.add("Cookie")
+    if getattr(g, "user", None) is None:
+        response.headers["Cache-Control"] = ANON_BROWSER_CACHE_CONTROL
+        response.headers["CDN-Cache-Control"] = ANON_CDN_CACHE_CONTROL
+        response.headers["Vercel-CDN-Cache-Control"] = ANON_CDN_CACHE_CONTROL
+    else:
+        response.headers["Cache-Control"] = PRIVATE_CACHE_CONTROL
+        response.headers.pop("CDN-Cache-Control", None)
+        response.headers.pop("Vercel-CDN-Cache-Control", None)
+    return response
+
 @app.route("/")
 def index():
     cfg = meta.Metadata()
     updates = db.get_updates(5)
-    return render_template(
+    response = make_response(render_template(
         "index.jinja",
         **cfg.serialize(),
         updates=updates
-    )
+    ))
+    return cache_anonymous_page(response)
 
 @app.route("/updates/")
 def updates():
@@ -56,11 +73,12 @@ def updates():
         title="Updates | Noah Trupin",
         description="All updates from Noah Trupin."
     )
-    return render_template(
+    response = make_response(render_template(
         "updates/index.jinja",
         **cfg.serialize(),
         updates=db.get_updates()
-    )
+    ))
+    return cache_anonymous_page(response)
 
 @app.route("/cv/")
 def cv():

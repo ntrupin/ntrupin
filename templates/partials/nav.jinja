@@ -1,6 +1,9 @@
 <header class="top-nav fade-in">
-  <nav id="nav" class="top-nav-links" aria-label="Primary">
+  <div class="top-nav-row">
+    <a href="/" class="site-brand" data-active="{{ 'true' if request.path == '/' else 'false' }}">Noah Trupin</a>
+    <nav id="nav" class="top-nav-links" aria-label="Primary">
     {% for url, data in links.items() %}
+    {% if url != "/" %}
     {% set external = data.external if data.external is defined else false %}
     {% set normalized = url if url.endswith('/') else url + '/' %}
     {% set is_active = (not external) and (request.path == normalized or (normalized != "/" and request.path.startswith(normalized))) %}
@@ -12,6 +15,8 @@
     >
       {{ data.name }}
     </a>
+    {% endif %}
     {% endfor %}
-  </nav>
+    </nav>
+  </div>
 </header>

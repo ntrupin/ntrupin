@@ -7,10 +7,17 @@
   {% endif %}
   <h1 class="title page-title">
     {{ writing.title }}
+  </h1>
+  {% if writing.pinned == true or writing.public == false %}
+  <p class="title-badge-line">
+    {% if writing.pinned == true %}
+    <span class="badge-pinned">Pinned</span>
+    {% endif %}
     {% if writing.public == false %}
     <span class="badge-private">Private</span>
     {% endif %}
-  </h1>
+  </p>
+  {% endif %}
   <div class="article-meta">
     <p>
       {{ writing.published_at.strftime("%B %d, %Y")  }}

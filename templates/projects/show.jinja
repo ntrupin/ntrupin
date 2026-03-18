@@ -7,16 +7,23 @@
   {% endif %}
   <h1 class="title page-title">
     {{ project.title }}
+  </h1>
+  {% if project.research == true or project.pinned == true or project.public == false %}
+  <p class="project-badge-line">
     {% if project.research == true %}
     <span class="badge-research">Research</span>
     {% endif %}
-    {% if project.pinned == true %}
-    <span class="badge-pinned">Pinned</span>
-    {% endif %}
+  {% if project.pinned == true %}
+  <span class="badge-pinned">Pinned</span>
+  {% endif %}
     {% if project.public == false %}
     <span class="badge-private">Private</span>
     {% endif %}
-  </h1>
+  </p>
+  {% endif %}
+  {% if project.deck %}
+  <p class="project-deck">{{ project.deck }}</p>
+  {% endif %}
   <div class="article-meta">
     <p>
       {% if project.started_on and project.ended_on %}

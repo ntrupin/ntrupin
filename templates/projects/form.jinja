@@ -1,6 +1,7 @@
 {% macro form_for(object) %}
 {% if object is mapping %}
 {% set title_value = object.get("title") or "" %}
+{% set deck_value = object.get("deck") or "" %}
 {% set summary_value = object.get("summary") or "" %}
 {% set started_on_value = object.get("started_on") or "" %}
 {% set ended_on_value = object.get("ended_on") or "" %}
@@ -15,6 +16,7 @@
 {% set public_value = object.get("public", false) %}
 {% else %}
 {% set title_value = (object.title or "") if object and object.title is defined else "" %}
+{% set deck_value = (object.deck or "") if object and object.deck is defined else "" %}
 {% set summary_value = (object.summary or "") if object and object.summary is defined else "" %}
 {% set started_on_value = object.started_on.strftime("%Y-%m-%d") if object and object.started_on is defined and object.started_on else "" %}
 {% set ended_on_value = object.ended_on.strftime("%Y-%m-%d") if object and object.ended_on is defined and object.ended_on else "" %}
@@ -32,6 +34,12 @@
   <div class="form-field">
     <label for="title" class="form-label">Title</label>
     <input name="title" id="title" value="{{ title_value }}" class="form-input" required />
+  </div>
+
+  <div class="form-field">
+    <label for="deck" class="form-label">Deck</label>
+    <textarea name="deck" id="deck" class="form-input form-textarea-short">{{ deck_value }}</textarea>
+    <p class="form-help">Optional standfirst for featured or case-study presentations.</p>
   </div>
 
   <div class="form-field">

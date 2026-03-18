@@ -11,6 +11,7 @@ class Project:
     started_on: date | None
     ended_on: date | None
     title: str
+    deck: str | None
     summary: str | None
     content: str | None
     html: str | None
@@ -35,6 +36,7 @@ class Project:
             started_on=date.fromisoformat(data["started_on"]) if data.get("started_on") else None,
             ended_on=date.fromisoformat(data["ended_on"]) if data.get("ended_on") else None,
             title=data["title"],
+            deck=data.get("deck"),
             summary=data.get("summary"),
             content=data.get("content"),
             html=data.get("html"),
@@ -59,6 +61,7 @@ class Project:
             "started_on": self.started_on.isoformat() if self.started_on else None,
             "ended_on": self.ended_on.isoformat() if self.ended_on else None,
             "title": self.title,
+            "deck": self.deck,
             "summary": self.summary,
             "content": self.content,
             "html": self.html,

@@ -9,9 +9,11 @@ class Writing:
     published_at: datetime
     updated_at: datetime
     title: str
+    summary: str | None
     content: str | None
     html: str | None
     canonical_url: str | None
+    pinned: bool
     public: bool
 
     @classmethod
@@ -23,9 +25,11 @@ class Writing:
             published_at=datetime.fromisoformat(data["published_at"]),
             updated_at=datetime.fromisoformat(data["updated_at"]),
             title=data["title"],
+            summary=data.get("summary"),
             content=data.get("content"),
             html=data.get("html"),
             canonical_url=data.get("canonical_url"),
+            pinned=data.get("pinned", False),
             public=data["public"]
         )
 
@@ -37,8 +41,10 @@ class Writing:
             "published_at": self.published_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
             "title": self.title,
+            "summary": self.summary,
             "content": self.content,
             "html": self.html,
             "canonical_url": self.canonical_url,
+            "pinned": self.pinned,
             "public": self.public
         }

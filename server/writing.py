@@ -8,7 +8,7 @@ from server.auth import login_required
 
 bp = Blueprint("writing", __name__, url_prefix="/writing")
 
-WRITING_INDEX_COLUMNS = "id,title,published_at,public,canonical_url"
+WRITING_INDEX_COLUMNS = "id,title,summary,pinned,published_at,public,canonical_url"
 
 def writing_visibility_filter() -> str:
     if g.user:
@@ -18,14 +18,22 @@ def writing_visibility_filter() -> str:
 def visible_writing_query(columns: str = "*"):
     return db.get().table("writing").select(columns).or_(writing_visibility_filter())
 
+def normalize_text(value: str | None) -> str | None:
+    if value is None:
+        return None
+    normalized = value.strip()
+    return normalized or None
+
 def get_writings() -> list[dict]:
     writings_data = (
         visible_writing_query(WRITING_INDEX_COLUMNS)
+        .order("pinned", desc=True)
         .order("published_at", desc=True)
         .execute()
     ).data
     for writing in writings_data:
         writing["published_at"] = datetime.fromisoformat(writing["published_at"])
+        writing["pinned"] = bool(writing.get("pinned"))
     return writings_data
 
 def get_writing_by_id(id: int) -> models.Writing | None:
@@ -59,7 +67,13 @@ def title_to_canonical(title: str) -> str:
 def content_to_html(content: str | None) -> str:
     return md.render(content or "Nothing to see here.")
 
-def create_writing(title: str, content: str | None, public: bool) -> int:
+def create_writing(
+    title: str,
+    summary: str | None,
+    content: str | None,
+    pinned: bool,
+    public: bool,
+) -> int:
     database = db.get()
     now = datetime.utcnow().isoformat()
     writing = {
@@ -68,9 +82,11 @@ def create_writing(title: str, content: str | None, public: bool) -> int:
         "published_at": now,
         "updated_at": now,
         "title": title,
+        "summary": normalize_text(summary),
         "content": content,
         "html": content_to_html(content),
         "canonical_url": title_to_canonical(title),
+        "pinned": pinned,
         "public": public,
     }
     response = (
@@ -80,15 +96,24 @@ def create_writing(title: str, content: str | None, public: bool) -> int:
     ).data
     return response[0]["id"]
 
-def update_writing(id: int, title: str, content: str | None, public: bool) -> int:
+def update_writing(
+    id: int,
+    title: str,
+    summary: str | None,
+    content: str | None,
+    pinned: bool,
+    public: bool,
+) -> int:
     database = db.get()
     now = datetime.utcnow().isoformat()
     writing = {
         "updated_at": now,
         "title": title,
+        "summary": normalize_text(summary),
         "content": content,
         "html": content_to_html(content),
         "canonical_url": title_to_canonical(title),
+        "pinned": pinned,
         "public": public,
     }
     #if public:
@@ -149,10 +174,12 @@ def show_canonical(name: str):
 def create():
     if request.method == "POST":
         title = request.form["title"]
+        summary = request.form.get("summary")
         content = request.form.get("content")
+        pinned = "pinned" in request.form
         public = "public" in request.form
 
-        id = create_writing(title, content, public)
+        id = create_writing(title, summary, content, pinned, public)
         return redirect(url_for("writing.show_id", id=id))
 
     cfg = meta.Metadata()
@@ -168,10 +195,12 @@ def update(id: int):
     if request.method == "POST":
 
         title = request.form["title"]
+        summary = request.form.get("summary")
         content = request.form.get("content")
+        pinned = "pinned" in request.form
         public = "public" in request.form
 
-        id = update_writing(id, title, content, public)
+        id = update_writing(id, title, summary, content, pinned, public)
         return redirect(url_for("writing.show_id", id=id))
 
     cfg = meta.Metadata()

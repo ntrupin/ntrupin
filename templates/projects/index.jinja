@@ -1,15 +1,75 @@
 {% extends "base.jinja" %}
 {% block content %}
+{% set case_studies = projects | selectattr("pinned") | list %}
+{% set archive_projects = projects | rejectattr("pinned") | list %}
 <section class="page-section">
   {% if g.user != None %}
   <a class="button-link" href="{{ url_for('projects.create') }}">New project</a>
   {% endif %}
   <h1 class="page-title">Projects</h1>
   <p class="section-intro">
-    Shipped systems, research tools, experiments, etc.
+    Research work, software systems, and smaller experiments.
   </p>
-  <div class="collection-list">
-    {% for project in projects %}
+  {% if case_studies %}
+  <section class="case-study-section" aria-labelledby="case-studies-heading">
+    <h2 id="case-studies-heading" class="section-title">Select projects</h2>
+    <div class="case-study-list">
+      {% for project in case_studies %}
+      <a href="{{ url_for('projects.show_canonical', name=project.canonical_url) if project.canonical_url else url_for('projects.show_id', id=project.id) }}" class="case-study-item">
+        <div class="case-study-header">
+          <p class="case-study-index">{{ "%02d"|format(loop.index) }}</p>
+          <h2 class="case-study-title">{{ project.title }}</h2>
+        </div>
+        {% if project.research == true or project.public == false %}
+        <p class="project-badge-line case-study-badge-line">
+          {% if project.research == true %}
+          <span class="badge-research">Research</span>
+          {% endif %}
+          {% if project.public == false %}
+          <span class="badge-private">Private</span>
+          {% endif %}
+        </p>
+        {% endif %}
+        {% if project.deck %}
+        <p class="case-study-deck">{{ project.deck }}</p>
+        {% elif project.summary %}
+        <p class="case-study-deck">{{ project.summary }}</p>
+        {% endif %}
+        {% if project.deck and project.summary %}
+        <p class="case-study-summary">{{ project.summary }}</p>
+        {% endif %}
+        {% if project.started_on or project.ended_on or project.status or project.stack %}
+        <p class="case-study-meta">
+          {% if project.status %}
+          <span>{{ project.status }}</span>
+          {% endif %}
+          {% if project.started_on and project.ended_on %}
+          <span>{{ project.started_on.strftime("%b %Y") }} - {{ project.ended_on.strftime("%b %Y") }}</span>
+          {% elif project.started_on %}
+          <span>{{ project.started_on.strftime("%b %Y") }} - Present</span>
+          {% elif project.ended_on %}
+          <span>Through {{ project.ended_on.strftime("%b %Y") }}</span>
+          {% else %}
+          <span>{{ project.published_at.strftime("%b %d, %Y") }}</span>
+          {% endif %}
+          {% if project.stack %}
+          <span>{{ project.stack }}</span>
+          {% endif %}
+        </p>
+        {% endif %}
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if archive_projects %}
+  <section class="project-archive" {% if case_studies %}aria-labelledby="archive-heading"{% endif %}>
+    {% if case_studies %}
+    <h2 id="archive-heading" class="section-title">Archive</h2>
+    {% endif %}
+    <div class="collection-list">
+    {% for project in archive_projects %}
     <a href="{{ url_for('projects.show_canonical', name=project.canonical_url) if project.canonical_url else url_for('projects.show_id', id=project.id) }}" class="collection-item project-collection-item">
       <p class="collection-date">
         {% if project.started_on and project.ended_on %}
@@ -25,6 +85,9 @@
       <div class="project-list-content">
         <p class="collection-title">
           {{ project.title }}
+        </p>
+        {% if project.research == true or project.pinned == true or project.public == false %}
+        <p class="project-badge-line">
           {% if project.research == true %}
           <span class="badge-research">Research</span>
           {% endif %}
@@ -35,6 +98,7 @@
           <span class="badge-private">Private</span>
           {% endif %}
         </p>
+        {% endif %}
         {% if project.summary %}
         <p class="project-summary-snippet">{{ project.summary }}</p>
         {% endif %}
@@ -51,6 +115,8 @@
       </div>
     </a>
     {% endfor %}
-  </div>
+    </div>
+  </section>
+  {% endif %}
 </section>
 {% endblock %}

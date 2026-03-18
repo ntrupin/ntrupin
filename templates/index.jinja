@@ -1,28 +1,77 @@
 {% extends "base.jinja" %}
 {% block content %}
-<section class="profile-page">
-  <h1 class="page-title">Noah Trupin</h1>
-  <div class="profile-body">
-    <p class="lede">
-      I am a third-year undergraduate student at Purdue University studying computer science (honors) with a concentration in machine intelligence and a (completed) minor in mathematics. I research <i>physics-informed diffusion networks</i> under <a href="https://www.cs.purdue.edu/homes/yexiang/">Yexiang Xue</a> and <i>robot perception and planning</i> at the <a href="https://corallab.net/">Cognitive Robot Autonomy and Learning Lab</a>, advised by <a href="https://wzx16.github.io/">Zixing Wang</a> and <a href="https://qureshiahmed.github.io/">Ahmed Qureshi</a>.
-    </p>
-    <p>
-      Outside formal research, I am interested in programming languages and compilers as tools for building and optimizing domain-specific high-performance systems.
-    </p>
-    <p>
-      I will join <a href="https://optiver.com/">Optiver</a> as a software engineer intern for Summer 2026.
-    </p>
-    <section class="updates-panel" aria-labelledby="updates-heading">
+<section class="profile-page portfolio-home">
+  <section class="home-hero" aria-labelledby="home-title">
+    <div class="home-intro">
+      <p class="home-kicker">Portfolio</p>
+      <h1 id="home-title" class="home-title">Hi, I'm <br /> <span class="home-name">Noah Trupin</span>.</h1>
+      <p class="home-summary">
+        I am a third-year computer science honors student at Purdue, working across machine learning, robotics, and languages.
+      </p>
+    </div>
+    <aside class="home-note" aria-label="About this site">
+      <p class="home-note-label">Current</p>
+      <p class="home-note-copy">
+        My personal archive for projects, writing, and small experiments.
+      </p>
+      <p class="home-note-copy">
+        Right now I am researching <i>error bounds for diffusion networks</i> under <a href="https://www.cs.purdue.edu/homes/yexiang/">Yexiang Xue</a>, <i>robot perception and planning</i> under <a href="https://qureshiahmed.github.io/">Ahmed Qureshi</a>, and <i>verification of stochastic systems</i> alongside <a href="https://pauljiang.com/">Paul Jiang</a>. I will join Optiver as a software engineer intern in Summer 2026.
+      </p>
+    </aside>
+  </section>
+
+  <section class="home-map" aria-labelledby="browse-heading">
+    <h2 id="browse-heading" class="section-title">Browse</h2>
+    <div class="home-map-grid">
+      <a href="{{ url_for('projects.index') }}" class="home-panel">
+        <p class="home-panel-index">01</p>
+        <h2 class="home-panel-title">Projects</h2>
+        <p class="home-panel-copy">Research work, software systems, and experiments.</p>
+      </a>
+      <a href="{{ url_for('writing.index') }}" class="home-panel">
+        <p class="home-panel-index">02</p>
+        <h2 class="home-panel-title">Writing</h2>
+        <p class="home-panel-copy">Essays, notes, and longer drafts in progress.</p>
+      </a>
+      <a href="{{ url_for('cv') }}" class="home-panel">
+        <p class="home-panel-index">03</p>
+        <h2 class="home-panel-title">CV</h2>
+        <p class="home-panel-copy">Experience, awards, publications, and academic work.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="home-details" aria-label="Practice and background">
+    <div class="home-detail">
+      <h2 class="section-title">Practice</h2>
+      <p class="home-detail-copy">
+        I am especially interested in programming languages and compilers as tools for building both domain-specific, high-performance systems, and the future of machine intellignece.
+      </p>
+    </div>
+    <div class="home-detail">
+      <h2 class="section-title">Background</h2>
+      <p class="home-detail-copy">
+        I worked as a software engineer on Virtual Cards at Capital One, built out experimental trading markets as a founding engineer at Straato, and conducted research across numerical and high performance computing, machine learning, and robotics.
+      </p>
+    </div>
+    <div class="home-detail">
+      <h2 class="section-title">Contact</h2>
+      <p class="home-detail-copy">
+        Email: ntrupin 「at」 purdue 「dot」 edu <br />
+        X: <a href="https://x.com/ntrupin">@ntrupin</a> <br />
+        LinkedIn: <a href="https://linkedin.com/in/ntrupin">ntrupin</a> <br />
+      </p>
+    </div>
+  </section>
+
+  <section class="home-updates" aria-labelledby="updates-heading">
+    <div class="home-updates-header">
       <h2 id="updates-heading" class="section-title">Recent updates</h2>
+      <p class="home-updates-intro">Recent updates.</p>
+    </div>
+    <div class="home-updates-list">
       {% include "partials/updates.jinja" %}
-    </section>
-    <p>
-      Previously, I wrote some physics-informed operators for diffusion and researched physics-constrained and VLM-informed robot task planning. I also built out the bank-side infrastructure for Google Autofill at <a href="https://www.capitalone.com/tech/">Capital One</a>, designed parallel routines for solving large sparse systems in seismology with the <a href="https://sites.google.com/site/xiaotaoyanggeo/home">Yang Group</a>, developed experimental trading environments at Straato, built interactive physics simulation software for <a href="https://sentinel.lawrenceville.org/">Sentinel</a>, deployed sensors and modeled water quality data for endangered rivers with <a href="https://stroudcenter.org/">Stroud</a>, and worked on optical music recognition and playback.
-    </p>
-    <p>
-      I have received awards from <a href="https://www.cs.purdue.edu/">Purdue CS</a> and <a href="https://www.l3harris.com/">L3Harris</a> for my work.
-    </p>
-    <p class="contact-line">You can contact me at ntrupin 「at」 purdue 「dot」 edu.</p>
-  </div>
+    </div>
+  </section>
 </section>
 {% endblock %}

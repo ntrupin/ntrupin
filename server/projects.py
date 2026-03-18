@@ -8,7 +8,7 @@ from server.auth import login_required
 
 bp = Blueprint("projects", __name__, url_prefix="/projects")
 
-PROJECT_INDEX_COLUMNS = "id,title,summary,status,stack,published_at,started_on,ended_on,pinned,research,public,canonical_url"
+PROJECT_INDEX_COLUMNS = "id,title,deck,summary,status,stack,published_at,started_on,ended_on,pinned,research,public,canonical_url"
 
 def projects_visibility_filter() -> str:
     if g.user:
@@ -94,6 +94,7 @@ def get_project_by_url(canonical_url: str) -> models.Project | None:
 
 def create_project(
     title: str,
+    deck: str | None,
     summary: str | None,
     content: str | None,
     started_on: str | None,
@@ -120,6 +121,7 @@ def create_project(
         "started_on": normalized_started_on.isoformat() if normalized_started_on else None,
         "ended_on": normalized_ended_on.isoformat() if normalized_ended_on else None,
         "title": title,
+        "deck": normalize_text(deck),
         "summary": normalize_text(summary),
         "content": normalized_content,
         "html": content_to_html(normalized_content),
@@ -143,6 +145,7 @@ def create_project(
 def update_project(
     id: int,
     title: str,
+    deck: str | None,
     summary: str | None,
     content: str | None,
     started_on: str | None,
@@ -166,6 +169,7 @@ def update_project(
         "started_on": normalized_started_on.isoformat() if normalized_started_on else None,
         "ended_on": normalized_ended_on.isoformat() if normalized_ended_on else None,
         "title": title,
+        "deck": normalize_text(deck),
         "summary": normalize_text(summary),
         "content": normalized_content,
         "html": content_to_html(normalized_content),
@@ -237,6 +241,7 @@ def show_canonical(name: str):
 def create():
     if request.method == "POST":
         title = request.form["title"]
+        deck = request.form.get("deck")
         summary = request.form.get("summary")
         content = request.form.get("content")
         started_on = request.form.get("started_on")
@@ -252,6 +257,7 @@ def create():
 
         id = create_project(
             title=title,
+            deck=deck,
             summary=summary,
             content=content,
             started_on=started_on,
@@ -279,6 +285,7 @@ def update(id: int):
 
     if request.method == "POST":
         title = request.form["title"]
+        deck = request.form.get("deck")
         summary = request.form.get("summary")
         content = request.form.get("content")
         started_on = request.form.get("started_on")
@@ -295,6 +302,7 @@ def update(id: int):
         id = update_project(
             id=id,
             title=title,
+            deck=deck,
             summary=summary,
             content=content,
             started_on=started_on,

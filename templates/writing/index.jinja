@@ -16,17 +16,20 @@
     <h2 id="selected-writing-heading" class="section-title">Selected essays</h2>
     <div class="case-study-list">
       {% for writing in selected_writings %}
+      {% set groups = writing.visibility_groups if writing.visibility_groups is defined else [] %}
       <a href="{{ url_for('writing.show_canonical', name=writing.canonical_url) if writing.canonical_url else url_for('writing.show_id', id=writing.id) }}" class="case-study-item">
         <div class="case-study-header">
           <p class="case-study-index">{{ "%02d"|format(loop.index) }}</p>
           <h2 class="case-study-title">{{ writing.title }}</h2>
         </div>
-        {% if writing.pinned == true or writing.public == false %}
+        {% if writing.pinned == true or writing.public == false or groups %}
         <p class="project-badge-line case-study-badge-line">
           {% if writing.pinned == true %}
           <span class="badge-pinned">Pinned</span>
           {% endif %}
-          {% if writing.public == false %}
+          {% if groups %}
+          <span class="badge-private">Groups: {{ groups | join(", ") }}</span>
+          {% elif writing.public == false %}
           <span class="badge-private">Private</span>
           {% endif %}
         </p>
@@ -50,6 +53,7 @@
     {% endif %}
     <div class="collection-list">
       {% for writing in archive_writings %}
+      {% set groups = writing.visibility_groups if writing.visibility_groups is defined else [] %}
       <a href="{{ url_for('writing.show_canonical', name=writing.canonical_url) if writing.canonical_url else url_for('writing.show_id', id=writing.id) }}" class="collection-item">
         <p class="collection-date">
           {{ writing.published_at.strftime("%b %d, %Y") }}
@@ -58,12 +62,14 @@
           <p class="collection-title">
             {{ writing.title }}
           </p>
-          {% if writing.pinned == true or writing.public == false %}
+          {% if writing.pinned == true or writing.public == false or groups %}
           <p class="project-badge-line">
             {% if writing.pinned == true %}
             <span class="badge-pinned">Pinned</span>
             {% endif %}
-            {% if writing.public == false %}
+            {% if groups %}
+            <span class="badge-private">Groups: {{ groups | join(", ") }}</span>
+            {% elif writing.public == false %}
             <span class="badge-private">Private</span>
             {% endif %}
           </p>

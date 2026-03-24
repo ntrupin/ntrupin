@@ -5,7 +5,7 @@ from datetime import date, datetime
 class Project:
     id: int
     created_at: datetime
-    user_id: int
+    user_id: str | None
     published_at: datetime
     updated_at: datetime
     started_on: date | None
@@ -30,7 +30,7 @@ class Project:
         return cls(
             id=data["id"],
             created_at=datetime.fromisoformat(data["created_at"]),
-            user_id=data["user_id"],
+            user_id=data.get("user_id"),
             published_at=datetime.fromisoformat(data["published_at"]),
             updated_at=datetime.fromisoformat(data["updated_at"]),
             started_on=date.fromisoformat(data["started_on"]) if data.get("started_on") else None,

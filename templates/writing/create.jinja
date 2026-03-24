@@ -6,6 +6,6 @@
 <section class="page-section">
   <h1 class="page-title">New Essay</h1>
   <p class="section-intro">Draft in Markdown; sidenotes and equations render automatically.</p>
-  {{ form_for(request.form) }}
+  {{ form_for(request.form, available_groups, selected_group_ids, show_group_selector) }}
 </section>
 {% endblock %}

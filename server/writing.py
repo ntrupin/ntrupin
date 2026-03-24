@@ -10,19 +10,102 @@ bp = Blueprint("writing", __name__, url_prefix="/writing")
 
 WRITING_INDEX_COLUMNS = "id,title,summary,pinned,published_at,public,canonical_url"
 
-def writing_visibility_filter() -> str:
-    if g.user:
-        return f"user_id.eq.{g.user['id']},public.eq.true"
-    return "public.eq.true"
-
-def visible_writing_query(columns: str = "*"):
-    return db.get().table("writing").select(columns).or_(writing_visibility_filter())
-
 def normalize_text(value: str | None) -> str | None:
     if value is None:
         return None
     normalized = value.strip()
     return normalized or None
+
+def _group_ids_for_current_user() -> list[int]:
+    if not g.user:
+        return []
+    return [int(group_id) for group_id in g.user.get("group_ids", [])]
+
+def _is_admin() -> bool:
+    return bool(g.user and g.user.get("is_admin"))
+
+def _owner_id(record: models.Writing | dict) -> str | None:
+    if isinstance(record, models.Writing):
+        return record.user_id
+    owner = record.get("user_id")
+    return str(owner) if owner is not None else None
+
+def can_manage_writing(record: models.Writing | dict) -> bool:
+    if g.user is None:
+        return False
+    if _is_admin():
+        return True
+    owner_id = _owner_id(record)
+    return owner_id == g.user["id"]
+
+def writing_visibility_filter() -> str:
+    clauses = ["public.eq.true"]
+    if not g.user:
+        return ",".join(clauses)
+    clauses.append(f"user_id.eq.{g.user['id']}")
+    group_ids = _group_ids_for_current_user()
+    if group_ids:
+        visible_writing_ids = db.get_writing_ids_for_group_ids(group_ids)
+        if visible_writing_ids:
+            ids = ",".join(str(writing_id) for writing_id in visible_writing_ids)
+            clauses.append(f"id.in.({ids})")
+    return ",".join(clauses)
+
+def visible_writing_query(columns: str = "*"):
+    query = db.get().table("writing").select(columns)
+    if _is_admin():
+        return query
+    return query.or_(writing_visibility_filter())
+
+def get_writing_record_by_id(id: int) -> dict | None:
+    data = (
+        db.get().table("writing")
+        .select("*")
+        .eq("id", id)
+        .limit(1)
+        .execute()
+    ).data
+    return data[0] if data else None
+
+def group_form_context_for_current_user() -> tuple[list[dict], list[int], bool]:
+    if not g.user:
+        return [], [], False
+
+    if _is_admin():
+        available_groups = db.list_groups()
+    else:
+        available_groups = db.list_groups_by_ids(_group_ids_for_current_user())
+
+    if available_groups:
+        return available_groups, [], len(available_groups) > 1
+
+    default_group = db.ensure_default_role_group(
+        user_id=g.user["id"],
+        is_admin=_is_admin(),
+    )
+    if not default_group:
+        return [], [], False
+
+    g.user["group_ids"] = db.get_user_group_ids(g.user["id"])
+    default_group_id = int(default_group["id"])
+    return [default_group], [default_group_id], False
+
+def parse_allowed_group_ids(available_groups: list[dict]) -> list[int]:
+    allowed_group_ids = {int(group["id"]) for group in available_groups}
+    selected: list[int] = []
+    for raw_group_id in request.form.getlist("group_ids"):
+        try:
+            parsed = int(raw_group_id)
+        except ValueError:
+            continue
+        if parsed in allowed_group_ids:
+            selected.append(parsed)
+    return sorted(set(selected))
+
+def writing_group_map(writing_ids: list[int]) -> dict[int, list[str]]:
+    if not writing_ids:
+        return {}
+    return db.get_writing_group_map(writing_ids)
 
 def get_writings() -> list[dict]:
     writings_data = (
@@ -31,9 +114,11 @@ def get_writings() -> list[dict]:
         .order("published_at", desc=True)
         .execute()
     ).data
+    group_map = writing_group_map([writing["id"] for writing in writings_data])
     for writing in writings_data:
         writing["published_at"] = datetime.fromisoformat(writing["published_at"])
         writing["pinned"] = bool(writing.get("pinned"))
+        writing["visibility_groups"] = group_map.get(writing["id"], [])
     return writings_data
 
 def get_writing_by_id(id: int) -> models.Writing | None:
@@ -73,6 +158,7 @@ def create_writing(
     content: str | None,
     pinned: bool,
     public: bool,
+    group_ids: list[int],
 ) -> int:
     database = db.get()
     now = datetime.utcnow().isoformat()
@@ -94,7 +180,9 @@ def create_writing(
         .insert(writing)
         .execute()
     ).data
-    return response[0]["id"]
+    writing_id = response[0]["id"]
+    db.replace_writing_groups(writing_id, group_ids)
+    return writing_id
 
 def update_writing(
     id: int,
@@ -103,6 +191,7 @@ def update_writing(
     content: str | None,
     pinned: bool,
     public: bool,
+    group_ids: list[int],
 ) -> int:
     database = db.get()
     now = datetime.utcnow().isoformat()
@@ -124,9 +213,11 @@ def update_writing(
         .eq("id", id)
         .execute()
     )
+    db.replace_writing_groups(id, group_ids)
     return id
 
 def delete_writing(id: int) -> None:
+    db.replace_writing_groups(id, [])
     database = db.get()
     (
         database.table("writing")
@@ -144,6 +235,7 @@ def show_id(id: int):
         return redirect(url_for("writing.show_canonical", name=writing.canonical_url))
     writing.html = writing.html or content_to_html(writing.content)
     needs_math = md.contains_math(writing.content or writing.html)
+    groups = db.get_writing_group_map([writing.id]).get(writing.id, [])
 
     cfg = meta.Metadata()
     return render_template(
@@ -151,6 +243,8 @@ def show_id(id: int):
         **cfg.serialize(),
         writing=writing,
         needs_math=needs_math,
+        can_edit=can_manage_writing(writing),
+        visibility_groups=groups,
     )
 
 @bp.route("/<string:name>/", methods=["GET"])
@@ -160,6 +254,7 @@ def show_canonical(name: str):
         abort(404)
     writing.html = writing.html or content_to_html(writing.content)
     needs_math = md.contains_math(writing.content or writing.html)
+    groups = db.get_writing_group_map([writing.id]).get(writing.id, [])
 
     cfg = meta.Metadata()
     return render_template(
@@ -167,48 +262,83 @@ def show_canonical(name: str):
         **cfg.serialize(),
         writing=writing,
         needs_math=needs_math,
+        can_edit=can_manage_writing(writing),
+        visibility_groups=groups,
     )
 
 @bp.route("/new/", methods=["GET", "POST"])
 @login_required
 def create():
+    available_groups, default_group_ids, show_group_selector = group_form_context_for_current_user()
     if request.method == "POST":
         title = request.form["title"]
         summary = request.form.get("summary")
         content = request.form.get("content")
         pinned = "pinned" in request.form
         public = "public" in request.form
+        group_ids = parse_allowed_group_ids(available_groups)
+        if not group_ids and not show_group_selector:
+            group_ids = default_group_ids.copy()
 
-        id = create_writing(title, summary, content, pinned, public)
+        id = create_writing(title, summary, content, pinned, public, group_ids)
         return redirect(url_for("writing.show_id", id=id))
 
     cfg = meta.Metadata()
-    return render_template("writing/create.jinja", **cfg.serialize())
+    return render_template(
+        "writing/create.jinja",
+        **cfg.serialize(),
+        available_groups=available_groups,
+        selected_group_ids=[str(group_id) for group_id in default_group_ids],
+        show_group_selector=show_group_selector,
+    )
 
 @bp.route("/<int:id>/edit/", methods=["GET", "POST"])
 @login_required
 def update(id: int):
-    writing = get_writing_by_id(id)
-    if not writing:
+    writing_record = get_writing_record_by_id(id)
+    if not writing_record:
         abort(404)
+    writing = models.Writing.from_dict(writing_record)
+    if not can_manage_writing(writing):
+        abort(403)
+    available_groups, default_group_ids, show_group_selector = group_form_context_for_current_user()
+    existing_group_ids = db.get_writing_group_ids(id)
 
     if request.method == "POST":
-
         title = request.form["title"]
         summary = request.form.get("summary")
         content = request.form.get("content")
         pinned = "pinned" in request.form
         public = "public" in request.form
+        group_ids = parse_allowed_group_ids(available_groups)
+        if not group_ids and not show_group_selector:
+            group_ids = existing_group_ids.copy() if existing_group_ids else default_group_ids.copy()
 
-        id = update_writing(id, title, summary, content, pinned, public)
+        id = update_writing(id, title, summary, content, pinned, public, group_ids)
         return redirect(url_for("writing.show_id", id=id))
 
+    selected_group_ids = [str(group_id) for group_id in existing_group_ids]
+    if not selected_group_ids:
+        selected_group_ids = [str(group_id) for group_id in default_group_ids]
     cfg = meta.Metadata()
-    return render_template("writing/update.jinja", **cfg.serialize(), writing=writing)
+    return render_template(
+        "writing/update.jinja",
+        **cfg.serialize(),
+        writing=writing,
+        available_groups=available_groups,
+        selected_group_ids=selected_group_ids,
+        show_group_selector=show_group_selector,
+    )
 
 @bp.route("/<int:id>/delete/", methods=["POST"])
 @login_required
 def delete(id: int):
+    writing_record = get_writing_record_by_id(id)
+    if not writing_record:
+        abort(404)
+    writing = models.Writing.from_dict(writing_record)
+    if not can_manage_writing(writing):
+        abort(403)
     delete_writing(id)
     return redirect(url_for("index"))
 

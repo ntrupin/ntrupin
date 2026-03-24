@@ -131,6 +131,17 @@ a {
   transition: color 140ms ease;
 }
 
+.nav-link-form {
+  margin: 0;
+}
+
+.nav-link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
 .site-brand:hover,
 .site-brand[data-active="true"],
 .nav-link:hover,

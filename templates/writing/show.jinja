@@ -2,18 +2,20 @@
 {% block content %}
 {% include "partials/mathjax.jinja" %}
 <section class="article-page">
-  {% if g.user != None %}
+  {% if can_edit %}
   <a class="button-link" href="{{ url_for('writing.update', id=writing.id) }}">Edit</a>
   {% endif %}
   <h1 class="title page-title">
     {{ writing.title }}
   </h1>
-  {% if writing.pinned == true or writing.public == false %}
+  {% if writing.pinned == true or writing.public == false or visibility_groups %}
   <p class="title-badge-line">
     {% if writing.pinned == true %}
     <span class="badge-pinned">Pinned</span>
     {% endif %}
-    {% if writing.public == false %}
+    {% if visibility_groups %}
+    <span class="badge-private">Groups: {{ visibility_groups | join(", ") }}</span>
+    {% elif writing.public == false %}
     <span class="badge-private">Private</span>
     {% endif %}
   </p>

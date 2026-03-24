@@ -30,6 +30,15 @@
     <div class="site-shell">
       {% include "partials/nav.jinja" %}
       <main class="site-main fade-in">
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <section class="page-section">
+        {% for message in messages %}
+        <p class="form-help">{{ message }}</p>
+        {% endfor %}
+      </section>
+      {% endif %}
+      {% endwith %}
       {% block content %}{% endblock %}
       </main>
       {% include "partials/footer.jinja" %}

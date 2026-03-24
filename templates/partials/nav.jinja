@@ -17,6 +17,17 @@
     </a>
     {% endif %}
     {% endfor %}
+    {% if g.user %}
+    {% if g.user.is_admin %}
+    <a href="{{ url_for('admin.index') }}" class="nav-link" data-active="{{ 'true' if request.path.startswith('/admin/') else 'false' }}">Admin</a>
+    {% endif %}
+    <form action="{{ url_for('auth.logout') }}" method="post" class="nav-link-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+      <button type="submit" class="nav-link nav-link-button" data-active="false">Logout</button>
+    </form>
+    {% else %}
+    <a href="{{ url_for('auth.login') }}" class="nav-link" data-active="{{ 'true' if request.path.startswith('/auth/login/') else 'false' }}">Login</a>
+    {% endif %}
     </nav>
   </div>
 </header>

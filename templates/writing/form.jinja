@@ -1,4 +1,4 @@
-{% macro form_for(object) %}
+{% macro form_for(object, available_groups=[], selected_group_ids=[], show_group_selector=true) %}
 {% if object is mapping %}
 {% set title_value = object.get("title") or "" %}
 {% set summary_value = object.get("summary") or "" %}
@@ -13,6 +13,7 @@
 {% set public_value = object.public if object and object.public is defined else false %}
 {% endif %}
 <form method="post" class="form-stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
   <div class="form-field">
     <label for="title" class="form-label">Title</label>
     <input name="title" id="title" value="{{ title_value }}" class="form-input" required />
@@ -38,6 +39,27 @@
     <input type="checkbox" name="public" id="public" class="form-checkbox" {{ "checked" if public_value == true }} />
     <label for="public" class="form-checkbox-label">Public</label>
   </div>
+
+  {% if show_group_selector and available_groups %}
+  {% set group_select_size = available_groups|length %}
+  {% if group_select_size > 6 %}
+  {% set group_select_size = 6 %}
+  {% endif %}
+  <div class="form-field">
+    <label for="group_ids" class="form-label">Allowed groups</label>
+    <select name="group_ids" id="group_ids" class="form-input" multiple size="{{ group_select_size }}">
+      {% for group in available_groups %}
+      <option
+        value="{{ group.id }}"
+        {{ "selected" if group.id in selected_group_ids or group.id|string in selected_group_ids }}
+      >
+        {{ group.name }}
+      </option>
+      {% endfor %}
+    </select>
+    <p class="form-help">Optional. Leave empty for owner-only private access when Public is unchecked.</p>
+  </div>
+  {% endif %}
 
   <button type="submit" class="button-primary">Save</button>
 </form>

@@ -1,7 +1,7 @@
 from datetime import datetime
 import re
 
-from flask import abort, Blueprint, g, redirect, render_template, request, url_for
+from flask import abort, Blueprint, current_app, g, redirect, render_template, request, url_for
 
 from server import db, md, meta, models
 from server.auth import login_required
@@ -38,24 +38,9 @@ def can_manage_writing(record: models.Writing | dict) -> bool:
     owner_id = _owner_id(record)
     return owner_id == g.user["id"]
 
-def writing_visibility_filter() -> str:
-    clauses = ["public.eq.true"]
-    if not g.user:
-        return ",".join(clauses)
-    clauses.append(f"user_id.eq.{g.user['id']}")
-    group_ids = _group_ids_for_current_user()
-    if group_ids:
-        visible_writing_ids = db.get_writing_ids_for_group_ids(group_ids)
-        if visible_writing_ids:
-            ids = ",".join(str(writing_id) for writing_id in visible_writing_ids)
-            clauses.append(f"id.in.({ids})")
-    return ",".join(clauses)
-
 def visible_writing_query(columns: str = "*"):
-    query = db.get().table("writing").select(columns)
-    if _is_admin():
-        return query
-    return query.or_(writing_visibility_filter())
+    # RLS now enforces visibility, so we avoid extra prefilter queries.
+    return db.get().table("writing").select(columns)
 
 def get_writing_record_by_id(id: int) -> dict | None:
     data = (
@@ -300,6 +285,13 @@ def update(id: int):
         abort(404)
     writing = models.Writing.from_dict(writing_record)
     if not can_manage_writing(writing):
+        current_app.logger.warning(
+            "Writing manage denied: writing_id=%s user_id=%s owner_id=%s is_admin=%s",
+            id,
+            g.user["id"] if g.user else None,
+            writing.user_id,
+            _is_admin(),
+        )
         abort(403)
     available_groups, default_group_ids, show_group_selector = group_form_context_for_current_user()
     existing_group_ids = db.get_writing_group_ids(id)
@@ -338,6 +330,13 @@ def delete(id: int):
         abort(404)
     writing = models.Writing.from_dict(writing_record)
     if not can_manage_writing(writing):
+        current_app.logger.warning(
+            "Writing delete denied: writing_id=%s user_id=%s owner_id=%s is_admin=%s",
+            id,
+            g.user["id"] if g.user else None,
+            writing.user_id,
+            _is_admin(),
+        )
         abort(403)
     delete_writing(id)
     return redirect(url_for("index"))

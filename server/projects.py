@@ -1,7 +1,7 @@
 from datetime import date, datetime
 import re
 
-from flask import abort, Blueprint, g, redirect, render_template, request, url_for
+from flask import abort, Blueprint, current_app, g, redirect, render_template, request, url_for
 
 from server import db, md, meta, models
 from server.auth import login_required
@@ -38,24 +38,9 @@ def can_manage_project(record: models.Project | dict) -> bool:
     owner_id = _owner_id(record)
     return owner_id == g.user["id"]
 
-def projects_visibility_filter() -> str:
-    clauses = ["public.eq.true"]
-    if not g.user:
-        return ",".join(clauses)
-    clauses.append(f"user_id.eq.{g.user['id']}")
-    group_ids = _group_ids_for_current_user()
-    if group_ids:
-        visible_project_ids = db.get_project_ids_for_group_ids(group_ids)
-        if visible_project_ids:
-            ids = ",".join(str(project_id) for project_id in visible_project_ids)
-            clauses.append(f"id.in.({ids})")
-    return ",".join(clauses)
-
 def visible_projects_query(columns: str = "*"):
-    query = db.get().table("projects").select(columns)
-    if _is_admin():
-        return query
-    return query.or_(projects_visibility_filter())
+    # RLS now enforces visibility, so we avoid extra prefilter queries.
+    return db.get().table("projects").select(columns)
 
 def get_project_record_by_id(id: int) -> dict | None:
     data = (
@@ -392,6 +377,13 @@ def update(id: int):
         abort(404)
     project = models.Project.from_dict(project_record)
     if not can_manage_project(project):
+        current_app.logger.warning(
+            "Project manage denied: project_id=%s user_id=%s owner_id=%s is_admin=%s",
+            id,
+            g.user["id"] if g.user else None,
+            project.user_id,
+            _is_admin(),
+        )
         abort(403)
     available_groups, default_group_ids, show_group_selector = group_form_context_for_current_user()
     existing_group_ids = db.get_project_group_ids(id)
@@ -456,6 +448,13 @@ def delete(id: int):
         abort(404)
     project = models.Project.from_dict(project_record)
     if not can_manage_project(project):
+        current_app.logger.warning(
+            "Project delete denied: project_id=%s user_id=%s owner_id=%s is_admin=%s",
+            id,
+            g.user["id"] if g.user else None,
+            project.user_id,
+            _is_admin(),
+        )
         abort(403)
     delete_project(id)
     return redirect(url_for("projects.index"))

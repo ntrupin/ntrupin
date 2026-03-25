@@ -71,7 +71,7 @@ def bootstrap_admin_role(user_id: str, email: str | None) -> None:
     upsert_user_role(user_id, "admin")
 
 def get_user_role(user_id: str) -> str | None:
-    database = get()
+    database = get_service()
     data = (
         database.table("app_roles")
         .select("role")
@@ -175,7 +175,7 @@ def sync_default_role_group(user_id: str, role: str, created_by: str | None = No
     return target_group
 
 def get_user_group_ids(user_id: str) -> list[int]:
-    database = get()
+    database = get_service()
     rows = (
         database.table("group_memberships")
         .select("group_id")

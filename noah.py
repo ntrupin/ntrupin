@@ -2,8 +2,9 @@ from datetime import datetime, timedelta
 import hmac
 import os
 import secrets
+from urllib.parse import urlparse
 
-from flask import Flask, Response, g, make_response, redirect, render_template, request, session
+from flask import Flask, Response, current_app, g, make_response, redirect, render_template, request, session
 
 from server import db, meta
 
@@ -34,6 +35,26 @@ def get_csrf_token() -> str:
     token = secrets.token_urlsafe(32)
     session[CSRF_SESSION_KEY] = token
     return token
+
+def _is_same_origin_request() -> bool:
+    request_origin = request.headers.get("Origin")
+    if request_origin:
+        return request_origin.rstrip("/") == request.host_url.rstrip("/")
+
+    request_referer = request.headers.get("Referer")
+    if not request_referer:
+        return False
+
+    try:
+        referer = urlparse(request_referer)
+        current = urlparse(request.host_url)
+    except Exception:
+        return False
+
+    return (
+        referer.scheme == current.scheme
+        and referer.netloc == current.netloc
+    )
 
 def create_app() -> Flask:
     app = Flask(
@@ -84,11 +105,31 @@ def csrf_protect():
         request.headers.get(CSRF_HEADER_NAME)
         or request.form.get("csrf_token")
     )
-    if not expected_token or not provided_token:
-        return "Forbidden", 403
-    if not hmac.compare_digest(provided_token, expected_token):
-        return "Forbidden", 403
-    return None
+    if expected_token and provided_token and hmac.compare_digest(provided_token, expected_token):
+        return None
+
+    # Fallback for authenticated same-origin browser posts when session/CSRF state
+    # was rotated while the edit page was open.
+    if session.get("sb_access_token") and _is_same_origin_request():
+        if not expected_token:
+            session[CSRF_SESSION_KEY] = secrets.token_urlsafe(32)
+        current_app.logger.warning(
+            "CSRF fallback accepted for %s %s (token missing or mismatched).",
+            request.method,
+            request.path,
+        )
+        return None
+
+    current_app.logger.warning(
+        "CSRF rejected for %s %s (has_expected=%s has_provided=%s same_origin=%s has_auth_session=%s)",
+        request.method,
+        request.path,
+        bool(expected_token),
+        bool(provided_token),
+        _is_same_origin_request(),
+        bool(session.get("sb_access_token")),
+    )
+    return "Forbidden", 403
 
 @app.after_request
 def add_security_headers(response: Response) -> Response:

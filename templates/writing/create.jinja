@@ -1,11 +1,12 @@
 {% extends "base.jinja" %}
-
 {% from "writing/form.jinja" import form_for %}
-
 {% block content %}
-<section class="page-section">
-  <h1 class="page-title">New Essay</h1>
-  <p class="section-intro">Draft in Markdown; sidenotes and equations render automatically.</p>
+<section class="container page">
+  <header class="page-head">
+    <p class="eyebrow">Writing</p>
+    <h1 class="page-title">New essay</h1>
+    <p class="page-subtitle">Markdown with automatic sidenotes and equations.</p>
+  </header>
   {{ form_for(request.form, available_groups, selected_group_ids, show_group_selector) }}
 </section>
 {% endblock %}

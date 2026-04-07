@@ -1,39 +1,40 @@
 {% extends "base.jinja" %}
 {% block content %}
 {% include "partials/mathjax.jinja" %}
-<section class="article-page">
+<section class="post-page article-page">
   {% if can_edit %}
-  <a class="button-link" href="{{ url_for('writing.update', id=writing.id) }}">Edit</a>
+  <a class="utility-button" href="{{ url_for('writing.update', id=writing.id) }}">Edit</a>
   {% endif %}
-  <h1 class="title page-title">
-    {{ writing.title }}
-  </h1>
-  {% if writing.pinned == true or writing.public == false or visibility_groups %}
-  <p class="title-badge-line">
-    {% if writing.pinned == true %}
-    <span class="badge-pinned">Pinned</span>
-    {% endif %}
-    {% if visibility_groups %}
-    <span class="badge-private">Groups: {{ visibility_groups | join(", ") }}</span>
-    {% elif writing.public == false %}
-    <span class="badge-private">Private</span>
-    {% endif %}
-  </p>
-  {% endif %}
-  <div class="article-meta">
-    <p>
-      {{ writing.published_at.strftime("%B %d, %Y")  }}
+
+  <h1 class="title post-title">{{ writing.title }}</h1>
+  <div class="post-meta-row">
+    <p class="post-date">
+      {{ writing.published_at.strftime("%B %d, %Y") }}
       {% if writing.published_at != writing.updated_at %}
       | Updated {{ writing.updated_at.strftime("%B %d, %Y") }}
       {% endif %}
     </p>
   </div>
-  <div class="article-layout" data-sidenote-root>
-    <article class="prose">
+
+  {% if writing.pinned == true or writing.public == false or visibility_groups %}
+  <p class="badge-line post-badges">
+    {% if writing.pinned == true %}<span class="badge">Pinned</span>{% endif %}
+    {% if visibility_groups %}
+    <span class="badge badge-private">Groups: {{ visibility_groups | join(", ") }}</span>
+    {% elif writing.public == false %}
+    <span class="badge badge-private">Private</span>
+    {% endif %}
+  </p>
+  {% endif %}
+
+  <div class="article-shell" data-sidenote-root data-toc-root>
+    <aside class="toc-rail" data-toc-column aria-label="Table of contents"></aside>
+    <article class="prose" data-article-body>
       {{ writing.html | safe }}
     </article>
-    <aside class="sidenote-column" data-sidenote-column aria-label="Sidenotes"></aside>
+    <aside class="sidenote-rail" data-sidenote-column aria-label="Sidenotes"></aside>
   </div>
 </section>
+<script src="{{ url_for('static', filename='js/article_toc.js') }}"></script>
 <script src="{{ url_for('static', filename='js/sidenotes.js') }}"></script>
 {% endblock %}

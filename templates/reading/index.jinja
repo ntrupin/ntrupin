@@ -1,17 +1,16 @@
 {% extends "base.jinja" %}
 {% block content %}
-<section class="page-section">
-  <h1 class="page-title">Reading</h1>
-  <p class="section-intro">Papers, books, and other links I find interesting.</p>
-  <div class="collection-list">
+<section>
+  <h1 class="list-page-title">Reading</h1>
+  <div class="blog-list" role="list">
     {% for reading in readings %}
-    <a target="_blank" href="{{ reading.link }}" class="collection-item" rel="noopener noreferrer">
-      <p class="collection-date">
-        {{ reading.created_at.strftime("%b %d, %Y") }}
-      </p>
-      <p class="collection-title">
-        {{ reading.text }}
-      </p>
+    <a target="_blank" href="{{ reading.link }}" class="blog-row" rel="noopener noreferrer" role="listitem">
+      <div class="blog-row-main">
+        <p class="blog-date">{{ reading.created_at.strftime("%b %d, %Y") }}</p>
+        <div class="blog-main-text">
+          <p class="blog-title">{{ reading.text }}</p>
+        </div>
+      </div>
     </a>
     {% endfor %}
   </div>

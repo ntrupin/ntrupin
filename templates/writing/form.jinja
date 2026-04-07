@@ -12,42 +12,42 @@
 {% set pinned_value = object.pinned if object and object.pinned is defined else false %}
 {% set public_value = object.public if object and object.public is defined else false %}
 {% endif %}
-<form method="post" class="form-stack">
+<form method="post" class="form-block">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-  <div class="form-field">
-    <label for="title" class="form-label">Title</label>
-    <input name="title" id="title" value="{{ title_value }}" class="form-input" required />
-  </div>
 
-  <div class="form-field">
-    <label for="summary" class="form-label">Summary</label>
-    <textarea name="summary" id="summary" class="form-input form-textarea-short">{{ summary_value }}</textarea>
-    <p class="form-help">Optional one or two sentence standfirst for the writing index.</p>
-  </div>
+  <label class="field">
+    <span class="field-label">Title</span>
+    <input name="title" id="title" value="{{ title_value }}" class="input" required />
+  </label>
 
-  <div class="form-field">
-    <label for="content" class="form-label">Content</label>
-    <textarea name="content" id="content" class="form-input form-textarea">{{ content_value }}</textarea>
-  </div>
+  <label class="field">
+    <span class="field-label">Summary</span>
+    <textarea name="summary" id="summary" class="input textarea-small">{{ summary_value }}</textarea>
+  </label>
 
-  <div class="form-checkbox-row">
-    <input type="checkbox" name="pinned" id="pinned" class="form-checkbox" {{ "checked" if pinned_value == true }} />
-    <label for="pinned" class="form-checkbox-label">Pinned</label>
-  </div>
+  <label class="field">
+    <span class="field-label">Content</span>
+    <textarea name="content" id="content" class="input textarea-large">{{ content_value }}</textarea>
+  </label>
 
-  <div class="form-checkbox-row">
-    <input type="checkbox" name="public" id="public" class="form-checkbox" {{ "checked" if public_value == true }} />
-    <label for="public" class="form-checkbox-label">Public</label>
-  </div>
+  <label class="choice">
+    <input type="checkbox" name="pinned" id="pinned" class="checkbox" {{ "checked" if pinned_value == true }} />
+    <span>Pinned</span>
+  </label>
+
+  <label class="choice">
+    <input type="checkbox" name="public" id="public" class="checkbox" {{ "checked" if public_value == true }} />
+    <span>Public</span>
+  </label>
 
   {% if show_group_selector and available_groups %}
   {% set group_select_size = available_groups|length %}
   {% if group_select_size > 6 %}
   {% set group_select_size = 6 %}
   {% endif %}
-  <div class="form-field">
-    <label for="group_ids" class="form-label">Allowed groups</label>
-    <select name="group_ids" id="group_ids" class="form-input" multiple size="{{ group_select_size }}">
+  <label class="field">
+    <span class="field-label">Allowed groups</span>
+    <select name="group_ids" id="group_ids" class="input" multiple size="{{ group_select_size }}">
       {% for group in available_groups %}
       <option
         value="{{ group.id }}"
@@ -57,10 +57,10 @@
       </option>
       {% endfor %}
     </select>
-    <p class="form-help">Optional. Leave empty for owner-only private access when Public is unchecked.</p>
-  </div>
+    <span class="field-help">Leave empty for owner-only access when Public is unchecked.</span>
+  </label>
   {% endif %}
 
-  <button type="submit" class="button-primary">Save</button>
+  <button type="submit" class="button">Save</button>
 </form>
 {% endmacro %}

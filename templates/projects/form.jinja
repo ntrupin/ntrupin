@@ -30,92 +30,88 @@
 {% set pinned_value = object.pinned if object and object.pinned is defined else false %}
 {% set public_value = object.public if object and object.public is defined else false %}
 {% endif %}
-<form method="post" class="form-stack">
+<form method="post" class="form-block">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-  <div class="form-field">
-    <label for="title" class="form-label">Title</label>
-    <input name="title" id="title" value="{{ title_value }}" class="form-input" required />
+
+  <label class="field">
+    <span class="field-label">Title</span>
+    <input name="title" id="title" value="{{ title_value }}" class="input" required />
+  </label>
+
+  <label class="field">
+    <span class="field-label">Deck</span>
+    <textarea name="deck" id="deck" class="input textarea-small">{{ deck_value }}</textarea>
+  </label>
+
+  <label class="field">
+    <span class="field-label">Summary</span>
+    <textarea name="summary" id="summary" class="input textarea-small" required>{{ summary_value }}</textarea>
+  </label>
+
+  <div class="field-grid-2">
+    <label class="field">
+      <span class="field-label">Start date</span>
+      <input type="date" name="started_on" id="started_on" value="{{ started_on_value }}" class="input" />
+    </label>
+    <label class="field">
+      <span class="field-label">End date</span>
+      <input type="date" name="ended_on" id="ended_on" value="{{ ended_on_value }}" class="input" />
+    </label>
   </div>
 
-  <div class="form-field">
-    <label for="deck" class="form-label">Deck</label>
-    <textarea name="deck" id="deck" class="form-input form-textarea-short">{{ deck_value }}</textarea>
-    <p class="form-help">Optional standfirst for featured or case-study presentations.</p>
-  </div>
+  <label class="field">
+    <span class="field-label">Status</span>
+    <input name="status" id="status" value="{{ status_value }}" class="input" placeholder="Live, In progress, Archived" />
+  </label>
 
-  <div class="form-field">
-    <label for="summary" class="form-label">Summary</label>
-    <textarea name="summary" id="summary" class="form-input form-textarea-short" required>{{ summary_value }}</textarea>
-    <p class="form-help">One or two sentences focused on what shipped and why it matters.</p>
-  </div>
+  <label class="field">
+    <span class="field-label">Stack</span>
+    <input name="stack" id="stack" value="{{ stack_value }}" class="input" placeholder="Python, Flask, Supabase" />
+  </label>
 
-  <div class="form-row-two">
-    <div class="form-field">
-      <label for="started_on" class="form-label">Start date</label>
-      <input type="date" name="started_on" id="started_on" value="{{ started_on_value }}" class="form-input" />
-    </div>
+  <label class="field">
+    <span class="field-label">Project URL</span>
+    <input type="url" name="project_url" id="project_url" value="{{ project_url_value }}" class="input" />
+  </label>
 
-    <div class="form-field">
-      <label for="ended_on" class="form-label">End date</label>
-      <input type="date" name="ended_on" id="ended_on" value="{{ ended_on_value }}" class="form-input" />
-    </div>
-  </div>
-  <p class="form-help">Use only start date for ongoing projects. Leave both blank to use publish date.</p>
+  <label class="field">
+    <span class="field-label">Repository URL</span>
+    <input type="url" name="repo_url" id="repo_url" value="{{ repo_url_value }}" class="input" />
+  </label>
 
-  <div class="form-field">
-    <label for="status" class="form-label">Status</label>
-    <input name="status" id="status" value="{{ status_value }}" class="form-input" placeholder="Live, In progress, Archived" />
-  </div>
+  <label class="field">
+    <span class="field-label">Paper URL</span>
+    <input type="url" name="paper_url" id="paper_url" value="{{ paper_url_value }}" class="input" />
+  </label>
 
-  <div class="form-field">
-    <label for="stack" class="form-label">Stack</label>
-    <input name="stack" id="stack" value="{{ stack_value }}" class="form-input" placeholder="Python, Flask, Supabase" />
-  </div>
+  <label class="field">
+    <span class="field-label">Notes</span>
+    <textarea name="content" id="content" class="input textarea-large">{{ content_value }}</textarea>
+  </label>
 
-  <div class="form-field">
-    <label for="project_url" class="form-label">Project URL</label>
-    <input type="url" name="project_url" id="project_url" value="{{ project_url_value }}" class="form-input" />
-  </div>
+  <label class="choice">
+    <input type="checkbox" name="research" id="research" class="checkbox" {{ "checked" if research_value == true }} />
+    <span>Research</span>
+  </label>
 
-  <div class="form-field">
-    <label for="repo_url" class="form-label">Repository URL</label>
-    <input type="url" name="repo_url" id="repo_url" value="{{ repo_url_value }}" class="form-input" />
-  </div>
+  <label class="choice">
+    <input type="checkbox" name="pinned" id="pinned" class="checkbox" {{ "checked" if pinned_value == true }} />
+    <span>Pinned</span>
+  </label>
 
-  <div class="form-field">
-    <label for="paper_url" class="form-label">Paper URL</label>
-    <input type="url" name="paper_url" id="paper_url" value="{{ paper_url_value }}" class="form-input" />
-  </div>
-
-  <div class="form-field">
-    <label for="content" class="form-label">Notes (optional)</label>
-    <textarea name="content" id="content" class="form-input form-textarea">{{ content_value }}</textarea>
-    <p class="form-help">Markdown for implementation notes, design decisions, and longer write-ups.</p>
-  </div>
-
-  <div class="form-checkbox-row">
-    <input type="checkbox" name="research" id="research" class="form-checkbox" {{ "checked" if research_value == true }} />
-    <label for="research" class="form-checkbox-label">Research</label>
-  </div>
-
-  <div class="form-checkbox-row">
-    <input type="checkbox" name="pinned" id="pinned" class="form-checkbox" {{ "checked" if pinned_value == true }} />
-    <label for="pinned" class="form-checkbox-label">Pinned</label>
-  </div>
-
-  <div class="form-checkbox-row">
-    <input type="checkbox" name="public" id="public" class="form-checkbox" {{ "checked" if public_value == true }} />
-    <label for="public" class="form-checkbox-label">Public</label>
-  </div>
+  <label class="choice">
+    <input type="checkbox" name="public" id="public" class="checkbox" {{ "checked" if public_value == true }} />
+    <span>Public</span>
+  </label>
 
   {% if show_group_selector and available_groups %}
   {% set group_select_size = available_groups|length %}
   {% if group_select_size > 6 %}
   {% set group_select_size = 6 %}
   {% endif %}
-  <div class="form-field">
-    <label for="group_ids" class="form-label">Allowed groups</label>
-    <select name="group_ids" id="group_ids" class="form-input" multiple size="{{ group_select_size }}">
+  <label class="field">
+    <span class="field-label">Allowed groups</span>
+    <select name="group_ids" id="group_ids" class="input" multiple size="{{ group_select_size }}">
       {% for group in available_groups %}
       <option
         value="{{ group.id }}"
@@ -125,10 +121,10 @@
       </option>
       {% endfor %}
     </select>
-    <p class="form-help">Optional. Leave empty for owner-only private access when Public is unchecked.</p>
-  </div>
+    <span class="field-help">Leave empty for owner-only access when Public is unchecked.</span>
+  </label>
   {% endif %}
 
-  <button type="submit" class="button-primary">Save</button>
+  <button type="submit" class="button">Save</button>
 </form>
 {% endmacro %}

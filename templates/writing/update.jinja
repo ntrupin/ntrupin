@@ -1,14 +1,15 @@
 {% extends "base.jinja" %}
-
 {% from "writing/form.jinja" import form_for %}
-
 {% block content %}
-<section class="page-section">
-  <h1 class="page-title">Edit Essay</h1>
+<section class="container page">
+  <header class="page-head">
+    <p class="eyebrow">Writing</p>
+    <h1 class="page-title">Edit essay</h1>
+  </header>
   {{ form_for(request.form if request.form else writing, available_groups, selected_group_ids, show_group_selector) }}
-  <form action="{{ url_for('writing.delete', id=writing.id) }}" method="post" class="delete-form">
+  <form action="{{ url_for('writing.delete', id=writing.id) }}" method="post" class="delete-row">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-    <button type="submit" class="button-danger" onclick="return confirm('Are you sure?');">Delete</button>
+    <button type="submit" class="button button-danger" onclick="return confirm('Are you sure?');">Delete</button>
   </form>
 </section>
 {% endblock %}

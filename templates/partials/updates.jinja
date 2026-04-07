@@ -1,17 +1,17 @@
-<div class="timeline-list">
+<div class="blog-list" role="list">
   {% for update in updates %}
-  <div class="timeline-item">
-    <p class="timeline-date">
-      {{ update.date.strftime("%b") }}&nbsp;{{ update.date.year }}
-    </p>
-    <p class="timeline-text">
-      {{ update.description }}
-    </p>
-  </div>
+  <article class="blog-row" role="listitem">
+    <div class="blog-row-main">
+      <p class="blog-date update-date">{{ update.date.strftime("%b %d, %Y") }}</p>
+      <div class="blog-main-text">
+        <p class="blog-title">{{ update.description | trim }}</p>
+      </div>
+    </div>
+  </article>
+  {% else %}
+  <p class="muted">No updates yet.</p>
   {% endfor %}
 </div>
 {% if request.path != "/updates/" %}
-<div class="updates-more">
-  <a href="{{ url_for('updates') }}" class="updates-more-link">All updates →</a>
-</div>
+<p class="blog-more"><a href="{{ url_for('updates') }}">All updates →</a></p>
 {% endif %}

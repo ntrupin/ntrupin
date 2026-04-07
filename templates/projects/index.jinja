@@ -1,128 +1,111 @@
 {% extends "base.jinja" %}
 {% block content %}
-{% set case_studies = projects | selectattr("pinned") | list %}
+{% set featured_projects = projects | selectattr("pinned") | list %}
 {% set archive_projects = projects | rejectattr("pinned") | list %}
-<section class="page-section">
+<section>
   {% if g.user != None %}
-  <a class="button-link" href="{{ url_for('projects.create') }}">New project</a>
+  <a class="utility-button" href="{{ url_for('projects.create') }}">New project</a>
   {% endif %}
-  <h1 class="page-title">Projects</h1>
-  <p class="section-intro">
-    Research work, software systems, and smaller experiments.
-  </p>
-  {% if case_studies %}
-  <section class="case-study-section" aria-labelledby="case-studies-heading">
-    <h2 id="case-studies-heading" class="section-title">Select projects</h2>
-    <div class="case-study-list">
-      {% for project in case_studies %}
-      {% set groups = project.visibility_groups if project.visibility_groups is defined else [] %}
-      <a href="{{ url_for('projects.show_canonical', name=project.canonical_url) if project.canonical_url else url_for('projects.show_id', id=project.id) }}" class="case-study-item">
-        <div class="case-study-header">
-          <p class="case-study-index">{{ "%02d"|format(loop.index) }}</p>
-          <h2 class="case-study-title">{{ project.title }}</h2>
-        </div>
-        {% if project.research == true or project.public == false or groups %}
-        <p class="project-badge-line case-study-badge-line">
-          {% if project.research == true %}
-          <span class="badge-research">Research</span>
-          {% endif %}
-          {% if groups %}
-          <span class="badge-private">Groups: {{ groups | join(", ") }}</span>
-          {% elif project.public == false %}
-          <span class="badge-private">Private</span>
-          {% endif %}
-        </p>
-        {% endif %}
-        {% if project.deck %}
-        <p class="case-study-deck">{{ project.deck }}</p>
-        {% elif project.summary %}
-        <p class="case-study-deck">{{ project.summary }}</p>
-        {% endif %}
-        {% if project.deck and project.summary %}
-        <p class="case-study-summary">{{ project.summary }}</p>
-        {% endif %}
-        {% if project.started_on or project.ended_on or project.status or project.stack %}
-        <p class="case-study-meta">
-          {% if project.status %}
-          <span>{{ project.status }}</span>
-          {% endif %}
-          {% if project.started_on and project.ended_on %}
-          <span>{{ project.started_on.strftime("%b %Y") }} - {{ project.ended_on.strftime("%b %Y") }}</span>
-          {% elif project.started_on %}
-          <span>{{ project.started_on.strftime("%b %Y") }} - Present</span>
-          {% elif project.ended_on %}
-          <span>Through {{ project.ended_on.strftime("%b %Y") }}</span>
-          {% else %}
-          <span>{{ project.published_at.strftime("%b %d, %Y") }}</span>
-          {% endif %}
-          {% if project.stack %}
-          <span>{{ project.stack }}</span>
-          {% endif %}
-        </p>
-        {% endif %}
-      </a>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
+  <h1 class="list-page-title">Projects</h1>
 
-  {% if archive_projects %}
-  <section class="project-archive" {% if case_studies %}aria-labelledby="archive-heading"{% endif %}>
-    {% if case_studies %}
-    <h2 id="archive-heading" class="section-title">Archive</h2>
-    {% endif %}
-    <div class="collection-list">
-    {% for project in archive_projects %}
+  {% if featured_projects %}
+  <h2 class="section-title">Selected</h2>
+  <div class="blog-list" role="list">
+    {% for project in featured_projects %}
     {% set groups = project.visibility_groups if project.visibility_groups is defined else [] %}
-    <a href="{{ url_for('projects.show_canonical', name=project.canonical_url) if project.canonical_url else url_for('projects.show_id', id=project.id) }}" class="collection-item project-collection-item">
-      <p class="collection-date">
-        {% if project.started_on and project.ended_on %}
-        {{ project.started_on.strftime("%b %Y") }} - {{ project.ended_on.strftime("%b %Y") }}
-        {% elif project.started_on %}
-        {{ project.started_on.strftime("%b %Y") }} - Present
-        {% elif project.ended_on %}
-        Through {{ project.ended_on.strftime("%b %Y") }}
-        {% else %}
-        {{ project.published_at.strftime("%b %d, %Y") }}
-        {% endif %}
-      </p>
-      <div class="project-list-content">
-        <p class="collection-title">
-          {{ project.title }}
-        </p>
-        {% if project.research == true or project.pinned == true or project.public == false or groups %}
-        <p class="project-badge-line">
-          {% if project.research == true %}
-          <span class="badge-research">Research</span>
-          {% endif %}
-          {% if project.pinned == true %}
-          <span class="badge-pinned">Pinned</span>
-          {% endif %}
-          {% if groups %}
-          <span class="badge-private">Groups: {{ groups | join(", ") }}</span>
-          {% elif project.public == false %}
-          <span class="badge-private">Private</span>
+    <a
+      href="{{ url_for('projects.show_canonical', name=project.canonical_url) if project.canonical_url else url_for('projects.show_id', id=project.id) }}"
+      class="blog-row"
+      role="listitem"
+    >
+      <div class="blog-row-main">
+        <p class="blog-date project-date">
+          {% if project.started_on and project.ended_on %}
+          <span class="project-date-line">{{ project.started_on.strftime("%b %Y") }}</span>
+          <span class="project-date-mobile-sep"> - </span>
+          <span class="project-date-line">{{ project.ended_on.strftime("%b %Y") }}</span>
+          {% elif project.started_on %}
+          <span class="project-date-line">{{ project.started_on.strftime("%b %Y") }}</span>
+          <span class="project-date-mobile-sep"> - </span>
+          <span class="project-date-line">Present</span>
+          {% elif project.ended_on %}
+          <span class="project-date-line">Through</span>
+          <span class="project-date-mobile-sep"> </span>
+          <span class="project-date-line">{{ project.ended_on.strftime("%b %Y") }}</span>
+          {% else %}
+          {{ project.published_at.strftime("%b %d, %Y") }}
           {% endif %}
         </p>
-        {% endif %}
-        {% if project.summary %}
-        <p class="project-summary-snippet">{{ project.summary }}</p>
-        {% endif %}
-        {% if project.status or project.stack %}
-        <p class="project-inline-meta">
-          {% if project.status %}
-          <span>{{ project.status }}</span>
+        <div class="blog-main-text">
+          <p class="blog-title">{{ project.title }}</p>
+          {% if project.deck or project.summary %}
+          <p class="blog-summary">{{ project.deck if project.deck else project.summary }}</p>
           {% endif %}
-          {% if project.stack %}
-          <span>{{ project.stack }}</span>
+          {% if project.research == true or project.pinned == true or project.public == false or groups %}
+          <p class="badge-line">
+            {% if project.research == true %}<span class="badge">Research</span>{% endif %}
+            {% if project.pinned == true %}<span class="badge">Pinned</span>{% endif %}
+            {% if groups %}
+            <span class="badge badge-private">Groups: {{ groups | join(", ") }}</span>
+            {% elif project.public == false %}
+            <span class="badge badge-private">Private</span>
+            {% endif %}
+          </p>
           {% endif %}
-        </p>
-        {% endif %}
+        </div>
       </div>
     </a>
     {% endfor %}
-    </div>
-  </section>
+  </div>
+  {% endif %}
+
+  {% if archive_projects %}
+  <h2 class="section-title section-title-archive">{% if featured_projects %}Archive{% else %}All{% endif %}</h2>
+  <div class="blog-list" role="list">
+    {% for project in archive_projects %}
+    {% set groups = project.visibility_groups if project.visibility_groups is defined else [] %}
+    <a
+      href="{{ url_for('projects.show_canonical', name=project.canonical_url) if project.canonical_url else url_for('projects.show_id', id=project.id) }}"
+      class="blog-row"
+      role="listitem"
+    >
+      <div class="blog-row-main">
+        <p class="blog-date project-date">
+          {% if project.started_on and project.ended_on %}
+          <span class="project-date-line">{{ project.started_on.strftime("%b %Y") }}</span>
+          <span class="project-date-mobile-sep"> - </span>
+          <span class="project-date-line">{{ project.ended_on.strftime("%b %Y") }}</span>
+          {% elif project.started_on %}
+          <span class="project-date-line">{{ project.started_on.strftime("%b %Y") }}</span>
+          <span class="project-date-mobile-sep"> - </span>
+          <span class="project-date-line">Present</span>
+          {% elif project.ended_on %}
+          <span class="project-date-line">Through</span>
+          <span class="project-date-mobile-sep"> </span>
+          <span class="project-date-line">{{ project.ended_on.strftime("%b %Y") }}</span>
+          {% else %}
+          {{ project.published_at.strftime("%b %d, %Y") }}
+          {% endif %}
+        </p>
+        <div class="blog-main-text">
+          <p class="blog-title">{{ project.title }}</p>
+          {% if project.summary %}<p class="blog-summary">{{ project.summary }}</p>{% endif %}
+          {% if project.research == true or project.pinned == true or project.public == false or groups %}
+          <p class="badge-line">
+            {% if project.research == true %}<span class="badge">Research</span>{% endif %}
+            {% if project.pinned == true %}<span class="badge">Pinned</span>{% endif %}
+            {% if groups %}
+            <span class="badge badge-private">Groups: {{ groups | join(", ") }}</span>
+            {% elif project.public == false %}
+            <span class="badge badge-private">Private</span>
+            {% endif %}
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
   {% endif %}
 </section>
 {% endblock %}

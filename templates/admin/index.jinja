@@ -1,145 +1,126 @@
 {% extends "base.jinja" %}
 {% block content %}
-<section class="page-section">
-  <h1 class="page-title">Admin</h1>
-  <p class="section-intro">Manage users, roles, and groups.</p>
+<section class="container page">
+  <header class="page-head">
+    <p class="eyebrow">Admin</p>
+    <h1 class="page-title">Administration</h1>
+    <p class="page-subtitle">Users, roles, and groups.</p>
+  </header>
 
-  <section class="project-hero" aria-labelledby="create-user-heading">
-    <h2 id="create-user-heading" class="section-title">Create user</h2>
-    <form action="{{ url_for('admin.create_user') }}" method="post" class="form-stack">
+  <section class="panel" aria-labelledby="admin-create-user-heading">
+    <h2 id="admin-create-user-heading" class="panel-title">Create user</h2>
+    <form action="{{ url_for('admin.create_user') }}" method="post" class="form-block">
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-      <div class="form-field">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" name="email" class="form-input" required />
-      </div>
-      <div class="form-field">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" id="password" name="password" class="form-input" required />
-      </div>
-      <div class="form-checkbox-row">
-        <input type="checkbox" id="is_admin" name="is_admin" class="form-checkbox" />
-        <label for="is_admin" class="form-checkbox-label">Admin</label>
-      </div>
-      <button type="submit" class="button-primary">Create user</button>
+      <label class="field"><span class="field-label">Email</span><input type="email" id="email" name="email" class="input" required /></label>
+      <label class="field"><span class="field-label">Password</span><input type="password" id="password" name="password" class="input" required /></label>
+      <label class="choice"><input type="checkbox" id="is_admin" name="is_admin" class="checkbox" /><span>Admin</span></label>
+      <button type="submit" class="button">Create user</button>
     </form>
   </section>
 
-  <section class="project-hero" aria-labelledby="create-group-heading">
-    <h2 id="create-group-heading" class="section-title">Create group</h2>
-    <form action="{{ url_for('admin.create_group') }}" method="post" class="form-stack">
+  <section class="panel" aria-labelledby="admin-create-group-heading">
+    <h2 id="admin-create-group-heading" class="panel-title">Create group</h2>
+    <form action="{{ url_for('admin.create_group') }}" method="post" class="form-block">
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-      <div class="form-field">
-        <label for="group_name" class="form-label">Group name</label>
-        <input type="text" id="group_name" name="name" class="form-input" required />
-      </div>
-      <div class="form-field">
-        <label for="group_slug" class="form-label">Group slug</label>
-        <input type="text" id="group_slug" name="slug" class="form-input" placeholder="auto if blank" />
-      </div>
-      <button type="submit" class="button-primary">Create group</button>
+      <label class="field"><span class="field-label">Group name</span><input type="text" id="group_name" name="name" class="input" required /></label>
+      <label class="field"><span class="field-label">Group slug</span><input type="text" id="group_slug" name="slug" class="input" placeholder="auto if blank" /></label>
+      <button type="submit" class="button">Create group</button>
     </form>
   </section>
 
-  <section class="project-hero" aria-labelledby="add-member-heading">
-    <h2 id="add-member-heading" class="section-title">Add user to group</h2>
-    <form action="{{ url_for('admin.add_group_member') }}" method="post" class="form-stack">
+  <section class="panel" aria-labelledby="admin-add-member-heading">
+    <h2 id="admin-add-member-heading" class="panel-title">Add user to group</h2>
+    <form action="{{ url_for('admin.add_group_member') }}" method="post" class="form-block">
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-      <div class="form-field">
-        <label for="member_user_id" class="form-label">User</label>
-        <select id="member_user_id" name="user_id" class="form-input" required>
+      <label class="field">
+        <span class="field-label">User</span>
+        <select id="member_user_id" name="user_id" class="input" required>
           <option value="">Select user</option>
           {% for user in users %}
           <option value="{{ user.id }}">{{ user.email }}{% if user.role == "admin" %} (admin){% endif %}</option>
           {% endfor %}
         </select>
-      </div>
-      <div class="form-field">
-        <label for="member_group_id" class="form-label">Group</label>
-        <select id="member_group_id" name="group_id" class="form-input" required>
+      </label>
+      <label class="field">
+        <span class="field-label">Group</span>
+        <select id="member_group_id" name="group_id" class="input" required>
           <option value="">Select group</option>
           {% for group in groups %}
           <option value="{{ group.id }}">{{ group.name }}</option>
           {% endfor %}
         </select>
-      </div>
-      <button type="submit" class="button-primary">Add membership</button>
+      </label>
+      <button type="submit" class="button">Add membership</button>
     </form>
   </section>
 
-  <section class="project-hero" aria-labelledby="users-heading">
-    <h2 id="users-heading" class="section-title">Users</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Last sign in</th>
-          <th>Role update</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-        <tr>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-          <td>{{ user.last_sign_in_at.strftime("%Y-%m-%d %H:%M") if user.last_sign_in_at else "-" }}</td>
-          <td>
-            <form action="{{ url_for('admin.update_role') }}" method="post" class="form-checkbox-row">
-              <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-              <input type="hidden" name="user_id" value="{{ user.id }}" />
-              <select name="role" class="form-input" aria-label="Role for {{ user.email }}">
-                <option value="member" {{ "selected" if user.role == "member" }}>member</option>
-                <option value="admin" {{ "selected" if user.role == "admin" }}>admin</option>
-              </select>
-              <button type="submit" class="button-link">Save</button>
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </section>
-
-  <section class="project-hero" aria-labelledby="groups-heading">
-    <h2 id="groups-heading" class="section-title">Groups</h2>
-    {% if groups %}
-    {% for group in groups %}
-    <article class="project-notes">
-      <h3 class="title">{{ group.name }} <span class="form-help">({{ group.slug }})</span></h3>
-      {% set members = members_by_group.get(group.id, []) %}
-      {% if members %}
+  <section class="panel" aria-labelledby="admin-users-heading">
+    <h2 id="admin-users-heading" class="panel-title">Users</h2>
+    <div class="table-wrap">
       <table>
         <thead>
-          <tr>
-            <th>Member</th>
-            <th>Role</th>
-            <th>Remove</th>
-          </tr>
+          <tr><th>Email</th><th>Role</th><th>Last sign in</th><th>Role update</th></tr>
         </thead>
         <tbody>
-          {% for member in members %}
+          {% for user in users %}
           <tr>
-            <td>{{ member.email }}</td>
-            <td>{{ member.role }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ user.last_sign_in_at.strftime("%Y-%m-%d %H:%M") if user.last_sign_in_at else "-" }}</td>
             <td>
-              <form action="{{ url_for('admin.remove_group_member') }}" method="post">
+              <form action="{{ url_for('admin.update_role') }}" method="post" class="inline-form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
-                <input type="hidden" name="group_id" value="{{ group.id }}" />
-                <input type="hidden" name="user_id" value="{{ member.id }}" />
-                <button type="submit" class="button-link">Remove</button>
+                <input type="hidden" name="user_id" value="{{ user.id }}" />
+                <select name="role" class="input" aria-label="Role for {{ user.email }}">
+                  <option value="member" {{ "selected" if user.role == "member" }}>member</option>
+                  <option value="admin" {{ "selected" if user.role == "admin" }}>admin</option>
+                </select>
+                <button type="submit" class="button">Save</button>
               </form>
             </td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="admin-groups-heading">
+    <h2 id="admin-groups-heading" class="panel-title">Groups</h2>
+    {% if groups %}
+    {% for group in groups %}
+    <article class="subpanel">
+      <h3 class="subpanel-title">{{ group.name }} <span class="muted">({{ group.slug }})</span></h3>
+      {% set members = members_by_group.get(group.id, []) %}
+      {% if members %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Role</th><th>Remove</th></tr></thead>
+          <tbody>
+            {% for member in members %}
+            <tr>
+              <td>{{ member.email }}</td>
+              <td>{{ member.role }}</td>
+              <td>
+                <form action="{{ url_for('admin.remove_group_member') }}" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                  <input type="hidden" name="group_id" value="{{ group.id }}" />
+                  <input type="hidden" name="user_id" value="{{ member.id }}" />
+                  <button type="submit" class="button">Remove</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
       {% else %}
-      <p class="form-help">No members yet.</p>
+      <p class="muted">No members yet.</p>
       {% endif %}
     </article>
     {% endfor %}
     {% else %}
-    <p class="form-help">No groups yet.</p>
+    <p class="muted">No groups yet.</p>
     {% endif %}
   </section>
 </section>

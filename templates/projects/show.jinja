@@ -1,33 +1,14 @@
 {% extends "base.jinja" %}
 {% block content %}
 {% include "partials/mathjax.jinja" %}
-<section class="article-page project-page">
+<section class="post-page">
   {% if can_edit %}
-  <a class="button-link" href="{{ url_for('projects.update', id=project.id) }}">Edit</a>
+  <a class="utility-button" href="{{ url_for('projects.update', id=project.id) }}">Edit</a>
   {% endif %}
-  <h1 class="title page-title">
-    {{ project.title }}
-  </h1>
-  {% if project.research == true or project.pinned == true or project.public == false or visibility_groups %}
-  <p class="project-badge-line">
-    {% if project.research == true %}
-    <span class="badge-research">Research</span>
-    {% endif %}
-  {% if project.pinned == true %}
-  <span class="badge-pinned">Pinned</span>
-  {% endif %}
-    {% if visibility_groups %}
-    <span class="badge-private">Groups: {{ visibility_groups | join(", ") }}</span>
-    {% elif project.public == false %}
-    <span class="badge-private">Private</span>
-    {% endif %}
-  </p>
-  {% endif %}
-  {% if project.deck %}
-  <p class="project-deck">{{ project.deck }}</p>
-  {% endif %}
-  <div class="article-meta">
-    <p>
+
+  <h1 class="title post-title">{{ project.title }}</h1>
+  <div class="post-meta-row">
+    <p class="post-date">
       {% if project.started_on and project.ended_on %}
       {{ project.started_on.strftime("%B %Y") }} - {{ project.ended_on.strftime("%B %Y") }}
       {% elif project.started_on %}
@@ -35,7 +16,7 @@
       {% elif project.ended_on %}
       Through {{ project.ended_on.strftime("%B %Y") }}
       {% else %}
-      {{ project.published_at.strftime("%B %d, %Y")  }}
+      {{ project.published_at.strftime("%B %d, %Y") }}
       {% endif %}
       {% if project.published_at != project.updated_at %}
       | Updated {{ project.updated_at.strftime("%B %d, %Y") }}
@@ -43,70 +24,46 @@
     </p>
   </div>
 
-  <section class="project-hero" aria-labelledby="project-summary-heading">
-    <h2 id="project-summary-heading" class="section-title">Project summary</h2>
-    {% if project.summary %}
-    <p class="project-summary">{{ project.summary }}</p>
+  {% if project.research == true or project.pinned == true or project.public == false or visibility_groups %}
+  <p class="badge-line post-badges">
+    {% if project.research == true %}<span class="badge">Research</span>{% endif %}
+    {% if project.pinned == true %}<span class="badge">Pinned</span>{% endif %}
+    {% if visibility_groups %}
+    <span class="badge badge-private">Groups: {{ visibility_groups | join(", ") }}</span>
+    {% elif project.public == false %}
+    <span class="badge badge-private">Private</span>
     {% endif %}
+  </p>
+  {% endif %}
 
-    {% if project.started_on or project.ended_on or project.status or project.stack or project.project_url or project.repo_url or project.paper_url %}
-    <div class="project-facts">
-      {% if project.started_on or project.ended_on %}
-      <div class="project-fact">
-        <p class="project-fact-label">Timeline</p>
-        <p class="project-fact-value">
-          {% if project.started_on and project.ended_on %}
-          {{ project.started_on.strftime("%B %Y") }} - {{ project.ended_on.strftime("%B %Y") }}
-          {% elif project.started_on %}
-          {{ project.started_on.strftime("%B %Y") }} - Present
-          {% elif project.ended_on %}
-          Through {{ project.ended_on.strftime("%B %Y") }}
-          {% endif %}
-        </p>
-      </div>
-      {% endif %}
-
+  <section class="glance-block" aria-labelledby="project-glance-heading">
+    <h2 id="project-glance-heading" class="section-title">At a glance</h2>
+    {% if project.deck %}<p class="post-summary">{{ project.deck }}</p>{% endif %}
+    {% if project.summary %}<p class="post-summary">{{ project.summary }}</p>{% endif %}
+    <dl class="fact-grid compact-facts">
       {% if project.status %}
-      <div class="project-fact">
-        <p class="project-fact-label">Status</p>
-        <p class="project-fact-value">{{ project.status }}</p>
-      </div>
+      <div class="fact-row"><dt>Status</dt><dd>{{ project.status }}</dd></div>
       {% endif %}
-
       {% if project.stack %}
-      <div class="project-fact">
-        <p class="project-fact-label">Stack</p>
-        <p class="project-fact-value">{{ project.stack }}</p>
-      </div>
+      <div class="fact-row"><dt>Stack</dt><dd>{{ project.stack }}</dd></div>
       {% endif %}
-
       {% if project.project_url or project.repo_url or project.paper_url %}
-      <div class="project-fact">
-        <p class="project-fact-label">Links</p>
-        <p class="project-fact-value project-links">
-          {% if project.project_url %}
-          <a href="{{ project.project_url }}" target="_blank" rel="noopener noreferrer">Live project</a>
-          {% endif %}
-          {% if project.repo_url %}
-          <a href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer">Source code</a>
-          {% endif %}
-          {% if project.paper_url %}
-          <a href="{{ project.paper_url }}" target="_blank" rel="noopener noreferrer">Paper</a>
-          {% endif %}
-        </p>
+      <div class="fact-row">
+        <dt>Links</dt>
+        <dd class="link-row">
+          {% if project.project_url %}<a href="{{ project.project_url }}" target="_blank" rel="noopener noreferrer">Live</a>{% endif %}
+          {% if project.repo_url %}<a href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer">Code</a>{% endif %}
+          {% if project.paper_url %}<a href="{{ project.paper_url }}" target="_blank" rel="noopener noreferrer">Paper</a>{% endif %}
+        </dd>
       </div>
       {% endif %}
-    </div>
-    {% endif %}
+    </dl>
   </section>
 
   {% if project.content %}
-  <section class="project-notes" aria-labelledby="project-notes-heading">
-    <h2 id="project-notes-heading" class="section-title">Notes</h2>
-    <article class="prose">
-      {{ project.html | safe }}
-    </article>
-  </section>
+  <article class="prose">
+    {{ project.html | safe }}
+  </article>
   {% endif %}
 </section>
 {% endblock %}

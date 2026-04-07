@@ -22,27 +22,26 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap"
     />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" />
   </head>
   <body>
-    <div class="site-shell">
+    <main class="site-main">
       {% include "partials/nav.jinja" %}
-      <main class="site-main fade-in">
       {% with messages = get_flashed_messages() %}
       {% if messages %}
-      <section class="page-section">
+      <section class="flash-wrap" aria-label="Messages">
         {% for message in messages %}
-        <p class="form-help">{{ message }}</p>
+        <p class="flash-message">{{ message }}</p>
         {% endfor %}
       </section>
       {% endif %}
       {% endwith %}
+
       {% block content %}{% endblock %}
-      </main>
       {% include "partials/footer.jinja" %}
-    </div>
+    </main>
   </body>
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };

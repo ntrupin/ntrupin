@@ -9,7 +9,7 @@
   --layout-gap: 1.5rem;
   --content-width: 38rem;
   --article-width: 38rem;
-  --rail-width: 11rem;
+  --rail-width: 12rem;
   --frame-width: calc(var(--article-width) + (var(--rail-width) * 2) + (var(--layout-gap) * 2));
 
   --bg: #ffffff;
@@ -158,7 +158,7 @@ textarea:focus-visible {
   display: inline-flex;
   align-items: center;
   position: relative;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.0rem; /* 0.5rem */ 
   margin: 0.25rem;
   text-decoration: none;
   color: var(--muted);
@@ -168,8 +168,8 @@ textarea:focus-visible {
 .nav-item::after {
   content: "";
   position: absolute;
-  left: 0.5rem;
-  right: 0.5rem;
+  left: 0.0rem; /* 0.5rem */
+  right: 0.0rem; /* 0.5rem */
   bottom: 0.16rem;
   height: 1px;
   background: currentColor;
@@ -1115,4 +1115,8 @@ mjx-container {
     visibility: visible;
     pointer-events: auto;
   }
+}
+
+.prose ul.cv-list {
+  list-style: none;
 }

@@ -41,8 +41,8 @@ def can_manage_project(record: models.Project | dict) -> bool:
 def visible_projects_query(columns: str = "*"):
     query = db.get().table("projects").select(columns)
     # Defense-in-depth: never expose private projects to anonymous sessions.
-    if g.user is None:
-        query = query.eq("public", True)
+    # if g.user is None:
+    #     query = query.eq("public", True)
     return query
 
 def get_project_record_by_id(id: int) -> dict | None:

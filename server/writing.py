@@ -39,8 +39,11 @@ def can_manage_writing(record: models.Writing | dict) -> bool:
     return owner_id == g.user["id"]
 
 def visible_writing_query(columns: str = "*"):
-    # RLS now enforces visibility, so we avoid extra prefilter queries.
-    return db.get().table("writing").select(columns)
+    query = db.get().table("writing").select(columns)
+    # Defense-in-depth: never expose private writing to anonymous sessions.
+    if g.user is None:
+        query = query.eq("public", True)
+    return query
 
 def get_writing_record_by_id(id: int) -> dict | None:
     data = (

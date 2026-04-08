@@ -82,24 +82,40 @@
     if (activeLink) activeLink.dataset.active = "true";
   };
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-      if (visible.length > 0) {
-        setActive(visible[0].target);
+  const ACTIVE_OFFSET_PX = 140;
+  let activeHeading = null;
+  let frameRequested = false;
+
+  const updateActiveFromScroll = () => {
+    const targetY = window.scrollY + ACTIVE_OFFSET_PX;
+    let nextActive = headings[0];
+
+    for (const heading of headings) {
+      if (heading.offsetTop <= targetY) {
+        nextActive = heading;
+      } else {
+        break;
       }
-    },
-    {
-      rootMargin: "0px 0px -70% 0px",
-      threshold: [0, 1],
-    },
-  );
+    }
 
-  for (const heading of headings) {
-    observer.observe(heading);
-  }
+    if (nextActive !== activeHeading) {
+      activeHeading = nextActive;
+      setActive(nextActive);
+    }
+  };
 
-  setActive(headings[0]);
+  const scheduleUpdate = () => {
+    if (frameRequested) return;
+    frameRequested = true;
+    window.requestAnimationFrame(() => {
+      frameRequested = false;
+      updateActiveFromScroll();
+    });
+  };
+
+  window.addEventListener("scroll", scheduleUpdate, { passive: true });
+  window.addEventListener("resize", scheduleUpdate, { passive: true });
+  window.addEventListener("load", scheduleUpdate, { once: true });
+
+  updateActiveFromScroll();
 })();

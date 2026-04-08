@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 ::selection {
-  background-color: #47a3f3;
-  color: #fefefe;
+  background-color: color-mix(in srgb, var(--accent-soft) 68%, transparent);
+  color: var(--fg);
 }
 
 :root {
@@ -18,7 +18,8 @@
   --muted-strong: #404040;
   --line: #e5e5e5;
   --line-strong: #d4d4d4;
-  --accent: #171717;
+  --accent: #8f5ca7;
+  --accent-soft: #d8b4e2;
   --danger: #b91c1c;
 
   --sh-class: #2d5e9d;
@@ -40,7 +41,8 @@
     --muted-strong: #d4d4d4;
     --line: #404040;
     --line-strong: #525252;
-    --accent: #fafafa;
+    --accent: #d8b4e2;
+    --accent-soft: #d8b4e2;
     --danger: #f87171;
 
     --sh-class: #4c97f8;
@@ -158,7 +160,7 @@ textarea:focus-visible {
   display: inline-flex;
   align-items: center;
   position: relative;
-  padding: 0.25rem 0.0rem; /* 0.5rem */ 
+  padding: 0.25rem 0;
   margin: 0.25rem;
   text-decoration: none;
   color: var(--muted);
@@ -168,8 +170,8 @@ textarea:focus-visible {
 .nav-item::after {
   content: "";
   position: absolute;
-  left: 0.0rem; /* 0.5rem */
-  right: 0.0rem; /* 0.5rem */
+  left: 0;
+  right: 0;
   bottom: 0.16rem;
   height: 1px;
   background: currentColor;
@@ -258,7 +260,7 @@ textarea:focus-visible {
   line-height: 1.2;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--muted);
+  color: color-mix(in srgb, var(--accent) 20%, var(--muted));
 }
 
 .section-title-archive {
@@ -638,12 +640,12 @@ a.blog-row:hover {
 }
 
 .toc-link:hover {
-  color: var(--muted-strong);
+  color: color-mix(in srgb, var(--accent) 68%, var(--muted-strong));
 }
 
 .toc-link[data-active="true"] {
-  color: var(--fg);
-  border-left-color: var(--line-strong);
+  color: var(--accent);
+  border-left-color: color-mix(in srgb, var(--accent) 58%, var(--line-strong));
 }
 
 .prose .anchor {

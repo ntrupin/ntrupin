@@ -226,10 +226,10 @@ app.register_blueprint(projects_bp)
 from server.admin import bp as admin_bp
 app.register_blueprint(admin_bp)
 
-from server.draft_optimizer.draft_optimizer.web import create_blueprint
-draft_bp = create_blueprint()
-@draft_bp.before_request
-def auth():
-    if g.user is None:
-        return "Forbidden", 403
-app.register_blueprint(draft_bp, url_prefix="/baseball-draft")
+# from server.draft_optimizer.draft_optimizer.web import create_blueprint
+# draft_bp = create_blueprint()
+# @draft_bp.before_request
+# def auth():
+#     if g.user is None:
+#         return "Forbidden", 403
+# app.register_blueprint(draft_bp, url_prefix="/baseball-draft")

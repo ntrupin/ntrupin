@@ -220,8 +220,8 @@ app.register_blueprint(reading_bp)
 from server.writing import bp as writing_bp, show_canonical
 app.register_blueprint(writing_bp)
 
-from server.projects import bp as projects_bp
-app.register_blueprint(projects_bp)
+# from server.projects import bp as projects_bp
+# app.register_blueprint(projects_bp)
 
 from server.admin import bp as admin_bp
 app.register_blueprint(admin_bp)

@@ -12,15 +12,18 @@
   --rail-width: 12rem;
   --frame-width: calc(var(--article-width) + (var(--rail-width) * 2) + (var(--layout-gap) * 2));
 
-  --bg: #ffffff;
-  --fg: #000000;
-  --muted: #525252;
-  --muted-strong: #404040;
-  --line: #e5e5e5;
-  --line-strong: #d4d4d4;
-  --accent: #8f5ca7;
-  --accent-soft: #d8b4e2;
+  --bg: #faf9f7;
+  --fg: #292725;
+  --muted: #706b66;
+  --muted-strong: #514d48;
+  --line: #e4e0da;
+  --line-strong: #d1cbc3;
+  --accent: #805a99;
+  --accent-soft: #d8c5e2;
   --danger: #b91c1c;
+
+  --code-bg: #f3f1ee;
+  --code-border: #e0dcd6;
 
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
@@ -33,17 +36,21 @@
   --sh-entity: #e25a1c;
 }
 
+/* Keep light mode as the site default until a manual theme control is added.
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #000000;
-    --fg: #ffffff;
-    --muted: #a3a3a3;
-    --muted-strong: #d4d4d4;
-    --line: #404040;
-    --line-strong: #525252;
-    --accent: #d8b4e2;
-    --accent-soft: #d8b4e2;
+    --bg: #1e1d20;
+    --fg: #e9e6e3;
+    --muted: #afa9a5;
+    --muted-strong: #d2ceca;
+    --line: #39363b;
+    --line-strong: #504c52;
+    --accent: #cfafe0;
+    --accent-soft: #9c7caf;
     --danger: #f87171;
+
+    --code-bg: #27252a;
+    --code-border: #343137;
 
     --sh-class: #4c97f8;
     --sh-identifier: #ffffff;
@@ -55,6 +62,7 @@
     color-scheme: dark;
   }
 }
+*/
 
 html {
   min-width: 360px;
@@ -668,14 +676,8 @@ a.blog-row:hover {
 }
 
 .prose .anchor:after {
-  color: #a3a3a3;
+  color: var(--muted);
   content: '#';
-}
-
-@media (prefers-color-scheme: dark) {
-  .prose .anchor:after {
-    color: #404040;
-  }
 }
 
 .prose *:hover > .anchor {
@@ -689,19 +691,12 @@ a.blog-row:hover {
 }
 
 .prose pre {
-  background: #fafafa;
+  background: var(--code-bg);
   border-radius: 0.5rem;
   overflow-x: auto;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--code-border);
   padding: 0.55rem 0.75rem;
   font-size: 0.86rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .prose pre {
-    background: #171717;
-    border-color: #171717;
-  }
 }
 
 .prose code {
@@ -725,13 +720,7 @@ a.blog-row:hover {
 
 .prose p {
   margin: 1rem 0;
-  color: #262626;
-}
-
-@media (prefers-color-scheme: dark) {
-  .prose p {
-    color: #e5e5e5;
-  }
+  color: var(--fg);
 }
 
 .prose h1 {

@@ -8,7 +8,7 @@ from server.auth import login_required
 
 bp = Blueprint("writing", __name__, url_prefix="/writing")
 
-WRITING_INDEX_COLUMNS = "id,title,summary,pinned,published_at,public,canonical_url"
+WRITING_INDEX_COLUMNS = "id,user_id,title,summary,pinned,published_at,public,canonical_url"
 
 def normalize_text(value: str | None) -> str | None:
     if value is None:
@@ -40,10 +40,36 @@ def can_manage_writing(record: models.Writing | dict) -> bool:
 
 def visible_writing_query(columns: str = "*"):
     query = db.get().table("writing").select(columns)
-    # Defense-in-depth: never expose private writing to anonymous sessions.
-    #if g.user is None:
-    #    query = query.eq("public", True)
+    if g.user is None:
+        query = query.eq("public", True)
     return query
+
+
+def _visible_records(records: list[dict]) -> list[dict]:
+    """Enforce visibility even if database policies accidentally return extra rows."""
+    if _is_admin():
+        return records
+    group_ids = _group_ids_for_current_user()
+    shared_ids = set(db.get_writing_ids_for_group_ids(group_ids)) if group_ids else set()
+    return [record for record in records if (
+        record.get("public") is True
+        or can_manage_writing(record)
+        or record["id"] in shared_ids
+    )]
+
+
+def get_featured_writings(limit: int = 3) -> list[dict]:
+    # The homepage always features public work, even for signed-in visitors.
+    records = (
+        db.get().table("writing").select(WRITING_INDEX_COLUMNS)
+        .eq("public", True)
+        .order("pinned", desc=True).order("published_at", desc=True)
+        .limit(limit + 1).execute()
+    ).data
+    return [record for record in records if (
+        record.get("public") is True and record.get("canonical_url") != "cv"
+    )][:limit]
+
 
 def get_writing_record_by_id(id: int) -> dict | None:
     data = (
@@ -102,7 +128,8 @@ def get_writings() -> list[dict]:
         .order("published_at", desc=True)
         .execute()
     ).data
-    group_map = writing_group_map([writing["id"] for writing in writings_data])
+    writings_data = _visible_records(writings_data)
+    group_map = writing_group_map([writing["id"] for writing in writings_data]) if g.user else {}
     for writing in writings_data:
         writing["published_at"] = datetime.fromisoformat(writing["published_at"])
         writing["pinned"] = bool(writing.get("pinned"))
@@ -115,6 +142,7 @@ def get_writing_by_id(id: int) -> models.Writing | None:
         .eq("id", id)
         .execute()
     ).data
+    writing_data = _visible_records(writing_data)
     if writing_data:
         return models.Writing.from_dict(writing_data[0])
     return None
@@ -125,6 +153,7 @@ def get_writing_by_url(canonical_url: str) -> models.Writing | None:
         .eq("canonical_url", canonical_url)
         .execute()
     ).data
+    writing_data = _visible_records(writing_data)
     if writing_data:
         return models.Writing.from_dict(writing_data[0])
     return None
@@ -214,6 +243,18 @@ def delete_writing(id: int) -> None:
         .execute()
     )
 
+def writing_metadata(writing: models.Writing) -> meta.Metadata:
+    cfg = meta.Metadata(
+        title=f"{writing.title} | Noah Trupin",
+        description=writing.summary or f"{writing.title}, by Noah Trupin.",
+    )
+    cfg.openGraph["type"] = "article"
+    if not writing.public:
+        cfg.robots = {"index": False, "follow": False}
+        cfg.googlebot = {"index": False, "follow": False}
+    return cfg
+
+
 @bp.route("/<int:id>/", methods=["GET"])
 def show_id(id: int):
     writing = get_writing_by_id(id)
@@ -223,9 +264,9 @@ def show_id(id: int):
         return redirect(url_for("writing.show_canonical", name=writing.canonical_url))
     writing.html = writing.html or content_to_html(writing.content)
     needs_math = md.contains_math(writing.content or writing.html)
-    groups = db.get_writing_group_map([writing.id]).get(writing.id, [])
+    groups = db.get_writing_group_map([writing.id]).get(writing.id, []) if g.user else []
 
-    cfg = meta.Metadata()
+    cfg = writing_metadata(writing)
     return render_template(
         "writing/show.jinja",
         **cfg.serialize(),
@@ -242,9 +283,9 @@ def show_canonical(name: str):
         abort(404)
     writing.html = writing.html or content_to_html(writing.content)
     needs_math = md.contains_math(writing.content or writing.html)
-    groups = db.get_writing_group_map([writing.id]).get(writing.id, [])
+    groups = db.get_writing_group_map([writing.id]).get(writing.id, []) if g.user else []
 
-    cfg = meta.Metadata()
+    cfg = writing_metadata(writing)
     return render_template(
         "writing/show.jinja",
         **cfg.serialize(),
@@ -348,5 +389,5 @@ def delete(id: int):
 def index():
     writings = get_writings()
 
-    cfg = meta.Metadata()
+    cfg = meta.Metadata(title="Writing | Noah Trupin", description="Essays and notes by Noah Trupin.")
     return render_template("writing/index.jinja", **cfg.serialize(), writings=writings)

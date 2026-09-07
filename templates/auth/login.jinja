@@ -3,7 +3,7 @@
 <section>
   <h1 class="list-page-title">Login</h1>
   <form method="post" class="form-block">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <label class="field">
       <span class="field-label">Email</span>
       <input type="email" name="email" id="email" required class="input" />

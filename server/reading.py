@@ -19,5 +19,5 @@ def get_readings(n: int = 100) -> list[models.Reading]:
 def index():
     reading = get_readings(1000)
 
-    cfg = meta.Metadata()
+    cfg = meta.Metadata(title="Reading | Noah Trupin", description="What Noah Trupin is reading.")
     return render_template("reading/index.jinja", **cfg.serialize(), readings=reading)

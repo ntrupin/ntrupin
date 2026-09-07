@@ -6,10 +6,13 @@ from urllib.parse import urlparse
 
 from flask import Flask, Response, current_app, g, make_response, redirect, render_template, request, session
 
-from server import db, meta
+from jinja2 import select_autoescape
+from markupsafe import Markup
+
+from server import db, md, meta
 
 ANON_BROWSER_CACHE_CONTROL = "public, max-age=0, must-revalidate"
-ANON_CDN_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=86400"
+ANON_CDN_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=60"
 PRIVATE_CACHE_CONTROL = "private, no-store, max-age=0"
 CSRF_SESSION_KEY = "csrf_token"
 CSRF_HEADER_NAME = "X-CSRF-Token"
@@ -17,11 +20,12 @@ SAFE_HTTP_METHODS = {"GET", "HEAD", "OPTIONS", "TRACE"}
 
 BASE_CSP = (
     "default-src 'self'; "
-    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+    "script-src 'self' https://cdn.jsdelivr.net/npm/mathjax@4.1.3/ https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.1.3/; script-src-attr 'none'; "
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-    "font-src 'self' https://fonts.gstatic.com data:; "
+    "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net data:; "
     "img-src 'self' https: data:; "
-    "connect-src 'self' https://vitals.vercel-insights.com; "
+    "connect-src 'self' https://vitals.vercel-insights.com https://cdn.jsdelivr.net/npm/mathjax@4.1.3/; "
+    "worker-src 'self' blob:; "
     "object-src 'none'; "
     "base-uri 'self'; "
     "frame-ancestors 'none'; "
@@ -66,11 +70,16 @@ def create_app() -> Flask:
     if not secret_key:
         raise ValueError("Expected SECRET_KEY")
     app.secret_key = secret_key
+    app.jinja_env.autoescape = select_autoescape(
+        ("html", "htm", "xml", "xhtml", "svg", "jinja"), default_for_string=True
+    )
+    app.jinja_env.filters["sanitize_html"] = lambda value: Markup(md.sanitize(value or ""))
     default_secure_cookie = (
         os.getenv("VERCEL") is not None
         or os.getenv("ENV", "").lower() == "production"
     )
     app.config.update(
+        VERCEL_ANALYTICS_ENABLED=os.getenv("VERCEL") is not None,
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
         SESSION_COOKIE_SECURE=(
@@ -93,7 +102,7 @@ app = create_app()
 def inject_vars():
     return {
         "now": datetime.utcnow(),
-        "csrf_token": get_csrf_token(),
+        "csrf_token": get_csrf_token,
     }
 
 @app.before_request
@@ -161,28 +170,52 @@ def page_not_found(_):
 def redirect_index():
     return redirect('/', code=301)
 
-def cache_anonymous_page(response: Response) -> Response:
-    response.vary.add("Cookie")
-    if getattr(g, "user", None) is None:
-        response.headers["Cache-Control"] = ANON_BROWSER_CACHE_CONTROL
+PUBLIC_PAGE_ENDPOINTS = {
+    "index", "updates", "cv", "reading.index", "writing.index",
+    "writing.show_id", "writing.show_canonical",
+}
+
+@app.after_request
+def cache_pages(response: Response) -> Response:
+    if request.endpoint == "static":
+        return response
+    # Cookie-bearing requests may include auth or flash state. They must never
+    # populate a shared cache, including when authentication has just expired.
+    cacheable = (
+        request.method in {"GET", "HEAD"}
+        and response.status_code == 200
+        and request.endpoint in PUBLIC_PAGE_ENDPOINTS
+        and not request.cookies
+        and not request.headers.get("Authorization")
+        and getattr(g, "user", None) is None
+        and not session.modified
+        and "Set-Cookie" not in response.headers
+    )
+    response.headers["Cache-Control"] = (
+        ANON_BROWSER_CACHE_CONTROL if cacheable else PRIVATE_CACHE_CONTROL
+    )
+    if cacheable:
         response.headers["CDN-Cache-Control"] = ANON_CDN_CACHE_CONTROL
         response.headers["Vercel-CDN-Cache-Control"] = ANON_CDN_CACHE_CONTROL
     else:
-        response.headers["Cache-Control"] = PRIVATE_CACHE_CONTROL
         response.headers.pop("CDN-Cache-Control", None)
         response.headers.pop("Vercel-CDN-Cache-Control", None)
+    response.vary.add("Cookie")
     return response
 
 @app.route("/")
 def index():
     cfg = meta.Metadata()
+    from server.writing import get_featured_writings
+
     updates = db.get_updates(5)
     response = make_response(render_template(
         "index.jinja",
         **cfg.serialize(),
-        updates=updates
+        updates=updates,
+        featured_writings=get_featured_writings(2),
     ))
-    return cache_anonymous_page(response)
+    return response
 
 @app.route("/updates/")
 def updates():
@@ -195,7 +228,7 @@ def updates():
         **cfg.serialize(),
         updates=db.get_updates()
     ))
-    return cache_anonymous_page(response)
+    return response
 
 @app.route("/cv/")
 def cv():

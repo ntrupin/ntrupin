@@ -1,4 +1,6 @@
 import re
+from functools import lru_cache
+import nh3
 from markdown import Markdown
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
@@ -51,9 +53,43 @@ def render(text: str) -> str:
             }
         }
     )
-    return md.convert(text)
+    return sanitize(md.convert(text))
 
 def contains_math(text: str | None) -> bool:
     if not text:
         return False
     return any(pattern.search(text) for pattern in MATH_PATTERNS)
+
+
+# Preserve Markdown structure, footnote anchors, and code-language classes.
+# Scripts, event handlers, forms, and unsafe URLs are removed. Only a small
+# set of layout styles is retained for the existing hand-formatted CV.
+_HTML_CLEANER = nh3.Cleaner(
+    tags=nh3.ALLOWED_TAGS | {"section", "aside"},
+    attributes={
+        **nh3.ALLOWED_ATTRIBUTES,
+        "*": {"id", "title", "style"},
+        "a": {"href", "title"},
+        "code": {"class"},
+        "img": {"src", "alt", "title", "width", "height"},
+    },
+    allowed_classes={
+        "div": {"footnote", "ml-4"},
+        "ul": {"cv-list"},
+        "a": {"footnote-ref", "footnote-backref"},
+    },
+    attribute_filter=lambda tag, attr, value: (
+        " ".join(name for name in value.split() if re.fullmatch(r"language-[\w+-]+", name))
+        if tag == "code" and attr == "class" else value
+    ),
+    filter_style_properties={
+        "text-align", "float", "margin-left", "margin-right",
+        "margin-top", "margin-bottom", "padding-top", "padding-bottom",
+    },
+    url_schemes={"http", "https", "mailto"},
+)
+
+@lru_cache(maxsize=128)
+def sanitize(html: str) -> str:
+    """Also sanitize old stored HTML on read, without modifying the database."""
+    return _HTML_CLEANER.clean(html)

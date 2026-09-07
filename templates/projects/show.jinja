@@ -62,7 +62,7 @@
 
   {% if project.content %}
   <article class="prose">
-    {{ project.html | safe }}
+    {{ project.html | sanitize_html }}
   </article>
   {% endif %}
 </section>

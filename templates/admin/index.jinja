@@ -10,7 +10,7 @@
   <section class="panel" aria-labelledby="admin-create-user-heading">
     <h2 id="admin-create-user-heading" class="panel-title">Create user</h2>
     <form action="{{ url_for('admin.create_user') }}" method="post" class="form-block">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <label class="field"><span class="field-label">Email</span><input type="email" id="email" name="email" class="input" required /></label>
       <label class="field"><span class="field-label">Password</span><input type="password" id="password" name="password" class="input" required /></label>
       <label class="choice"><input type="checkbox" id="is_admin" name="is_admin" class="checkbox" /><span>Admin</span></label>
@@ -21,7 +21,7 @@
   <section class="panel" aria-labelledby="admin-create-group-heading">
     <h2 id="admin-create-group-heading" class="panel-title">Create group</h2>
     <form action="{{ url_for('admin.create_group') }}" method="post" class="form-block">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <label class="field"><span class="field-label">Group name</span><input type="text" id="group_name" name="name" class="input" required /></label>
       <label class="field"><span class="field-label">Group slug</span><input type="text" id="group_slug" name="slug" class="input" placeholder="auto if blank" /></label>
       <button type="submit" class="button">Create group</button>
@@ -31,7 +31,7 @@
   <section class="panel" aria-labelledby="admin-add-member-heading">
     <h2 id="admin-add-member-heading" class="panel-title">Add user to group</h2>
     <form action="{{ url_for('admin.add_group_member') }}" method="post" class="form-block">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <label class="field">
         <span class="field-label">User</span>
         <select id="member_user_id" name="user_id" class="input" required>
@@ -69,7 +69,7 @@
             <td>{{ user.last_sign_in_at.strftime("%Y-%m-%d %H:%M") if user.last_sign_in_at else "-" }}</td>
             <td>
               <form action="{{ url_for('admin.update_role') }}" method="post" class="inline-form">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <input type="hidden" name="user_id" value="{{ user.id }}" />
                 <select name="role" class="input" aria-label="Role for {{ user.email }}">
                   <option value="member" {{ "selected" if user.role == "member" }}>member</option>
@@ -103,7 +103,7 @@
               <td>{{ member.role }}</td>
               <td>
                 <form action="{{ url_for('admin.remove_group_member') }}" method="post">
-                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                   <input type="hidden" name="group_id" value="{{ group.id }}" />
                   <input type="hidden" name="user_id" value="{{ member.id }}" />
                   <button type="submit" class="button">Remove</button>

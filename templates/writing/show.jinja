@@ -30,7 +30,7 @@
   <div class="article-shell" data-sidenote-root data-toc-root>
     <aside class="toc-rail" data-toc-column aria-label="Table of contents"></aside>
     <article class="prose" data-article-body>
-      {{ writing.html | safe }}
+      {{ writing.html | sanitize_html }}
     </article>
     <aside class="sidenote-rail" data-sidenote-column aria-label="Sidenotes"></aside>
   </div>

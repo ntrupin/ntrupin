@@ -44,11 +44,13 @@ class Metadata:
 
     def serialize(self) -> dict:
         botify = lambda d: ", ".join(
-            f"{k}" if v is True else "no{k}" if v is False 
+            f"{k}" if v is True else f"no{k}" if v is False
             else f"{k}:{v}" for k, v in d.items()
         )
 
         data = asdict(self)
+        data["openGraph"]["title"] = self.title
+        data["openGraph"]["description"] = self.description
         data["robots"] = botify(self.robots)
         data["googlebot"] = botify(self.googlebot)
         data["timestamp"] = datetime.utcnow().isoformat()

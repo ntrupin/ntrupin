@@ -1,18 +1,18 @@
 {% extends "base.jinja" %}
 {% block content %}
 <section>
-  <h1 class="list-page-title">Login</h1>
+  <h1 class="list-page-title">{{ _("Login") }}</h1>
   <form method="post" class="form-block">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <label class="field">
-      <span class="field-label">Email</span>
+      <span class="field-label">{{ _("Email") }}</span>
       <input type="email" name="email" id="email" required class="input" />
     </label>
     <label class="field">
-      <span class="field-label">Password</span>
+      <span class="field-label">{{ _("Password") }}</span>
       <input type="password" name="password" id="password" required class="input" />
     </label>
-    <button type="submit" class="utility-button">Log in</button>
+    <button type="submit" class="utility-button">{{ _("Log in") }}</button>
   </form>
 </section>
 {% endblock %}

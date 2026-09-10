@@ -5,40 +5,48 @@
 {% set content_value = object.get("content") or "" %}
 {% set pinned_value = object.get("pinned", false) %}
 {% set public_value = object.get("public", false) %}
+{% set listed_value = object.get("listed", false) %}
 {% else %}
 {% set title_value = (object.title or "") if object and object.title is defined else "" %}
 {% set summary_value = (object.summary or "") if object and object.summary is defined else "" %}
 {% set content_value = (object.content or "") if object and object.content is defined else "" %}
 {% set pinned_value = object.pinned if object and object.pinned is defined else false %}
 {% set public_value = object.public if object and object.public is defined else false %}
+{% set listed_value = object.listed if object and object.listed is defined else false %}
 {% endif %}
 <form method="post" class="form-block">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
   <label class="field">
-    <span class="field-label">Title</span>
+    <span class="field-label">{{ _("Title") }}</span>
     <input name="title" id="title" value="{{ title_value }}" class="input" required />
   </label>
 
   <label class="field">
-    <span class="field-label">Summary</span>
+    <span class="field-label">{{ _("Summary") }}</span>
     <textarea name="summary" id="summary" class="input textarea-small">{{ summary_value }}</textarea>
   </label>
 
   <label class="field">
-    <span class="field-label">Content</span>
+    <span class="field-label">{{ _("Content") }}</span>
     <textarea name="content" id="content" class="input textarea-large">{{ content_value }}</textarea>
   </label>
 
   <label class="choice">
     <input type="checkbox" name="pinned" id="pinned" class="checkbox" {{ "checked" if pinned_value == true }} />
-    <span>Pinned</span>
+    <span>{{ _("Pinned") }}</span>
   </label>
 
   <label class="choice">
     <input type="checkbox" name="public" id="public" class="checkbox" {{ "checked" if public_value == true }} />
-    <span>Public</span>
+    <span>{{ _("Public") }}</span>
   </label>
+
+  <label class="choice">
+    <input type="checkbox" name="listed" id="listed" class="checkbox" aria-describedby="listed-help" {{ "checked" if listed_value }} />
+    <span>{{ _("Listed") }}</span>
+  </label>
+  <p id="listed-help" class="field-help">{{ _("Show in the writing index for logged-out visitors. Signed-in users can still see entries they have permission to access.") }}</p>
 
   {% if show_group_selector and available_groups %}
   {% set group_select_size = available_groups|length %}
@@ -46,7 +54,7 @@
   {% set group_select_size = 6 %}
   {% endif %}
   <label class="field">
-    <span class="field-label">Allowed groups</span>
+    <span class="field-label">{{ _("Allowed groups") }}</span>
     <select name="group_ids" id="group_ids" class="input" multiple size="{{ group_select_size }}">
       {% for group in available_groups %}
       <option
@@ -57,10 +65,10 @@
       </option>
       {% endfor %}
     </select>
-    <span class="field-help">Leave empty for owner-only access when Public is unchecked.</span>
+    <span class="field-help">{{ _("Leave empty for owner-only access when Public is unchecked.") }}</span>
   </label>
   {% endif %}
 
-  <button type="submit" class="button">Save</button>
+  <button type="submit" class="button">{{ _("Save") }}</button>
 </form>
 {% endmacro %}

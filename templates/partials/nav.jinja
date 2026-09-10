@@ -1,11 +1,12 @@
 <aside class="nav-aside">
   <div class="nav-sticky">
-    <nav class="nav-scroll" id="nav" aria-label="Primary">
+    <nav class="nav-scroll" id="nav" aria-label="{{ _('Primary') }}">
       <div class="nav-items">
-        <a href="/" class="nav-item" data-active="{{ 'true' if request.path == '/' else 'false' }}" {% if request.path == '/' %}aria-current="page"{% endif %}>Home</a>
+        <a href="{{ url_for('index') }}" class="nav-item" data-active="{{ 'true' if base_endpoint(request.endpoint) == 'index' else 'false' }}" {% if base_endpoint(request.endpoint) == 'index' %}aria-current="page"{% endif %}>{{ _("Home") }}</a>
         {% for url, data in links.items() %}
         {% if url != "/" %}
         {% set external = data.external if data.external is defined else false %}
+        {% set url = ('/ko' + url) if locale == 'ko' and not external else url %}
         {% set normalized = url if url.endswith('/') else url + '/' %}
         {% set is_active = (not external) and (request.path == normalized or (normalized != "/" and request.path.startswith(normalized))) %}
         <a
@@ -15,19 +16,24 @@
           {% if is_active %}aria-current="page"{% endif %}
           {% if external %}target="_blank" rel="noopener noreferrer"{% endif %}
         >
-          {{ data.name }}
+          {{ _(data.name) }}
         </a>
         {% endif %}
         {% endfor %}
         {% if g.user and g.user.is_admin %}
-        <a href="{{ url_for('admin.index') }}" class="nav-item" data-active="{{ 'true' if request.path.startswith('/admin/') else 'false' }}" {% if request.path.startswith('/admin/') %}aria-current="page"{% endif %}>Admin</a>
+        <a href="{{ url_for('admin.index') }}" class="nav-item" data-active="{{ 'true' if request.path.startswith('/admin/') else 'false' }}" {% if request.path.startswith('/admin/') %}aria-current="page"{% endif %}>{{ _("Admin") }}</a>
         {% endif %}
         {% if g.user %}
         <form action="{{ url_for('auth.logout') }}" method="post" class="nav-form">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-          <button type="submit" class="nav-item nav-button" data-active="false">Logout</button>
+          <button type="submit" class="nav-item nav-button" data-active="false">{{ _("Logout") }}</button>
         </form>
         {% endif %}
+      </div>
+      <div class="language-switch" aria-label="{{ '언어' if locale == 'ko' else 'Language' }}">
+        <a href="{{ language_switch_url('en') }}" lang="en" hreflang="en" {% if locale == 'en' %}aria-current="true"{% endif %}>EN</a>
+        <span aria-hidden="true">/</span>
+        <a href="{{ language_switch_url('ko') }}" lang="ko" hreflang="ko" {% if locale == 'ko' %}aria-current="true"{% endif %}>한국어</a>
       </div>
     </nav>
   </div>

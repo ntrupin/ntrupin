@@ -3,38 +3,38 @@
 {% include "partials/mathjax.jinja" %}
 <section class="post-page article-page">
   {% if can_edit %}
-  <a class="utility-button" href="{{ url_for('writing.update', id=writing.id) }}">Edit</a>
+  <a class="utility-button" href="{{ url_for('writing.update', id=writing.id) }}">{{ _("Edit") }}</a>
   {% endif %}
 
-  <h1 class="title post-title">{{ writing.title }}</h1>
+  <h1 lang="en" class="title post-title">{{ writing.title }}</h1>
   <div class="post-meta-row">
     <p class="post-date">
-      {{ writing.published_at.strftime("%B %d, %Y") }}
+      {{ format_date(writing.published_at) }}
       {% if writing.published_at != writing.updated_at %}
-      | Updated {{ writing.updated_at.strftime("%B %d, %Y") }}
+      | {{ _("Updated") }} {{ format_date(writing.updated_at) }}
       {% endif %}
     </p>
   </div>
 
   {% if writing.pinned == true or writing.public == false or visibility_groups %}
   <p class="badge-line post-badges">
-    {% if writing.pinned == true %}<span class="badge">Pinned</span>{% endif %}
+    {% if writing.pinned == true %}<span class="badge">{{ _("Pinned") }}</span>{% endif %}
     {% if visibility_groups %}
-    <span class="badge badge-private">Groups: {{ visibility_groups | join(", ") }}</span>
+    <span class="badge badge-private">{{ _("Groups:") }} {{ visibility_groups | join(", ") }}</span>
     {% elif writing.public == false %}
-    <span class="badge badge-private">Private</span>
+    <span class="badge badge-private">{{ _("Private") }}</span>
     {% endif %}
   </p>
   {% endif %}
 
   <div class="article-shell" data-sidenote-root data-toc-root>
-    <aside class="toc-rail" data-toc-column aria-label="Table of contents"></aside>
-    <article class="prose" data-article-body>
+    <aside class="toc-rail" data-toc-column data-title="{{ _('On this page') }}" aria-label="{{ _('Table of contents') }}"></aside>
+    <article lang="en" class="prose" data-article-body>
       {{ writing.html | sanitize_html }}
     </article>
-    <aside class="sidenote-rail" data-sidenote-column aria-label="Sidenotes"></aside>
+    <aside class="sidenote-rail" data-sidenote-column aria-label="{{ _('Sidenotes') }}"></aside>
   </div>
 </section>
-<script src="{{ url_for('static', filename='js/article_toc.js') }}"></script>
-<script src="{{ url_for('static', filename='js/sidenotes.js') }}"></script>
+<script defer src="{{ url_for('static', filename='js/article_toc.js') }}"></script>
+<script defer src="{{ url_for('static', filename='js/sidenotes.js') }}"></script>
 {% endblock %}

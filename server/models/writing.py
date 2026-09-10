@@ -15,6 +15,7 @@ class Writing:
     canonical_url: str | None
     pinned: bool
     public: bool
+    listed: bool = False
 
     @classmethod
     def from_dict(cls, data: dict) -> "Writing":
@@ -30,7 +31,8 @@ class Writing:
             html=data.get("html"),
             canonical_url=data.get("canonical_url"),
             pinned=data.get("pinned", False),
-            public=data["public"]
+            public=data["public"],
+            listed=data.get("listed") is True
         )
 
     def to_dict(self) -> dict:
@@ -46,5 +48,6 @@ class Writing:
             "html": self.html,
             "canonical_url": self.canonical_url,
             "pinned": self.pinned,
-            "public": self.public
+            "public": self.public,
+            "listed": self.listed
         }

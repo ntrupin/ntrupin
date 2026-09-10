@@ -1,0 +1,3 @@
+IBM Plex Mono, Google Fonts v20, weights 400 and 500.
+https://fonts.google.com/specimen/IBM+Plex+Mono
+Unmodified WOFF2 subsets from fonts.gstatic.com; see OFL.txt.

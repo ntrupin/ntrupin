@@ -1,14 +1,16 @@
 from datetime import datetime
 import re
 
-from flask import abort, Blueprint, current_app, g, redirect, render_template, request, url_for
+from flask import abort, Blueprint, current_app, g, redirect, render_template, request
+
+from server.i18n import url_for
 
 from server import db, md, meta, models
 from server.auth import login_required
 
 bp = Blueprint("writing", __name__, url_prefix="/writing")
 
-WRITING_INDEX_COLUMNS = "id,user_id,title,summary,pinned,published_at,public,canonical_url"
+WRITING_INDEX_COLUMNS = "id,user_id,title,summary,pinned,published_at,public,listed,canonical_url"
 
 def normalize_text(value: str | None) -> str | None:
     if value is None:
@@ -122,8 +124,11 @@ def writing_group_map(writing_ids: list[int]) -> dict[int, list[str]]:
     return db.get_writing_group_map(writing_ids)
 
 def get_writings() -> list[dict]:
+    query = visible_writing_query(WRITING_INDEX_COLUMNS)
+    if g.user is None:
+        query = query.eq("listed", True)
     writings_data = (
-        visible_writing_query(WRITING_INDEX_COLUMNS)
+        query
         .order("pinned", desc=True)
         .order("published_at", desc=True)
         .execute()
@@ -175,6 +180,7 @@ def create_writing(
     content: str | None,
     pinned: bool,
     public: bool,
+    listed: bool,
     group_ids: list[int],
 ) -> int:
     database = db.get()
@@ -191,6 +197,7 @@ def create_writing(
         "canonical_url": title_to_canonical(title),
         "pinned": pinned,
         "public": public,
+        "listed": listed,
     }
     response = (
         database.table("writing")
@@ -208,6 +215,7 @@ def update_writing(
     content: str | None,
     pinned: bool,
     public: bool,
+    listed: bool,
     group_ids: list[int],
 ) -> int:
     database = db.get()
@@ -221,6 +229,7 @@ def update_writing(
         "canonical_url": title_to_canonical(title),
         "pinned": pinned,
         "public": public,
+        "listed": listed,
     }
     #if public:
     #    writing["published_at"] = now
@@ -305,11 +314,12 @@ def create():
         content = request.form.get("content")
         pinned = "pinned" in request.form
         public = "public" in request.form
+        listed = "listed" in request.form
         group_ids = parse_allowed_group_ids(available_groups)
         if not group_ids and not show_group_selector:
             group_ids = default_group_ids.copy()
 
-        id = create_writing(title, summary, content, pinned, public, group_ids)
+        id = create_writing(title, summary, content, pinned, public, listed, group_ids)
         return redirect(url_for("writing.show_id", id=id))
 
     cfg = meta.Metadata()
@@ -346,11 +356,12 @@ def update(id: int):
         content = request.form.get("content")
         pinned = "pinned" in request.form
         public = "public" in request.form
+        listed = "listed" in request.form
         group_ids = parse_allowed_group_ids(available_groups)
         if not group_ids and not show_group_selector:
             group_ids = existing_group_ids.copy() if existing_group_ids else default_group_ids.copy()
 
-        id = update_writing(id, title, summary, content, pinned, public, group_ids)
+        id = update_writing(id, title, summary, content, pinned, public, listed, group_ids)
         return redirect(url_for("writing.show_id", id=id))
 
     selected_group_ids = [str(group_id) for group_id in existing_group_ids]

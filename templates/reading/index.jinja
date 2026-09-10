@@ -1,12 +1,12 @@
 {% extends "base.jinja" %}
 {% block content %}
 <section>
-  <h1 class="list-page-title">Reading</h1>
+  <h1 class="list-page-title">{{ _("Reading") }}</h1>
   <div class="blog-list" role="list">
     {% for reading in readings %}
     <a target="_blank" href="{{ reading.link }}" class="blog-row" rel="noopener noreferrer" role="listitem">
       <div class="blog-row-main">
-        <p class="blog-date">{{ reading.created_at.strftime("%b %d, %Y") }}</p>
+        <p class="blog-date">{{ format_date(reading.created_at, short=True) }}</p>
         <div class="blog-main-text">
           <p class="blog-title">{{ reading.text }}</p>
         </div>

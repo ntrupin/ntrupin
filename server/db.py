@@ -1,9 +1,40 @@
 from datetime import datetime
+from functools import lru_cache
 import os
+import ssl
 
 from flask import g, has_request_context, session
 
 SESSION_ACCESS_TOKEN_KEY = "sb_access_token"
+
+@lru_cache(maxsize=1)
+def _tls_context():
+    # Loading the CA bundle is comparatively expensive. Only this immutable TLS
+    # configuration is shared; HTTP headers, cookies and auth remain per request.
+    import certifi
+    return ssl.create_default_context(cafile=certifi.where())
+
+def _create_client(key: str, slot: str):
+    import httpx
+    import supabase
+    from supabase.lib.client_options import ClientOptions
+
+    transport = httpx.Client(verify=_tls_context(), http2=True, timeout=20)
+    setattr(g, slot, transport)
+    return supabase.create_client(
+        _supabase_url(), key,
+        options=ClientOptions(
+            httpx_client=transport,
+            auto_refresh_token=False,
+            persist_session=False,
+        ),
+    )
+
+def close_clients(_error=None):
+    for slot in ("db_http", "service_db_http"):
+        transport = g.pop(slot, None)
+        if transport is not None:
+            transport.close()
 
 def _supabase_url() -> str:
     url = os.getenv("SUPABASE_URL")
@@ -25,9 +56,7 @@ def _supabase_service_key() -> str:
 
 def get():
     if "db" not in g:
-        import supabase
-
-        g.db = supabase.create_client(_supabase_url(), _supabase_anon_key())
+        g.db = _create_client(_supabase_anon_key(), "db_http")
         if has_request_context():
             access_token = session.get(SESSION_ACCESS_TOKEN_KEY)
             if access_token:
@@ -36,9 +65,7 @@ def get():
 
 def get_service():
     if "service_db" not in g:
-        import supabase
-
-        g.service_db = supabase.create_client(_supabase_url(), _supabase_service_key())
+        g.service_db = _create_client(_supabase_service_key(), "service_db_http")
     return g.service_db
 
 def _parse_admin_emails() -> set[str]:

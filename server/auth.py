@@ -5,7 +5,9 @@ import time
 from types import SimpleNamespace
 
 import click
-from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
+from flask import Blueprint, current_app, flash, g, redirect, render_template, request, session
+
+from server.i18n import url_for, base_endpoint, translate
 
 from server import db, meta
 
@@ -132,6 +134,10 @@ def _load_user_from_session():
 @bp.before_app_request
 def load_logged_in_user():
     g.user = None
+    # Static assets and logout do not need role/group queries. Preserve the
+    # tokens for logout even if the normal identity refresh would fail.
+    if base_endpoint(request.endpoint) in {"static", "auth.logout"}:
+        return
     auth_user = _load_user_from_session()
     if not auth_user:
         _clear_supabase_session()
@@ -148,10 +154,12 @@ def load_logged_in_user():
 
     role: str | None = None
     group_ids: list[int] = []
+    needs_groups = base_endpoint(request.blueprint) in {"writing", "projects"} or base_endpoint(request.endpoint) == "cv"
 
     try:
         role = db.get_user_role(auth_user.id)
-        group_ids = db.get_user_group_ids(auth_user.id)
+        if needs_groups:
+            group_ids = db.get_user_group_ids(auth_user.id)
     except Exception:
         role = None
         group_ids = []
@@ -165,7 +173,7 @@ def load_logged_in_user():
             pass
     effective_role = "admin" if is_admin else (role or "member")
 
-    if not group_ids:
+    if needs_groups and not group_ids:
         try:
             db.sync_default_role_group(
                 user_id=auth_user.id,
@@ -198,11 +206,11 @@ def login():
                 }
             )
         except Exception:
-            flash("Incorrect email or password.")
+            flash(translate("Incorrect email or password."))
             return redirect(url_for("auth.login"))
 
         if not auth_response.session:
-            flash("Login failed.")
+            flash(translate("Login failed."))
             return redirect(url_for("auth.login"))
 
         session.clear()
@@ -221,6 +229,27 @@ def login():
 
 @bp.route("/logout/", methods=["POST"])
 def logout():
+    from supabase_auth.errors import AuthApiError
+
+    access_token, refresh_token = _session_tokens()
+    try:
+        if access_token:
+            if _token_is_expired(access_token) and refresh_token:
+                refreshed = db.get().auth.refresh_session(refresh_token)
+                if refreshed.session:
+                    access_token = refreshed.session.access_token
+                    session[SESSION_ACCESS_TOKEN_KEY] = access_token
+                    session[SESSION_REFRESH_TOKEN_KEY] = refreshed.session.refresh_token
+            db.get().auth.admin.sign_out(access_token, scope="local")
+    except AuthApiError as exc:
+        if exc.code not in {"session_not_found", "refresh_token_not_found", "refresh_token_already_used", "user_not_found"}:
+            current_app.logger.warning("Supabase session revocation failed during logout.")
+            return translate("Could not sign out. Please try again."), 503
+    except Exception:
+        # Keep the session so the user can retry revocation; never silently
+        # claim a successful logout when the auth service is unavailable.
+        current_app.logger.warning("Supabase session revocation failed during logout.")
+        return translate("Could not sign out. Please try again."), 503
     session.clear()
     return redirect(url_for("index"))
 
@@ -241,6 +270,14 @@ def role_required(view, required_role: str):
             return "Forbidden", 403
         user_role = g.user.get("role")
         if user_role != required_role:
+            return "Forbidden", 403
+        # Service-key operations must also verify the account with Auth instead
+        # of relying only on identity cached in the signed Flask cookie.
+        try:
+            verified = db.get().auth.get_user(session.get(SESSION_ACCESS_TOKEN_KEY))
+            if not verified or not verified.user or verified.user.id != g.user["id"]:
+                return "Forbidden", 403
+        except Exception:
             return "Forbidden", 403
         return view(**kwargs)
     return wrapped_view

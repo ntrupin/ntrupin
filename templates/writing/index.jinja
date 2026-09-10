@@ -4,12 +4,12 @@
 {% set archive_writing = writings | rejectattr("pinned") | list %}
 <section>
   {% if g.user != None %}
-  <a class="utility-button" href="{{ url_for('writing.create') }}">New essay</a>
+  <a class="utility-button" href="{{ url_for('writing.create') }}">{{ _("New essay") }}</a>
   {% endif %}
-  <h1 class="list-page-title">Writing</h1>
+  <h1 class="list-page-title">{{ _("Writing") }}</h1>
 
   {% if featured_writing %}
-  <h2 class="section-title">Selected</h2>
+  <h2 class="section-title">{{ _("Selected") }}</h2>
   <div class="blog-list" role="list">
     {% for writing in featured_writing %}
     {% set groups = writing.visibility_groups if writing.visibility_groups is defined else [] %}
@@ -19,17 +19,17 @@
       role="listitem"
     >
       <div class="blog-row-main">
-        <p class="blog-date writing-date">{{ writing.published_at.strftime("%b %d, %Y") }}</p>
+        <p class="blog-date writing-date">{{ format_date(writing.published_at, short=True) }}</p>
         <div class="blog-main-text">
           <p class="blog-title">{{ writing.title }}</p>
           {% if writing.summary %}<p class="blog-summary">{{ writing.summary }}</p>{% endif %}
           {% if writing.pinned == true or writing.public == false or groups %}
           <p class="badge-line">
-            {% if writing.pinned == true %}<span class="badge">Pinned</span>{% endif %}
+            {% if writing.pinned == true %}<span class="badge">{{ _("Pinned") }}</span>{% endif %}
             {% if groups %}
-            <span class="badge badge-private">Groups: {{ groups | join(", ") }}</span>
+            <span class="badge badge-private">{{ _("Groups:") }} {{ groups | join(", ") }}</span>
             {% elif writing.public == false %}
-            <span class="badge badge-private">Private</span>
+            <span class="badge badge-private">{{ _("Private") }}</span>
             {% endif %}
           </p>
           {% endif %}
@@ -41,7 +41,7 @@
   {% endif %}
 
   {% if archive_writing %}
-  <h2 class="section-title section-title-archive">{% if featured_writing %}Archive{% else %}All{% endif %}</h2>
+  <h2 class="section-title section-title-archive">{% if featured_writing %}{{ _("Archive") }}{% else %}{{ _("All") }}{% endif %}</h2>
   <div class="blog-list" role="list">
     {% for writing in archive_writing %}
     {% set groups = writing.visibility_groups if writing.visibility_groups is defined else [] %}
@@ -51,17 +51,17 @@
       role="listitem"
     >
       <div class="blog-row-main">
-        <p class="blog-date writing-date">{{ writing.published_at.strftime("%b %d, %Y") }}</p>
+        <p class="blog-date writing-date">{{ format_date(writing.published_at, short=True) }}</p>
         <div class="blog-main-text">
           <p class="blog-title">{{ writing.title }}</p>
           {% if writing.summary %}<p class="blog-summary">{{ writing.summary }}</p>{% endif %}
           {% if writing.pinned == true or writing.public == false or groups %}
           <p class="badge-line">
-            {% if writing.pinned == true %}<span class="badge">Pinned</span>{% endif %}
+            {% if writing.pinned == true %}<span class="badge">{{ _("Pinned") }}</span>{% endif %}
             {% if groups %}
-            <span class="badge badge-private">Groups: {{ groups | join(", ") }}</span>
+            <span class="badge badge-private">{{ _("Groups:") }} {{ groups | join(", ") }}</span>
             {% elif writing.public == false %}
-            <span class="badge badge-private">Private</span>
+            <span class="badge badge-private">{{ _("Private") }}</span>
             {% endif %}
           </p>
           {% endif %}

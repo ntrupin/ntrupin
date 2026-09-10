@@ -2,16 +2,16 @@
   {% for update in updates %}
   <article class="blog-row" role="listitem">
     <div class="blog-row-main">
-      <p class="blog-date update-date">{{ update.date.strftime("%b %d, %Y") }}</p>
+      <p class="blog-date update-date">{{ format_date(update.date, short=True) }}</p>
       <div class="blog-main-text">
-        <p class="blog-title">{{ update.description | trim }}</p>
+        <p lang="en" class="blog-title">{{ update.description | trim }}</p>
       </div>
     </div>
   </article>
   {% else %}
-  <p class="muted">No updates yet.</p>
+  <p class="muted">{{ _("No updates yet.") }}</p>
   {% endfor %}
 </div>
-{% if request.path != "/updates/" %}
-<p class="blog-more"><a href="{{ url_for('updates') }}">All updates →</a></p>
+{% if base_endpoint(request.endpoint) != "updates" %}
+<p class="blog-more"><a href="{{ url_for('updates') }}">{{ _("All updates \u2192") }}</a></p>
 {% endif %}

@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 import hmac
+import json
 import os
+from pathlib import Path
 import secrets
 from urllib.parse import urlparse
 
@@ -9,7 +11,7 @@ from flask import Flask, Response, current_app, g, make_response, redirect, rend
 from jinja2 import select_autoescape
 from markupsafe import Markup
 
-from server import db, md, meta
+from server import db, md, meta, i18n
 
 ANON_BROWSER_CACHE_CONTROL = "public, max-age=0, must-revalidate"
 ANON_CDN_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=60"
@@ -21,8 +23,8 @@ SAFE_HTTP_METHODS = {"GET", "HEAD", "OPTIONS", "TRACE"}
 BASE_CSP = (
     "default-src 'self'; "
     "script-src 'self' https://cdn.jsdelivr.net/npm/mathjax@4.1.3/ https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.1.3/; script-src-attr 'none'; "
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-    "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net data:; "
+    "style-src 'self' 'unsafe-inline'; "
+    "font-src 'self' https://cdn.jsdelivr.net data:; "
     "img-src 'self' https: data:; "
     "connect-src 'self' https://vitals.vercel-insights.com https://cdn.jsdelivr.net/npm/mathjax@4.1.3/; "
     "worker-src 'self' blob:; "
@@ -70,6 +72,7 @@ def create_app() -> Flask:
     if not secret_key:
         raise ValueError("Expected SECRET_KEY")
     app.secret_key = secret_key
+    app.teardown_appcontext(db.close_clients)
     app.jinja_env.autoescape = select_autoescape(
         ("html", "htm", "xml", "xhtml", "svg", "jinja"), default_for_string=True
     )
@@ -93,10 +96,21 @@ def create_app() -> Flask:
 
     from server.auth import setup as auth_setup
     auth_setup(app)
+    i18n.setup(app)
 
     return app
 
 app = create_app()
+
+_manifest_path = Path(app.static_folder) / "manifest.json"
+_asset_manifest = json.loads(_manifest_path.read_text()) if _manifest_path.exists() else {}
+
+@app.url_defaults
+def version_static_assets(endpoint, values):
+    # Debug mode keeps Tailwind's watch output visible without rebuilding assets.
+    if endpoint == "static" and not app.debug:
+        filename = values.get("filename")
+        values["filename"] = _asset_manifest.get(filename, filename)
 
 @app.context_processor
 def inject_vars():
@@ -171,20 +185,19 @@ def redirect_index():
     return redirect('/', code=301)
 
 PUBLIC_PAGE_ENDPOINTS = {
-    "index", "updates", "cv", "reading.index", "writing.index",
-    "writing.show_id", "writing.show_canonical",
+    "index", "updates", "reading.index",
 }
 
 @app.after_request
 def cache_pages(response: Response) -> Response:
     if request.endpoint == "static":
+        if response.status_code == 200 and request.view_args.get("filename", "").startswith("versioned/"):
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
         return response
-    # Cookie-bearing requests may include auth or flash state. They must never
-    # populate a shared cache, including when authentication has just expired.
     cacheable = (
         request.method in {"GET", "HEAD"}
         and response.status_code == 200
-        and request.endpoint in PUBLIC_PAGE_ENDPOINTS
+        and i18n.base_endpoint(request.endpoint) in PUBLIC_PAGE_ENDPOINTS
         and not request.cookies
         and not request.headers.get("Authorization")
         and getattr(g, "user", None) is None
@@ -206,14 +219,11 @@ def cache_pages(response: Response) -> Response:
 @app.route("/")
 def index():
     cfg = meta.Metadata()
-    from server.writing import get_featured_writings
-
     updates = db.get_updates(5)
     response = make_response(render_template(
         "index.jinja",
         **cfg.serialize(),
         updates=updates,
-        featured_writings=get_featured_writings(2),
     ))
     return response
 
@@ -266,3 +276,5 @@ app.register_blueprint(admin_bp)
 #     if g.user is None:
 #         return "Forbidden", 403
 # app.register_blueprint(draft_bp, url_prefix="/baseball-draft")
+
+i18n.register_routes(app)

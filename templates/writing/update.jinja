@@ -3,13 +3,13 @@
 {% block content %}
 <section class="container page">
   <header class="page-head">
-    <p class="eyebrow">Writing</p>
-    <h1 class="page-title">Edit essay</h1>
+    <p class="eyebrow">{{ _("Writing") }}</p>
+    <h1 class="page-title">{{ _("Edit essay") }}</h1>
   </header>
   {{ form_for(request.form if request.form else writing, available_groups, selected_group_ids, show_group_selector) }}
   <form action="{{ url_for('writing.delete', id=writing.id) }}" method="post" class="delete-row">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-    <button type="submit" class="button button-danger" data-confirm="Delete this item?">Delete</button>
+    <button type="submit" class="button button-danger" data-confirm="{{ _('Delete this item?') }}">{{ _("Delete") }}</button>
   </form>
 </section>
 {% endblock %}

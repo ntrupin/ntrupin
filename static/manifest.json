@@ -1,0 +1,18 @@
+{
+  "fonts/ibm-plex-mono-0.woff2": "versioned/ibm-plex-mono-0.c6f09ee0e0a24b7c.woff2",
+  "fonts/ibm-plex-mono-1.woff2": "versioned/ibm-plex-mono-1.7b59d6bf7f8b8408.woff2",
+  "fonts/ibm-plex-mono-2.woff2": "versioned/ibm-plex-mono-2.0a8b854cc18641bd.woff2",
+  "fonts/ibm-plex-mono-3.woff2": "versioned/ibm-plex-mono-3.f1050dc5317b4343.woff2",
+  "fonts/ibm-plex-mono-4.woff2": "versioned/ibm-plex-mono-4.c36f509c0a8f9f85.woff2",
+  "fonts/ibm-plex-mono-5.woff2": "versioned/ibm-plex-mono-5.311098be73eac339.woff2",
+  "fonts/ibm-plex-mono-6.woff2": "versioned/ibm-plex-mono-6.d524dc8ff6dbf7ed.woff2",
+  "fonts/ibm-plex-mono-7.woff2": "versioned/ibm-plex-mono-7.b2529fba93fd07a5.woff2",
+  "fonts/ibm-plex-mono-8.woff2": "versioned/ibm-plex-mono-8.77f03e26f981c582.woff2",
+  "fonts/ibm-plex-mono-9.woff2": "versioned/ibm-plex-mono-9.a76f53ca6612e7b3.woff2",
+  "css/output.css": "versioned/output.917f461ae19dbdd8.css",
+  "js/article_toc.js": "versioned/article_toc.8b4c835e34022a53.js",
+  "js/fishdraw.js": "versioned/fishdraw.eda7f95f9d6274ee.js",
+  "js/math.js": "versioned/math.01539706ddd5bd7e.js",
+  "js/sidenotes.js": "versioned/sidenotes.12a5cac4e41d5ec7.js",
+  "js/site.js": "versioned/site.b8b101e467db47ba.js"
+}

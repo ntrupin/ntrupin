@@ -1,160 +1,43 @@
-from datetime import datetime, timedelta
-import hmac
-import json
 import os
-from pathlib import Path
-import secrets
-from urllib.parse import urlparse
 
-from flask import Flask, Response, current_app, g, make_response, redirect, render_template, request, session
-
+from flask import Flask, Response, render_template, request
 from jinja2 import select_autoescape
-from markupsafe import Markup
 
-from server import db, md, meta, i18n
+from server.meta import Metadata
+
 
 ANON_BROWSER_CACHE_CONTROL = "public, max-age=0, must-revalidate"
 ANON_CDN_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=60"
 PRIVATE_CACHE_CONTROL = "private, no-store, max-age=0"
-CSRF_SESSION_KEY = "csrf_token"
-CSRF_HEADER_NAME = "X-CSRF-Token"
-SAFE_HTTP_METHODS = {"GET", "HEAD", "OPTIONS", "TRACE"}
 
 BASE_CSP = (
     "default-src 'self'; "
-    "script-src 'self' https://cdn.jsdelivr.net/npm/mathjax@4.1.3/ https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.1.3/; script-src-attr 'none'; "
+    "script-src 'self'; script-src-attr 'none'; "
     "style-src 'self' 'unsafe-inline'; "
-    "font-src 'self' https://cdn.jsdelivr.net data:; "
-    "img-src 'self' https: data:; "
-    "connect-src 'self' https://vitals.vercel-insights.com https://cdn.jsdelivr.net/npm/mathjax@4.1.3/; "
-    "worker-src 'self' blob:; "
+    "connect-src 'self' https://vitals.vercel-insights.com; "
     "object-src 'none'; "
     "base-uri 'self'; "
     "frame-ancestors 'none'; "
     "form-action 'self'"
 )
 
-def get_csrf_token() -> str:
-    token = session.get(CSRF_SESSION_KEY)
-    if token:
-        return token
-    token = secrets.token_urlsafe(32)
-    session[CSRF_SESSION_KEY] = token
-    return token
-
-def _is_same_origin_request() -> bool:
-    request_origin = request.headers.get("Origin")
-    if request_origin:
-        return request_origin.rstrip("/") == request.host_url.rstrip("/")
-
-    request_referer = request.headers.get("Referer")
-    if not request_referer:
-        return False
-
-    try:
-        referer = urlparse(request_referer)
-        current = urlparse(request.host_url)
-    except Exception:
-        return False
-
-    return (
-        referer.scheme == current.scheme
-        and referer.netloc == current.netloc
-    )
 
 def create_app() -> Flask:
-    app = Flask(
-        __name__,
-        template_folder="./templates",
-        static_folder="./static",
-    )
-    secret_key = os.getenv("SECRET_KEY")
-    if not secret_key:
-        raise ValueError("Expected SECRET_KEY")
-    app.secret_key = secret_key
-    app.teardown_appcontext(db.close_clients)
+    app = Flask(__name__)
+    app.config["VERCEL_ANALYTICS_ENABLED"] = os.getenv("VERCEL") is not None
     app.jinja_env.autoescape = select_autoescape(
         ("html", "htm", "xml", "xhtml", "svg", "jinja"), default_for_string=True
     )
-    app.jinja_env.filters["sanitize_html"] = lambda value: Markup(md.sanitize(value or ""))
-    default_secure_cookie = (
-        os.getenv("VERCEL") is not None
-        or os.getenv("ENV", "").lower() == "production"
-    )
-    app.config.update(
-        VERCEL_ANALYTICS_ENABLED=os.getenv("VERCEL") is not None,
-        SESSION_COOKIE_HTTPONLY=True,
-        SESSION_COOKIE_SAMESITE="Lax",
-        SESSION_COOKIE_SECURE=(
-            os.getenv(
-                "SESSION_COOKIE_SECURE",
-                "true" if default_secure_cookie else "false",
-            ).lower() == "true"
-        ),
-        PERMANENT_SESSION_LIFETIME=timedelta(days=14),
-    )
-
-    from server.auth import setup as auth_setup
-    auth_setup(app)
-    i18n.setup(app)
-
+    app.add_url_rule("/", view_func=index)
+    app.after_request(add_security_headers)
+    app.after_request(cache_pages)
     return app
 
-app = create_app()
 
-_manifest_path = Path(app.static_folder) / "manifest.json"
-_asset_manifest = json.loads(_manifest_path.read_text()) if _manifest_path.exists() else {}
+def index() -> str:
+    return render_template("index.jinja", **Metadata().serialize())
 
-@app.url_defaults
-def version_static_assets(endpoint, values):
-    # Debug mode keeps Tailwind's watch output visible without rebuilding assets.
-    if endpoint == "static" and not app.debug:
-        filename = values.get("filename")
-        values["filename"] = _asset_manifest.get(filename, filename)
 
-@app.context_processor
-def inject_vars():
-    return {
-        "now": datetime.utcnow(),
-        "csrf_token": get_csrf_token,
-    }
-
-@app.before_request
-def csrf_protect():
-    if request.method in SAFE_HTTP_METHODS:
-        return None
-    expected_token = session.get(CSRF_SESSION_KEY)
-    provided_token = (
-        request.headers.get(CSRF_HEADER_NAME)
-        or request.form.get("csrf_token")
-    )
-    if expected_token and provided_token and hmac.compare_digest(provided_token, expected_token):
-        return None
-
-    # Fallback for authenticated same-origin browser posts when session/CSRF state
-    # was rotated while the edit page was open.
-    if session.get("sb_access_token") and _is_same_origin_request():
-        if not expected_token:
-            session[CSRF_SESSION_KEY] = secrets.token_urlsafe(32)
-        current_app.logger.warning(
-            "CSRF fallback accepted for %s %s (token missing or mismatched).",
-            request.method,
-            request.path,
-        )
-        return None
-
-    current_app.logger.warning(
-        "CSRF rejected for %s %s (has_expected=%s has_provided=%s same_origin=%s has_auth_session=%s)",
-        request.method,
-        request.path,
-        bool(expected_token),
-        bool(provided_token),
-        _is_same_origin_request(),
-        bool(session.get("sb_access_token")),
-    )
-    return "Forbidden", 403
-
-@app.after_request
 def add_security_headers(response: Response) -> Response:
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("X-Frame-Options", "DENY")
@@ -170,39 +53,19 @@ def add_security_headers(response: Response) -> Response:
         )
     return response
 
-@app.errorhandler(403)
-def forbidden(_):
-    cfg = meta.Metadata()
-    return render_template("403.jinja", **cfg.serialize()), 403
 
-@app.errorhandler(404)
-def page_not_found(_):
-    cfg = meta.Metadata()
-    return render_template("404.jinja", **cfg.serialize()), 404
-
-@app.route("/index/")
-def redirect_index():
-    return redirect('/', code=301)
-
-PUBLIC_PAGE_ENDPOINTS = {
-    "index", "updates", "reading.index",
-}
-
-@app.after_request
 def cache_pages(response: Response) -> Response:
     if request.endpoint == "static":
-        if response.status_code == 200 and request.view_args.get("filename", "").startswith("versioned/"):
+        if response.status_code == 200 and request.view_args["filename"].startswith("versioned/"):
             response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
         return response
+
     cacheable = (
         request.method in {"GET", "HEAD"}
         and response.status_code == 200
-        and i18n.base_endpoint(request.endpoint) in PUBLIC_PAGE_ENDPOINTS
+        and request.endpoint == "index"
         and not request.cookies
         and not request.headers.get("Authorization")
-        and getattr(g, "user", None) is None
-        and not session.modified
-        and "Set-Cookie" not in response.headers
     )
     response.headers["Cache-Control"] = (
         ANON_BROWSER_CACHE_CONTROL if cacheable else PRIVATE_CACHE_CONTROL
@@ -210,71 +73,8 @@ def cache_pages(response: Response) -> Response:
     if cacheable:
         response.headers["CDN-Cache-Control"] = ANON_CDN_CACHE_CONTROL
         response.headers["Vercel-CDN-Cache-Control"] = ANON_CDN_CACHE_CONTROL
-    else:
-        response.headers.pop("CDN-Cache-Control", None)
-        response.headers.pop("Vercel-CDN-Cache-Control", None)
     response.vary.add("Cookie")
     return response
 
-@app.route("/")
-def index():
-    cfg = meta.Metadata()
-    updates = db.get_updates(5)
-    response = make_response(render_template(
-        "index.jinja",
-        **cfg.serialize(),
-        updates=updates,
-    ))
-    return response
 
-@app.route("/updates/")
-def updates():
-    cfg = meta.Metadata(
-        title="Updates | Noah Trupin",
-        description="All updates from Noah Trupin."
-    )
-    response = make_response(render_template(
-        "updates/index.jinja",
-        **cfg.serialize(),
-        updates=db.get_updates()
-    ))
-    return response
-
-@app.route("/cv/")
-def cv():
-    return show_canonical("cv")
-
-@app.route("/play/<string:name>/")
-def play(name: str):
-    cfg = meta.Metadata()
-    return render_template(
-        "react.jinja",
-        **cfg.serialize(),
-        name=name
-    )
-
-
-from server.auth import bp as auth_bp
-app.register_blueprint(auth_bp)
-
-from server.reading import bp as reading_bp
-app.register_blueprint(reading_bp)
-
-from server.writing import bp as writing_bp, show_canonical
-app.register_blueprint(writing_bp)
-
-# from server.projects import bp as projects_bp
-# app.register_blueprint(projects_bp)
-
-from server.admin import bp as admin_bp
-app.register_blueprint(admin_bp)
-
-# from server.draft_optimizer.draft_optimizer.web import create_blueprint
-# draft_bp = create_blueprint()
-# @draft_bp.before_request
-# def auth():
-#     if g.user is None:
-#         return "Forbidden", 403
-# app.register_blueprint(draft_bp, url_prefix="/baseball-draft")
-
-i18n.register_routes(app)
+app = create_app()

@@ -1,31 +1,62 @@
-{% extends "base.jinja" %}
-{% block content %}
-<section>
-  {% if locale == 'ko' %}
-  <h1 class="main-title">Noah Trupin (노아)</h1>
-  <p lang="ko" class="intro-copy">
-    Optiver에서 소프트웨어 엔지니어로 일하고 있습니다. 주로 거래 실행과 최적화에 관심이 있습니다.
-  </p>
-  <p lang="ko" class="intro-copy">
-    Purdue University에서 컴퓨터과학을 전공하고 우등으로 졸업했습니다.
-    재학 중에는 <a href="https://wzx16.github.io/">Zixing Wang</a> 및 <a href="https://qureshiahmed.github.io/">Ahmed Qureshi</a>와 함께 로봇 인지와 계획을 연구했으며, <a href="https://www.cs.purdue.edu/homes/yexiang/">Yexiang Xue</a>와 함께 생성 모델링을 연구했습니다.
-  </p>
-  {% else %}
-  <h1 class="main-title">Noah Trupin</h1>
-  <p lang="en" class="intro-copy">
-    I am a software engineer at Optiver.
-    I work, broadly, in execution and optimization.
-  </p>
-  <p lang="en" class="intro-copy">
-    I graduated with honors in computer science from Purdue, where I researched
-    robot perception and planning with <a href="https://wzx16.github.io/">Zixing Wang</a> and <a href="https://qureshiahmed.github.io/">Ahmed Qureshi</a>
-    and generative modeling with <a href="https://www.cs.purdue.edu/homes/yexiang/">Yexiang Xue</a>.
-  </p>
-  {% endif %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title }}</title>
+    <link rel="canonical" href="{{ openGraph.url }}" />
+    <meta name="description" content="{{ description }}" />
+    <meta name="robots" content="{{ robots }}" />
+    <meta name="googlebot" content="{{ googlebot }}" />
+    <meta property="og:title" content="{{ openGraph.title }}" />
+    <meta property="og:description" content="{{ openGraph.description }}" />
+    <meta property="og:url" content="{{ openGraph.url }}" />
+    <meta property="og:locale" content="{{ openGraph.locale }}" />
+    <meta property="og:type" content="{{ openGraph.type }}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="{{ openGraph.title }}" />
+    <meta name="twitter:description" content="{{ openGraph.description }}" />
+    <style>
+      body {
+        margin: 0;
+        background: #fff;
+        color: #000;
+        font: 1.125rem/1.6 system-ui, sans-serif;
+      }
 
-  <div class="section-block">
-    <h2 class="section-title">{{ _("Latest updates") }}</h2>
-    {% include "partials/updates.jinja" %}
-  </div>
-</section>
-{% endblock %}
+      main {
+        box-sizing: content-box;
+        max-width: 38rem;
+        margin: clamp(3rem, 8vw, 5rem) auto 0;
+        padding: 0 1.5rem;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      p + p {
+        margin-top: 1rem;
+      }
+
+      a {
+        color: inherit;
+        text-underline-offset: 0.16em;
+      }
+    </style>
+    {% if config.VERCEL_ANALYTICS_ENABLED %}
+    <script defer src="/_vercel/insights/script.js"></script>
+    {% endif %}
+  </head>
+  <body>
+    <main>
+      <p>I'm a software engineer at Optiver.</p>
+      <p>
+        In the past, I researched
+        <a href="https://arxiv.org/abs/2605.11214">generative</a>
+        <a href="https://arxiv.org/abs/2602.17773">sampling</a> and
+        <a href="https://arxiv.org/abs/2505.01399">robot learning</a>.
+      </p>
+    </main>
+  </body>
+</html>

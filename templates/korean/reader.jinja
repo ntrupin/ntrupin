@@ -1,0 +1,60 @@
+{% extends "korean/base.jinja" %}
+{% block reader_content %}
+<article>
+  <h1 dir="auto">{{ document.title }}</h1>
+  {% if document.source %}<p class="reader-source" dir="auto">{{ document.source }}</p>{% endif %}
+  <div id="passage" class="reader-passage" lang="ko">{% for segment in segments -%}
+    {% set surface = segment.text|e|replace('\r', '&#13;'|safe) -%}
+    {% if segment.annotation_ids -%}
+      <span class="reader-span{% if segment.unknown %} is-unknown{% endif %}" tabindex="0" role="button" aria-haspopup="dialog" data-annotations="{{ segment.annotation_ids|join(',') }}">{{ surface }}</span>
+    {%- else -%}{{ surface }}{%- endif %}
+  {%- endfor %}</div>
+  <details class="reader-translation">
+    <summary>Passage translation</summary>
+    <p>{{ document.analysis.translation }}</p>
+  </details>
+</article>
+<form id="practice" class="reader-practice" action="{{ url_for('korean.start_practice', document_id=document.id) }}#practice" method="post" data-busy="Preparing exercises…">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+  {% if error %}<p class="reader-message" role="alert">{{ error }}</p>{% endif %}
+  <button type="submit">Practice this</button>
+</form>
+<details class="reader-manage"{% if gloss_error %} open{% endif %}>
+  <summary>Manage passage</summary>
+  {% if missing_glosses %}
+  {% if gloss_error %}<p class="reader-message" role="alert">{{ gloss_error }}</p>{% endif %}
+  <form action="{{ url_for('korean.add_word_glosses', document_id=document.id) }}" method="post"
+        data-busy="Filling annotation gaps…">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <button type="submit">Fill annotation gaps</button>
+  </form>
+  {% endif %}
+  <form action="{{ url_for('korean.delete', document_id=document.id) }}" method="post"
+        data-confirm="Delete this passage and its practice sessions?">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <button type="submit">Delete passage</button>
+  </form>
+</details>
+<div id="reader-tooltip" class="reader-tooltip" role="tooltip" hidden></div>
+<dialog id="reader-inspection" class="reader-inspection" aria-labelledby="inspection-surface">
+  <div class="inspection-heading">
+    <h2 id="inspection-surface" lang="ko" tabindex="-1"></h2>
+    <form method="dialog"><button type="submit" aria-label="Close explanation">Close</button></form>
+  </div>
+  <p id="inspection-gloss"></p>
+  <details id="inspection-details">
+    <summary>Details</summary>
+    <p id="inspection-breakdown"></p>
+    <p id="inspection-explanation"></p>
+    <ul id="inspection-concepts"></ul>
+    <nav id="inspection-related" aria-label="Related explanations" hidden></nav>
+  </details>
+  <p id="inspection-status" role="status"></p>
+</dialog>
+<script id="reader-data" type="application/json">{{ {
+  'annotations': annotations,
+  'concepts': concepts,
+  'csrf': csrf_token(),
+  'knowledgeUrl': url_for('korean.knowledge', concept_id='00000000-0000-0000-0000-000000000000')
+}|tojson }}</script>
+{% endblock %}

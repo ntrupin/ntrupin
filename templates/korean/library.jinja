@@ -1,0 +1,33 @@
+{% extends "korean/base.jinja" %}
+{% block reader_content %}
+<h1>Library</h1>
+{% if documents %}
+<ul class="reader-library">
+  {% for document in documents %}
+  <li>
+    <a href="{{ url_for('korean.reader', document_id=document.id) }}" dir="auto">{{ document.title }}</a>
+    {% if document.source %}<small dir="auto">{{ document.source }}</small>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+<details class="reader-import" {% if error or not documents %}open{% endif %}>
+  <summary>Add a passage</summary>
+  {% if error %}<p class="reader-message" role="alert">{{ error }}</p>{% endif %}
+  <form class="reader-form" action="{{ url_for('korean.ingest') }}" method="post" data-busy="Analyzing passage…">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <label>Title <small>(optional)</small>
+      <input type="text" name="title" maxlength="120" value="{{ draft.title if draft else '' }}" dir="auto" />
+    </label>
+    <label>Source <small>(optional)</small>
+      <input type="text" name="source" maxlength="180" value="{{ draft.source if draft else '' }}" dir="auto" />
+    </label>
+    <label>Korean text
+      <textarea name="text" rows="6" required lang="ko" data-passage-limit="{{ limit }}" aria-describedby="passage-limit"{% if draft %} data-original="{{ draft.text|tojson|forceescape }}"{% endif %}>
+{{ draft.text if draft else '' }}</textarea>
+      <small id="passage-limit">Up to {{ limit }} characters.</small>
+    </label>
+    <button type="submit">Save passage</button>
+  </form>
+</details>
+{% endblock %}

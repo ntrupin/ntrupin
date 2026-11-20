@@ -3,9 +3,11 @@ import functools
 import json
 import time
 from types import SimpleNamespace
+from urllib.parse import urlsplit
 
 import click
 from flask import Blueprint, current_app, flash, g, redirect, render_template, request, session
+from werkzeug.exceptions import HTTPException
 
 from server.i18n import url_for, base_endpoint, translate
 
@@ -134,6 +136,8 @@ def _load_user_from_session():
 @bp.before_app_request
 def load_logged_in_user():
     g.user = None
+    if not current_app.secret_key:
+        return
     # Static assets and logout do not need role/group queries. Preserve the
     # tokens for logout even if the normal identity refresh would fail.
     if base_endpoint(request.endpoint) in {"static", "auth.logout"}:
@@ -194,6 +198,7 @@ def load_logged_in_user():
 
 @bp.route("/login/", methods=["GET", "POST"])
 def login():
+    destination = _login_destination(request.args.get("next", ""))
     if request.method == "POST":
         email = request.form["email"].strip().lower()
         password = request.form["password"]
@@ -207,11 +212,11 @@ def login():
             )
         except Exception:
             flash(translate("Incorrect email or password."))
-            return redirect(url_for("auth.login"))
+            return redirect(url_for("auth.login", next=destination))
 
         if not auth_response.session:
             flash(translate("Login failed."))
-            return redirect(url_for("auth.login"))
+            return redirect(url_for("auth.login", next=destination))
 
         session.clear()
         session[SESSION_ACCESS_TOKEN_KEY] = auth_response.session.access_token
@@ -221,11 +226,29 @@ def login():
             auth_response.user.email if auth_response.user else email,
         )
         session.permanent = True
-        return redirect(url_for("index"))
+        return redirect(destination or url_for("index"), code=303)
 
-    cfg = meta.Metadata()
-    cfg.title = "Login"
+    cfg = meta.Metadata(title="Login", robots={"index": False, "follow": False},
+                        googlebot={"index": False, "follow": False})
     return render_template("auth/login.jinja", **cfg.serialize())
+
+
+def _login_destination(target: str) -> str | None:
+    if not target.startswith("/") or target.startswith("//") or "\\" in target:
+        return None
+    if any(ord(char) < 32 or ord(char) == 127 for char in target):
+        return None
+    try:
+        parsed = urlsplit(target)
+        if parsed.netloc or parsed.scheme or parsed.path != target:
+            return None
+        adapter = current_app.url_map.bind_to_environ(request.environ)
+        endpoint, values = adapter.match(parsed.path, method="GET")
+    except (HTTPException, ValueError):
+        return None
+    if base_endpoint(endpoint) == "auth.login":
+        return None
+    return url_for(endpoint, **values)
 
 @bp.route("/logout/", methods=["POST"])
 def logout():
@@ -257,8 +280,8 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            if request.method == "GET":
-                return redirect(url_for("auth.login"))
+            if request.method in {"GET", "HEAD"}:
+                return redirect(url_for("auth.login", next=request.path))
             return redirect(url_for("auth.login"), code=303)
         return view(**kwargs)
     return wrapped_view

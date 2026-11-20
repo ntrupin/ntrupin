@@ -1,0 +1,12 @@
+[
+  {"id":"particles","text":"친구가 도서관에서 저한테 책을 빌려 줬어요.","look_for":"Subject, object, location and recipient particles, -아/어 주다, polite past."},
+  {"id":"intention-and-inability","text":"여자친구한테 말하려고 했는데 못 했어.","look_for":"말하다, intention, past, connective -는데 and the contrast between intention and inability."},
+  {"id":"irregular-conjugation","text":"비가 와서 우산을 들고 걸었어요. 날씨가 추워서 일찍 돌아왔어요.","look_for":"오다 to 와, 걷다 to 걸었어요, 춥다 to 추워서, -아/어서 as cause."},
+  {"id":"future-and-modifiers","text":"내일 만날 사람한테 어제 만든 빵을 줄 거예요.","look_for":"Future, future and past noun modifiers, 주다."},
+  {"id":"auxiliaries-and-negation","text":"김치를 먹어 봤는데 너무 매워서 더는 먹을 수 없었어요.","look_for":"-아/어 보다, ability, -는데, degree and inability."},
+  {"id":"speech-level-and-honorifics","text":"할머니께서 벌써 주무셨어. 선생님께서는 내일 오십니다.","look_for":"Honorific subject particles, 주무시다, -시-, informal versus formal speech."},
+  {"id":"idiom","text":"면접이 다가오니까 발등에 불이 떨어진 것 같아.","look_for":"Idiomatic urgency, -(으)니까, speculative 것 같다."},
+  {"id":"ambiguity","text":"언니가 보고 싶대. 보고 나서 다시 연락할게.","look_for":"Possible missing arguments, reported desire, -고 나서, speaker commitment with -(으)ㄹ게."},
+  {"id":"clause-relations","text":"날씨가 좋으면 산에 가자고 했는데 비가 올 수도 있어서 고민 중이야.","look_for":"Conditional, quoted suggestion, -는데, possibility, causal connective and ongoing deliberation."},
+  {"id":"unicode-offsets","text":"  고양이가 왔다 🐈\r\n고양이가 또 왔다.  ","look_for":"Exact repeated surfaces, code-point offsets for the emoji and CRLF, and preservation of surrounding spaces."}
+]

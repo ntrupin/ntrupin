@@ -1,0 +1,15 @@
+{% extends "simple.jinja" %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/korean.css') }}" />
+<script defer src="{{ url_for('static', filename='js/korean.js') }}"></script>
+{% endblock %}
+{% block content %}
+<nav class="reader-nav" aria-label="Korean Reader">
+  <a href="{{ url_for('korean.library') }}" {% if request.endpoint == 'korean.library' %}aria-current="page"{% endif %}>Korean Reader</a>
+  <form action="{{ url_for('auth.logout') }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <button class="text-button" type="submit">Log out</button>
+  </form>
+</nav>
+{% block reader_content %}{% endblock %}
+{% endblock %}

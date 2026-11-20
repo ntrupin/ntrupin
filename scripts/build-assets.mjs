@@ -32,6 +32,7 @@ for (const [source, target] of Object.entries(manifest)) {
   css = css.replaceAll(`../${source}`, `/static/${target}`);
 }
 emit("css/output.css", transformSync(css, { loader: "css", minify: true }).code);
+emit("css/korean.css");
 for (const name of readdirSync(resolve(root, "js")).sort()) {
   if (name.endsWith(".js")) emit(`js/${name}`);
 }

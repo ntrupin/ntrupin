@@ -10,8 +10,10 @@
   "fonts/ibm-plex-mono-8.woff2": "versioned/ibm-plex-mono-8.77f03e26f981c582.woff2",
   "fonts/ibm-plex-mono-9.woff2": "versioned/ibm-plex-mono-9.a76f53ca6612e7b3.woff2",
   "css/output.css": "versioned/output.917f461ae19dbdd8.css",
+  "css/korean.css": "versioned/korean.acb12a78297a4d3c.css",
   "js/article_toc.js": "versioned/article_toc.8b4c835e34022a53.js",
   "js/fishdraw.js": "versioned/fishdraw.eda7f95f9d6274ee.js",
+  "js/korean.js": "versioned/korean.d48e1d71342f0a00.js",
   "js/math.js": "versioned/math.01539706ddd5bd7e.js",
   "js/sidenotes.js": "versioned/sidenotes.12a5cac4e41d5ec7.js",
   "js/site.js": "versioned/site.b8b101e467db47ba.js"

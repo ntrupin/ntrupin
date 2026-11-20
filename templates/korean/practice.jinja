@@ -1,0 +1,28 @@
+{% extends "korean/base.jinja" %}
+{% block reader_content %}
+<a class="reader-back" href="{{ url_for('korean.reader', document_id=document_id) }}#practice">Back to the passage</a>
+<h1>Practice</h1>
+<p class="reader-source">Exercise {{ position + 1 }} of {{ count }}</p>
+<p class="exercise-prompt">{{ prompt }}</p>
+{% if attempt %}
+<section class="reader-feedback" aria-label="Feedback">
+  <p lang="ko">{{ attempt.answer }}</p>
+  <p><strong>{{ 'Correct' if attempt.result.correct else 'Try this' }}</strong></p>
+  <p>{{ attempt.result.feedback }}</p>
+</section>
+{% if position + 1 < count %}
+<a class="reader-button" href="{{ url_for('korean.exercise', document_id=document_id, session_id=session_id, position=position + 1) }}">Next exercise</a>
+{% else %}
+<a class="reader-button" href="{{ url_for('korean.reader', document_id=document_id) }}#practice">Finish practice</a>
+{% endif %}
+{% else %}
+{% if error %}<p class="reader-message" role="alert">{{ error }}</p>{% endif %}
+<form class="reader-form" method="post" data-busy="Checking answer…">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+  <label>Your answer
+    <input type="text" name="answer" lang="ko" maxlength="{{ limit }}" value="{{ draft }}" required autocomplete="off" />
+  </label>
+  <button type="submit">Check answer</button>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title }}</title>
+    <link rel="canonical" href="{{ openGraph.url }}" />
+    <meta name="description" content="{{ description }}" />
+    <meta name="robots" content="{{ robots }}" />
+    <meta name="googlebot" content="{{ googlebot }}" />
+    <meta property="og:title" content="{{ openGraph.title }}" />
+    <meta property="og:description" content="{{ openGraph.description }}" />
+    <meta property="og:url" content="{{ openGraph.url }}" />
+    <meta property="og:locale" content="{{ openGraph.locale }}" />
+    <meta property="og:type" content="{{ openGraph.type }}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="{{ openGraph.title }}" />
+    <meta name="twitter:description" content="{{ openGraph.description }}" />
+    <style>
+      body {
+        margin: 0;
+        background: #fff;
+        color: #000;
+        font: 1.125rem/1.6 system-ui, sans-serif;
+      }
+
+      main {
+        box-sizing: content-box;
+        max-width: 38rem;
+        margin: clamp(3rem, 8vw, 5rem) auto 0;
+        padding: 0 1.5rem;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      p + p {
+        margin-top: 1rem;
+      }
+
+      a {
+        color: inherit;
+        text-underline-offset: 0.16em;
+      }
+    </style>
+    {% block head %}{% endblock %}
+    {% if config.VERCEL_ANALYTICS_ENABLED %}
+    <script defer src="/_vercel/insights/script.js"></script>
+    {% endif %}
+  </head>
+  <body>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

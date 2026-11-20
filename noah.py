@@ -1,8 +1,16 @@
+from datetime import timedelta
+import hmac
+import json
+import logging
 import os
+from pathlib import Path
+import secrets
 
-from flask import Flask, Response, render_template, request
+from flask import Flask, Response, abort, current_app, render_template, request, session
 from jinja2 import select_autoescape
 
+from server import auth, db, korean
+from server.i18n import translate, url_for
 from server.meta import Metadata
 
 
@@ -22,16 +30,62 @@ BASE_CSP = (
 )
 
 
-def create_app() -> Flask:
+def create_app(config=None) -> Flask:
     app = Flask(__name__)
-    app.config["VERCEL_ANALYTICS_ENABLED"] = os.getenv("VERCEL") is not None
+    production = os.getenv("VERCEL") is not None or os.getenv("ENV", "").lower() == "production"
+    app.config.update(
+        SECRET_KEY=os.getenv("SECRET_KEY"),
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE="Lax",
+        SESSION_COOKIE_SECURE=os.getenv("SESSION_COOKIE_SECURE", str(production)).lower() == "true",
+        PERMANENT_SESSION_LIFETIME=timedelta(days=14),
+        VERCEL_ANALYTICS_ENABLED=os.getenv("VERCEL") is not None,
+    )
+    if config:
+        app.config.update(config)
+    app.logger.setLevel(logging.INFO)
     app.jinja_env.autoescape = select_autoescape(
         ("html", "htm", "xml", "xhtml", "svg", "jinja"), default_for_string=True
     )
+    app.jinja_env.globals.update(csrf_token=get_csrf_token, url_for=url_for, _=translate)
+    manifest_path = Path(app.static_folder) / "manifest.json"
+    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+
+    @app.url_defaults
+    def version_static_assets(endpoint, values):
+        if endpoint == "static" and not app.debug:
+            filename = values.get("filename")
+            values["filename"] = manifest.get(filename, filename)
+
     app.add_url_rule("/", view_func=index)
+    app.before_request(protect_forms)
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(korean.bp)
+    auth.setup(app)
+    app.teardown_appcontext(db.close_clients)
     app.after_request(add_security_headers)
     app.after_request(cache_pages)
     return app
+
+
+def get_csrf_token():
+    if "csrf_token" not in session:
+        session["csrf_token"] = secrets.token_urlsafe(32)
+    return session["csrf_token"]
+
+
+def protect_forms():
+    if request.blueprint not in {"auth", "korean"}:
+        return
+    if not current_app.secret_key:
+        abort(503)
+    if request.method in {"GET", "HEAD", "OPTIONS"}:
+        return
+    request.max_content_length = 24 * 1024
+    expected = session.get("csrf_token")
+    provided = request.headers.get("X-CSRF-Token") or request.form.get("csrf_token")
+    if not expected or not provided or not hmac.compare_digest(expected.encode(), provided.encode()):
+        abort(403)
 
 
 def index() -> str:
